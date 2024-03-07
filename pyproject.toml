@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "test-gather-plan"
+name = "gatherplan-client"
 version = "0.1.0"
 description = ""
-authors = ["socar-piglet <socar-piglet@socar.kr>"]
+authors = ["wjdqlsdlsp <wjdqlsdlsp@naver.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-reflex = "^0.4.1"
+reflex = "^0.4.3"
 
 
 [build-system]
