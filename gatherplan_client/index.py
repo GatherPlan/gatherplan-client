@@ -1,8 +1,8 @@
 import reflex as rx
 
 
-class ButtonState(rx.State):
-    pass
+class State(rx.State):
+    """The app state."""
 
 
 def index() -> rx.Component:
