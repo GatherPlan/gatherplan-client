@@ -1,80 +1,57 @@
 import reflex as rx
 
 
-def sign_up_page() -> rx.Component:
-    return rx.center(
-        rx.vstack(
-            rx.heading("회원가입", size="6"),
-            rx.box(
-                rx.text("일반 회원가입", size="4", width="100%", weight="bold"),
-                width="100%",
+def sign_up() -> rx.Component:
+    return rx.vstack(
+        rx.box(
+            rx.text(
+                "우리 언제 만나?",
+                font_size="24px",
+                font_family="Pretendard-Regular",
+                font_weight="700",
+                color="#B5B5B5",
+                padding="10px 0 0 20px",
             ),
-            rx.form(
-                rx.vstack(
-                    rx.box(
-                        rx.text("이메일", size="2"),
-                        rx.input(
-                            placeholder="example@example.com", size="3", width="100%"
-                        ),
-                        rx.text(
-                            "중복된 이메일입니다", size="1", color="red", align="center"
-                        ),
-                        width="100%",
-                    ),
-                    rx.box(
-                        rx.text("이메일 인증", size="2"),
-                        rx.input(placeholder="인증 코드", size="3", width="100%"),
-                        rx.text(
-                            "인증 요청을 눌러주세요",
-                            size="1",
-                            color="red",
-                            align="center",
-                        ),
-                        width="100%",
-                    ),
-                    rx.box(
-                        rx.text("이름", size="2"),
-                        rx.input(placeholder="", size="3", width="100%"),
-                        rx.text(
-                            "필수 항목을 입력해주세요",
-                            size="1",
-                            color="red",
-                            align="center",
-                        ),
-                        width="100%",
-                    ),
-                    rx.box(
-                        rx.text("비밀번호", size="2"),
-                        rx.input(
-                            placeholder="최소 8자 이상의 영문, 숫자, 특수문자 조합",
-                            size="3",
-                            width="100%",
-                        ),
-                        rx.text(
-                            "비밀번호 형식에 맞게 입력해주세요",
-                            size="1",
-                            color="red",
-                            align="center",
-                        ),
-                        width="100%",
-                    ),
-                    spacing="2",
-                ),
-                width="95%",
+            rx.text(
+                "게더플랜에서 약속시간과 장소를 정해보세요!",
+                font_size="16px",
+                font_family="Pretendard-Regular",
+                font_weight="700",
+                padding="0 0 0 20px",
+            ),
+            width="100%",
+            height="10%",
+        ),
+        rx.center(
+            "Gather Plan",
+            font_size="36px",
+            font_family="JalnanGothic",
+            font_weight="700",
+            text_align="center",
+            width="100%",
+            height="72%",
+        ),
+        rx.vstack(
+            rx.button(
+                "회원가입",
+                width="348px",
+                height="48px",
+                padding="20px",
+                color="#FFFFFF",
+                background_color="#0000FF",
             ),
             rx.button(
-                "다음",
-                size="3",
-                width="80%",
-                color="white",
-                bg_color="black",
-                border_radius="5px",
+                "비회원으로 시작하기",
+                width="348px",
+                height="48px",
+                padding="20px",
+                color="#2B2A2A",
+                background_color="#EEEEEE",
             ),
-            width="70%",
-            height="80%",
-            font_size="2em",
-            spacing="5",
+            width="100%",
+            height="18%",
             align="center",
         ),
+        spacing="0",
         height="100vh",
     )
