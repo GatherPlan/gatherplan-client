@@ -39,6 +39,7 @@ def sign_up() -> rx.Component:
                 padding="20px",
                 color="#FFFFFF",
                 background_color="#0000FF",
+                on_click=rx.redirect("/docs/api-reference/special_events"),
             ),
             rx.button(
                 "비회원으로 시작하기",
