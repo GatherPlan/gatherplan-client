@@ -13,13 +13,13 @@ def index() -> rx.Component:
                 font_size="24px",
                 font_family="Pretendard-Regular",
                 font_weight="700",
-                color="#B5B5B5",
                 padding="10px 0 0 20px",
             ),
             rx.text(
                 "모임의 약속을 잡아보세요",
                 font_size="16px",
                 font_family="Pretendard-Regular",
+                color="#B5B5B5",
                 font_weight="700",
                 padding="0 0 0 20px",
             ),
@@ -35,7 +35,7 @@ def index() -> rx.Component:
             rx.button(
                 rx.vstack(
                     rx.text(
-                        "만들기 >",
+                        "만들기",
                         color="#000000",
                         font_size="24px",
                         font_family="JalnanGothic",
@@ -58,7 +58,7 @@ def index() -> rx.Component:
             rx.button(
                 rx.vstack(
                     rx.text(
-                        "참여하기 >",
+                        "참여하기",
                         color="#000000",
                         font_size="24px",
                         font_family="JalnanGothic",
@@ -81,7 +81,7 @@ def index() -> rx.Component:
             rx.button(
                 rx.vstack(
                     rx.text(
-                        "현황보기 >",
+                        "현황보기",
                         color="#000000",
                         font_size="24px",
                         font_family="JalnanGothic",
