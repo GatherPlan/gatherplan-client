@@ -1,104 +1,92 @@
 import reflex as rx
 
+from gatherplan_client.reflex_assets.buffer_box import buffer_box
+from gatherplan_client.reflex_assets.buttons import (
+    basic_button,
+    small_button,
+    second_basic_button,
+)
+from gatherplan_client.reflex_assets.form_box import form_box
+from gatherplan_client.reflex_assets.text_box import center_align_text_box
 
-class FormState(rx.State):
+
+def need_login(func):
+    def inner():
+        return rx.cond(LoginState.login_token == "", login(), func())
+
+    return inner
+
+
+class LoginState(rx.State):
     form_data: dict = {}
+    email: str = ""
+    password: str = ""
+    login_token: str = "temp"
+    error_message: str = ""
 
     def handle_submit(self, form_data: dict):
         """Handle the form submit."""
         self.form_data = form_data
+        if self.login():
+            return rx.redirect(f"{self.router.page.path}")
+        else:
+            self.error_message = "로그인 실패"
+            return None
+
+    def login(self):
+
+        self.email = self.form_data.get("email")
+        self.password = self.form_data.get("password")
+
+        login_state = True
+        self.login_token = "temp_token"
+
+        if login_state:
+            return True
+        else:
+            return False
 
 
+@rx.page(route="/login")
 def login() -> rx.Component:
     return rx.vstack(
-        rx.box(
-            rx.center(
-                "Gather Plan",
-                font_size="24px",
-                font_family="Pretendard-Regular",
-                font_weight="700",
-                color="#000000",
-                padding_top="8%",
-            ),
-            rx.center(
-                "게더플랜에서 모임의 약속을 잡아보세요",
-                font_size="12px",
-                font_family="Pretendard-Regular",
-                font_weight="500",
-                color="#737373",
-            ),
-            width="100%",
-            height="20%",
-            align="center",
+        buffer_box("8%"),
+        center_align_text_box(
+            main_text="Gather Plan", sub_text="게더플랜에서 모임의 약속을 잡아보세요"
         ),
         rx.center(
-            rx.form(
-                rx.box(
-                    rx.text(
-                        "이메일",
-                        font_size="10px",
-                        font_family="Pretendard-Regular",
+            rx.vstack(
+                rx.form(
+                    form_box(
+                        explain_text="이메일",
+                        placeholder_text="2~8자리",
+                        form_value="email",
                     ),
-                    rx.input(
-                        placeholder="2~8자리",
-                        name="email",
-                        font_size="16px",
-                        height="48px",
-                        border_radius="35px",
+                    form_box(
+                        explain_text="비밀번호",
+                        placeholder_text="2~8자리",
+                        form_value="password",
+                        type="password",
                     ),
-                    padding_bottom="20px",
+                    basic_button("로그인"),
+                    rx.hstack(
+                        small_button("아이디 찾기"),
+                        small_button("비밀번호 찾기"),
+                        small_button("회원가입"),
+                        padding_top="10px",
+                        width="100%",
+                    ),
+                    on_submit=LoginState.handle_submit,
+                    reset_on_submit=True,
+                    align="center",
+                    width="345px",
                 ),
-                rx.box(
-                    rx.text(
-                        "비밀번호",
-                        font_size="10px",
-                        font_family="Pretendard-Regular",
-                    ),
-                    rx.input(
-                        placeholder="2~8자리",
-                        name="password",
-                        font_size="16px",
-                        height="48px",
-                    ),
-                    padding_bottom="30px",
-                ),
-                rx.button(
-                    "로그인",
-                    width="348px",
-                    height="48px",
-                    padding="20px",
-                    color="#FFFFFF",
-                    type="submit",
-                    background_color="#3A7DFF",
-                ),
-                rx.hstack(
-                    rx.button(
-                        "아이디 찾기",
-                        width="110px",
-                        height="36px",
-                        color="#A3A3A3",
-                        background_color="#FFFFFF",
-                    ),
-                    rx.button(
-                        "비밀번호 찾기",
-                        width="110px",
-                        height="36px",
-                        color="#A3A3A3",
-                        background_color="#FFFFFF",
-                    ),
-                    rx.button(
-                        "회원가입",
-                        width="110px",
-                        height="36px",
-                        color="#A3A3A3",
-                        background_color="#FFFFFF",
-                    ),
-                    padding_top="10px",
+                rx.center(
+                    LoginState.error_message,
+                    font_size="12px",
+                    color="#FF0000",
                     width="100%",
                 ),
-                on_submit=FormState.handle_submit,
-                align="center",
-                width="345px",
             ),
             width="100%",
             height="60%",
@@ -108,15 +96,7 @@ def login() -> rx.Component:
             height="15%",
         ),
         rx.center(
-            rx.button(
-                "비회원으로 시작하기",
-                width="348px",
-                height="48px",
-                padding="20px",
-                color="#FFFFFF",
-                type="submit",
-                background_color="#D1D1D1",
-            ),
+            second_basic_button("비회원으로 시작하기"),
             width="100%",
             height="15%",
         ),
