@@ -1,63 +1,63 @@
+from typing import List
+
 import reflex as rx
 
+from gatherplan_client.login import need_login
+from gatherplan_client.reflex_assets.buffer_box import buffer_box
+from gatherplan_client.reflex_assets.buttons import basic_button
+from gatherplan_client.reflex_assets.form_box import form_box
+from gatherplan_client.reflex_assets.header import header
+from gatherplan_client.reflex_assets.schema import TextSize
+from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
+
+class MakeMeetingNameState(rx.State):
+    """The app state."""
+
+    form_data: dict = {}
+    input_location: str = ""
+    search_location: List[str] = ["성수동1", "성수동2", "성수동3", "성수동4"]
+    select_location: str = ""
+
+    def handle_submit(self, form_data: dict):
+        """Handle the form submit."""
+        self.form_data = form_data
+        return rx.redirect("/make_meeting_detail")
+
+    def handle_detail_submit(self, form_data: dict):
+        """Handle the form submit."""
+        self.input_location = form_data.get("input_location")
+
+    def handle_location_submit(self, form_data: dict):
+        """Handle the form submit."""
+        self.select_location = form_data.get("input_location")
+
+
+@need_login
 def make_meeting() -> rx.Component:
     return rx.vstack(
-        rx.box(
-            rx.center(
-                "약속 만들기",
-                font_size="32px",
-                font_family="Pretendard-Regular",
-                font_weight="700",
-            ),
-            width="100%",
-            align="center",
-            padding_top="10px",
-            padding_bottom="50px",
+        header("약속만들기"),
+        left_align_text_box(
+            "약속 이름을 정해주세요",
+            "상대방이 이해하기 좋은 이름으로 만들어요!",
+            main_font_size=TextSize.TINY_SMALL,
+            sub_font_size=TextSize.TINY,
         ),
-        rx.box(
-            rx.center(
-                "약속 이름을 정해주세요",
-                font_weight="500",
-                font_size="24px",
-            ),
-            rx.center(
-                "약속이름은 1~15자이여야 합니다.",
-                font_size="16px",
-                color="#B5B5B5",
-            ),
-            width="100%",
-        ),
-        rx.vstack(
-            rx.button(
-                "회원가입",
-                width="348px",
-                height="48px",
-                padding="20px",
-                color="#FFFFFF",
-                background_color="#3A7DFF",
-                on_click=rx.redirect("/docs/api-reference/special_events"),
-            ),
-            rx.button(
-                "회원가입",
-                width="348px",
-                height="48px",
-                padding="20px",
-                color="#2B2A2A",
-                background_color="#EEEEEE",
-                on_click=rx.redirect("/docs/api-reference/special_events"),
-            ),
-            rx.button(
-                "비회원으로 시작하기",
-                width="348px",
-                height="48px",
-                padding="20px",
-                color="#2B2A2A",
-                background_color="#C8C8C8",
+        rx.center(
+            rx.vstack(
+                rx.form(
+                    form_box(
+                        explain_text="약속이름",
+                        placeholder_text="약속이름을 입력해주세요",
+                        form_value="meeting_name",
+                    ),
+                    basic_button("다음"),
+                    on_submit=MakeMeetingNameState.handle_submit,
+                    align="center",
+                    width="345px",
+                ),
             ),
             width="100%",
-            height="25%",
-            align="center",
         ),
         spacing="0",
         height="100vh",
