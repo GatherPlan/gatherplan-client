@@ -29,3 +29,31 @@ def form_box(
         padding_bottom="20px",
         width="345px",
     )
+
+
+def form_box_with_value(
+    explain_text: str = "",
+    explain_text_size: TextSize = TextSize.VERY_TINY,
+    value: str = "",
+    form_value: str = "",
+    placeholder_text_size: TextSize = TextSize.SMALL,
+    form_box_height: str = "48px",
+    type: str = "text",
+):
+    return rx.box(
+        rx.text(
+            explain_text,
+            font_size=explain_text_size,
+            font_family=AppFontFamily.DEFAULT_FONT,
+        ),
+        rx.input(
+            value=value,
+            name=form_value,
+            font_size=placeholder_text_size,
+            height=form_box_height,
+            border_radius="35px",
+            type=type,
+        ),
+        padding_bottom="20px",
+        width="345px",
+    )
