@@ -39,16 +39,16 @@ def make_meeting_detail() -> rx.Component:
             rx.vstack(
                 rx.form(
                     rx.hstack(
-                        form_box_with_value(
+                        form_box(
                             explain_text="약속장소",
-                            value=MakeMeetingNameState.select_location,
+                            placeholder_text="약속장소를 입력해주세요",
                             form_value="location",
                         ),
                         rx.drawer.root(
                             rx.drawer.trigger(
                                 rx.button(
                                     "검색",
-                                    type="submit",
+                                    type="button",
                                     height="48px",
                                     margin_top="15px",
                                 )
@@ -94,6 +94,16 @@ def make_meeting_detail() -> rx.Component:
                                 )
                             ),
                             direction="bottom",
+                        ),
+                    ),
+                    rx.cond(
+                        MakeMeetingNameState.select_location == "",
+                        rx.text(""),
+                        left_align_text_box(
+                            MakeMeetingNameState.select_location,
+                            "선택한 장소를 확인하고, 다음 단계로 이동하세요",
+                            main_font_size=TextSize.TINY_SMALL,
+                            sub_font_size=TextSize.TINY,
                         ),
                     ),
                     basic_button("다음"),
