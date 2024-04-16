@@ -1,28 +1,56 @@
+from typing import List
+
 import reflex as rx
 
 from gatherplan_client.login import need_login
-from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.reflex_assets.buttons import basic_button
-from gatherplan_client.reflex_assets.form_box import form_box, form_box_with_value
 from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import TextSize
 from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 
-def location_button(button_text: str):
-    return rx.drawer.close(
+def location_button(button_text: int):
+    return rx.cond(
+        button_text == 0,
         rx.button(
             button_text,
-            width="340px",
+            width="36px",
             height="36px",
-            color="#A3A3A3",
+            color="#000000",
             type="button",
-            on_click=MakeMeetingNameState.handle_location_submit(
-                {"input_location": button_text}
-            ),
             background_color="#FFFFFF",
-        )
+            on_click=CalendarSelect.click_button(button_text),
+        ),
+        rx.cond(
+            button_text == 1,
+            rx.button(
+                button_text,
+                width="36px",
+                height="36px",
+                color="#0000FF",
+                type="button",
+                background_color="#FFFFFF",
+                on_click=CalendarSelect.click_button(button_text),
+            ),
+            rx.button(
+                button_text,
+                width="36px",
+                height="36px",
+                color="#F50000",
+                type="button",
+                background_color="#FFFFFF",
+                on_click=CalendarSelect.click_button(button_text),
+            ),
+        ),
     )
+
+
+class CalendarSelect(rx.State):
+    select_date: List[int] = [0, 1, 2] * 10
+    weekday: List[int] = [0] * 30
+
+    def click_button(self, value: int):
+        self.select_date[value] = 1
 
 
 @need_login
@@ -35,27 +63,14 @@ def make_meeting_date() -> rx.Component:
             main_font_size=TextSize.TINY_SMALL,
             sub_font_size=TextSize.TINY,
         ),
-        # TODO: Implement the date picker
-        rx.vstack(
-            rx.chakra.hstack(
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
+        rx.grid(
+            rx.foreach(
+                CalendarSelect.select_date,
+                location_button,
             ),
-            rx.chakra.hstack(
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-                rx.chakra.checkbox("4/16", color_scheme="red", size="sm"),
-            ),
+            columns="7",
         ),
+        # TODO: Implement the date picker
         basic_button("다음"),
         spacing="0",
         height="100vh",
