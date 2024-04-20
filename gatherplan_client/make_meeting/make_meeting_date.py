@@ -14,40 +14,121 @@ from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 
 def location_button(display_data: List):
+
     return rx.cond(
-        CalendarSelect.holiday_data[display_data[0]] == "prev",
-        rx.button(
-            display_data[0].to_string(json=False).split("-")[2],
-            width="50px",
-            height="36px",
-            color="#000000",
-            font_size="16px",
-            type="button",
-            background_color=AppColor.BACKGROUND_GRAY_COLOR,
-            disabled=True,
-            on_click=CalendarSelect.click_button(display_data[0]),
-        ),
+        CalendarSelect.holiday_data[display_data[0]] == "sun",
         rx.cond(
-            display_data[1],
+            CalendarSelect.holiday_data[display_data[0]] == "prev",
             rx.button(
                 display_data[0].to_string(json=False).split("-")[2],
                 width="50px",
                 height="36px",
-                color="#000000",
+                color=AppColor.RED,
                 font_size="16px",
                 type="button",
                 background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                disabled=True,
                 on_click=CalendarSelect.click_button(display_data[0]),
             ),
-            rx.button(
-                display_data[0].to_string(json=False).split("-")[2],
-                width="50px",
-                height="36px",
-                color="#000000",
-                font_size="16px",
-                type="button",
-                background_color=AppColor.WHITE,
-                on_click=CalendarSelect.click_button(display_data[0]),
+            rx.cond(
+                display_data[1],
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.RED,
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    on_click=CalendarSelect.click_button(display_data[0]),
+                ),
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.RED,
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.WHITE,
+                    on_click=CalendarSelect.click_button(display_data[0]),
+                ),
+            ),
+        ),
+        rx.cond(
+            CalendarSelect.holiday_data[display_data[0]] == "sat",
+            rx.cond(
+                CalendarSelect.holiday_data[display_data[0]] == "prev",
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.BLUE,
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disabled=True,
+                    on_click=CalendarSelect.click_button(display_data[0]),
+                ),
+                rx.cond(
+                    display_data[1],
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color=AppColor.BLUE,
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        on_click=CalendarSelect.click_button(display_data[0]),
+                    ),
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color=AppColor.BLUE,
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.WHITE,
+                        on_click=CalendarSelect.click_button(display_data[0]),
+                    ),
+                ),
+            ),
+            rx.cond(
+                CalendarSelect.holiday_data[display_data[0]] == "prev",
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color="#000000",
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disabled=True,
+                    on_click=CalendarSelect.click_button(display_data[0]),
+                ),
+                rx.cond(
+                    display_data[1],
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color="#000000",
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        on_click=CalendarSelect.click_button(display_data[0]),
+                    ),
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color="#000000",
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.WHITE,
+                        on_click=CalendarSelect.click_button(display_data[0]),
+                    ),
+                ),
             ),
         ),
     )
@@ -106,12 +187,12 @@ class CalendarSelect(rx.State):
             ] = False
 
             weekday = datetime.date(
-                self.setting_time.year, self.setting_time.month, 1
+                self.setting_time.year, self.setting_time.month, i
             ).weekday()
 
             self.holiday_data[
                 f"{self.setting_time.year}-{self.setting_time.month}-{i}"
-            ] = ("sun" if weekday == 7 else "sat" if weekday == 6 else "normal")
+            ] = ("sun" if weekday == 6 else "sat" if weekday == 5 else "normal")
 
         for clicked_data in self.select_data:
             if clicked_data in self.display_data.keys():
