@@ -11,6 +11,8 @@ class AppColor(str, Enum):
     BACKGROUND_GRAY_COLOR: str = "#EEEEEE"
     WHITE: str = "#FFFFFF"
     BLACK: str = "#000000"
+    RED: str = "#FF0000"
+    BLUE: str = "#0000FF"
 
 
 @dataclass
