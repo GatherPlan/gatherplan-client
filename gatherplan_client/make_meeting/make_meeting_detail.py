@@ -82,6 +82,7 @@ def make_meeting_detail() -> rx.Component:
                                         ),
                                         default_value="tab1",
                                         width="360px",
+                                        align="center",
                                     ),
                                     align="center",
                                     top="auto",

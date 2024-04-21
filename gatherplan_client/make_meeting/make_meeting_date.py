@@ -4,9 +4,11 @@ import reflex as rx
 import datetime
 import calendar
 from dateutil.relativedelta import relativedelta
+from pytimekr import pytimekr
 
-
+from gatherplan_client.additional_holiday import additional_holiday
 from gatherplan_client.login import need_login
+from gatherplan_client.reflex_assets.buffer_box import buffer_box
 from gatherplan_client.reflex_assets.buttons import basic_button
 from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import TextSize, AppColor, AppFontFamily
@@ -14,7 +16,6 @@ from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 
 def location_button(display_data: List):
-
     return rx.cond(
         CalendarSelect.holiday_data[display_data[0]] == "sun",
         rx.cond(
@@ -178,6 +179,10 @@ class CalendarSelect(rx.State):
             self.display_data[temp] = False
             self.holiday_data[temp] = "prev"
 
+        kr_holidays = pytimekr.holidays(
+            year=self.setting_time.year
+        ) + additional_holiday(year=self.setting_time.year)
+
         for i in range(
             1,
             calendar.monthrange(self.setting_time.year, self.setting_time.month)[1] + 1,
@@ -192,7 +197,13 @@ class CalendarSelect(rx.State):
 
             self.holiday_data[
                 f"{self.setting_time.year}-{self.setting_time.month}-{i}"
-            ] = ("sun" if weekday == 6 else "sat" if weekday == 5 else "normal")
+            ] = (
+                "sun"
+                if weekday == 6
+                or datetime.date(self.setting_time.year, self.setting_time.month, i)
+                in kr_holidays
+                else "sat" if weekday == 5 else "normal"
+            )
 
         for clicked_data in self.select_data:
             if clicked_data in self.display_data.keys():
@@ -210,18 +221,32 @@ def make_meeting_date() -> rx.Component:
             sub_font_size=TextSize.TINY,
         ),
         rx.center(
-            rx.button("<", on_click=CalendarSelect.month_decrement),
-            rx.text(
+            rx.button(
+                rx.icon(tag="chevron-left"),
+                on_click=CalendarSelect.month_decrement,
+                width="48px",
+                height="40px",
+                color=AppColor.BLACK,
+                background_color=AppColor.WHITE,
+            ),
+            rx.center(
                 CalendarSelect.setting_time_display,
                 width="100px",
-                height="45px",
+                height="40px",
                 align="center",
             ),
-            rx.button(">", on_click=CalendarSelect.month_increment),
+            rx.button(
+                rx.icon(tag="chevron-right"),
+                on_click=CalendarSelect.month_increment,
+                width="48px",
+                height="40px",
+                color=AppColor.BLACK,
+                background_color=AppColor.WHITE,
+            ),
             color=AppColor.BLACK,
-            font_size=TextSize.MEDIUM,
+            font_size=TextSize.SMALL_MEDIUM,
             font_family=AppFontFamily.DEFAULT_FONT,
-            height="45px",
+            height="40px",
             width="100%",
             font_weight="600",
             background_color=AppColor.WHITE,
@@ -245,8 +270,8 @@ def make_meeting_date() -> rx.Component:
             ),
             width="100%",
         ),
-        # TODO: Implement the date picker
-        basic_button("다음"),
+        buffer_box("5%"),
+        rx.center(basic_button("다음"), width="100%"),
         spacing="0",
         height="100vh",
     )
