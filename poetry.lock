@@ -751,6 +751,17 @@ docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.link
 testing = ["pytest (>=6,!=8.1.1)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-mypy", "pytest-ruff (>=0.2.1)"]
 
 [[package]]
+name = "lunardate"
+version = "0.2.2"
+description = "A Chinese Calendar Library in Pure Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "lunardate-0.2.2-py3-none-any.whl", hash = "sha256:cf1916337e50470a82df12d885ff47a456e89c91a3ad4e5fdf1575e063a7ed55"},
+    {file = "lunardate-0.2.2.tar.gz", hash = "sha256:8ff8c01721bef7710f0712a302b1cb7d0b8b3ffc72a63a9a056cd01e58e5485a"},
+]
+
+[[package]]
 name = "mako"
 version = "1.3.2"
 description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
@@ -1198,6 +1209,19 @@ python-engineio = ">=4.8.0"
 asyncio-client = ["aiohttp (>=3.4)"]
 client = ["requests (>=2.21.0)", "websocket-client (>=0.54.0)"]
 docs = ["sphinx"]
+
+[[package]]
+name = "pytimekr"
+version = "0.1.0"
+description = "PyTime fork for Korean"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytimekr-0.1.0.tar.gz", hash = "sha256:4c83f981c3ad13173af404a05b0a8e2bf25a829c4376577f4fe5c0655045fd9d"},
+]
+
+[package.dependencies]
+lunardate = ">=0.1.5"
 
 [[package]]
 name = "pywin32-ctypes"
@@ -2083,4 +2107,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "0cce7272dc766894e83d1bc14e67002cad7fc612030f1634f4b319683a5a1660"
+content-hash = "58fe54059eeb6dcd7fdcf4fa6103044a81296dd1967957bf36b79ba13a782e02"
