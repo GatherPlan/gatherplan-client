@@ -14,14 +14,18 @@ from gatherplan_client.reflex_assets.text_box import left_align_text_box
 class MakeMeetingNameState(rx.State):
     """The app state."""
 
+    # TODO: default value init
     form_data: dict = {}
+    meeting_name: str = "세 얼간이 점심약속"
     input_location: str = ""
     search_location: List[str] = ["성수동1", "성수동2", "성수동3", "성수동4"]
-    select_location: str = ""
+    select_location: str = "서울숲카페거리"
+    select_location_detail_location: str = "서울 성동구 성수동 1가 000-00"
 
     def handle_submit(self, form_data: dict):
         """Handle the form submit."""
         self.form_data = form_data
+        self.meeting_name = form_data.get("meeting_name")
         return rx.redirect("/make_meeting_detail")
 
     def handle_detail_submit(self, form_data: dict):

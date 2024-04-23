@@ -1,3 +1,5 @@
+from typing import Any
+
 import reflex as rx
 
 from gatherplan_client.reflex_assets.schema import TextSize, AppColor, AppFontFamily
@@ -62,4 +64,36 @@ def small_button(button_text: str = ""):
         color="#A3A3A3",
         type="button",
         background_color="#FFFFFF",
+    )
+
+
+def make_meeting_time_button(
+    main_text: str,
+    sub_text: str = "",
+    on_click_func: Any = None,
+    text_color: str = "#000000",
+):
+    return rx.button(
+        rx.vstack(
+            rx.text(
+                main_text,
+                color=text_color,
+                font_size=TextSize.SMALL,
+                font_family=AppFontFamily.JALNAN_GOTHIC,
+            ),
+            rx.text(
+                sub_text,
+                color=AppColor.GRAY_TEXT,
+                font_size=TextSize.TINY,
+                font_family=AppFontFamily.JALNAN_GOTHIC,
+            ),
+            width="340px",
+        ),
+        width="340px",
+        height="76px",
+        padding="20px",
+        border_radius="15px",
+        border=f"3px solid {text_color}",
+        background_color=AppColor.WHITE,
+        on_click=on_click_func,
     )
