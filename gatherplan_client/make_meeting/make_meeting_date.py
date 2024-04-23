@@ -138,7 +138,7 @@ def location_button(display_data: List):
 class CalendarSelect(rx.State):
     display_data: Dict[str, bool] = {}
     holiday_data: Dict[str, str] = {}
-    select_data: List[str] = []
+    select_data: List[str] = ["2024-4-3", "2024-4-12"]
 
     setting_time = datetime.datetime.now()
     setting_time_display = setting_time.strftime("%Y-%m")
@@ -209,9 +209,9 @@ class CalendarSelect(rx.State):
             if clicked_data in self.display_data.keys():
                 self.display_data[clicked_data] = True
 
-    def handle_submit(self, form_data: dict):
-        print(f"선택된 날짜: {self.select_data}")
-        return rx.redirect("/make_meeting_time")
+    def handle_submit(self):
+        print("test")
+        return rx.redirect("/")
 
 
 @need_login

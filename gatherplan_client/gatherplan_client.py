@@ -1,5 +1,6 @@
 import reflex as rx
 from .index import index
+from .make_meeting.make_meeting_check import make_meeting_check
 from .make_meeting.make_meeting_timeline import make_meeting_time
 from .sign_up import sign_up
 from .make_meeting.make_meeting import make_meeting
@@ -14,3 +15,4 @@ app.add_page(make_meeting, route="/make_meeting")
 app.add_page(make_meeting_detail, route="/make_meeting_detail")
 app.add_page(make_meeting_date, route="/make_meeting_date")
 app.add_page(make_meeting_time, route="/make_meeting_time")
+app.add_page(make_meeting_check, route="/make_meeting_check")
