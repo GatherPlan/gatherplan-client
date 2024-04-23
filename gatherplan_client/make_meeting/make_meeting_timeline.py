@@ -1,42 +1,27 @@
-from typing import List
-
 import reflex as rx
 
 from gatherplan_client.login import need_login
-from gatherplan_client.reflex_assets.buffer_box import buffer_box
-from gatherplan_client.reflex_assets.buttons import basic_button
-from gatherplan_client.reflex_assets.form_box import form_box
+from gatherplan_client.reflex_assets.buttons import make_meeting_time_button
 from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import TextSize
 from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 
-class MakeMeetingTimeState(rx.State)
-
-
 @need_login
-def make_meeting_timeline() -> rx.Component:
+def make_meeting_time() -> rx.Component:
     return rx.vstack(
         header("약속만들기"),
         left_align_text_box(
-            "약속 이름을 정해주세요",
-            "상대방이 이해하기 좋은 이름으로 만들어요!",
+            "약속 시간대를 골라주세요",
+            "사용자 지정은 중복 선택이 불가합니다.",
             main_font_size=TextSize.TINY_SMALL,
             sub_font_size=TextSize.TINY,
         ),
         rx.center(
             rx.vstack(
-                rx.form(
-                    form_box(
-                        explain_text="약속이름",
-                        placeholder_text="약속이름을 입력해주세요",
-                        form_value="meeting_name",
-                    ),
-                    basic_button("다음"),
-                    on_submit=MakeMeetingNameState.handle_submit,
-                    align="center",
-                    width="345px",
-                ),
+                make_meeting_time_button(main_text="오전", sub_text="06:00 ~ 12:00"),
+                make_meeting_time_button(main_text="오후", sub_text="12:00 ~ 18:00"),
+                make_meeting_time_button(main_text="저녁", sub_text="18:00 ~ 24:00"),
             ),
             width="100%",
         ),

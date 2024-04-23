@@ -209,6 +209,10 @@ class CalendarSelect(rx.State):
             if clicked_data in self.display_data.keys():
                 self.display_data[clicked_data] = True
 
+    def handle_submit(self, form_data: dict):
+        print(f"선택된 날짜: {self.select_data}")
+        return rx.redirect("/make_meeting_time")
+
 
 @need_login
 def make_meeting_date() -> rx.Component:
@@ -271,7 +275,19 @@ def make_meeting_date() -> rx.Component:
             width="100%",
         ),
         buffer_box("5%"),
-        rx.center(basic_button("다음"), width="100%"),
+        rx.center(
+            rx.button(
+                "다음",
+                width="348px",
+                height="48px",
+                padding="20px",
+                color=AppColor.WHITE,
+                type="submit",
+                background_color=AppColor.MAIN_BACKGROUND,
+                on_click=rx.redirect("/make_meeting_time"),
+            ),
+            width="100%",
+        ),
         spacing="0",
         height="100vh",
     )
