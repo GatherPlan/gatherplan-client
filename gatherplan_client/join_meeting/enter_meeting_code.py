@@ -10,12 +10,12 @@ from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 
 @need_login
-def make_meeting() -> rx.Component:
+def enter_meeting_code() -> rx.Component:
     return rx.vstack(
-        header("약속만들기"),
+        header("약속 참여하기"),
         left_align_text_box(
-            "약속 이름을 정해주세요",
-            "상대방이 이해하기 좋은 이름으로 만들어요!",
+            "약속 코드를 입력해주세요",
+            "약속 코드는 20자리 영소문자입니다.",
             main_font_size=TextSize.TINY_SMALL,
             sub_font_size=TextSize.TINY,
         ),
@@ -23,9 +23,9 @@ def make_meeting() -> rx.Component:
             rx.vstack(
                 rx.form(
                     form_box(
-                        explain_text="약속이름",
-                        placeholder_text="약속이름을 입력해주세요",
-                        form_value="meeting_name",
+                        explain_text="약속코드",
+                        placeholder_text=MakeMeetingNameState.meeting_code,
+                        form_value="enter_code",
                     ),
                     basic_button("다음"),
                     on_submit=MakeMeetingNameState.handle_submit,

@@ -1,26 +1,12 @@
-from typing import List
-
 import reflex as rx
 
 from gatherplan_client.login import need_login
+from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.reflex_assets.buffer_box import buffer_box
 from gatherplan_client.reflex_assets.buttons import make_meeting_time_button
 from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import TextSize, AppColor
 from gatherplan_client.reflex_assets.text_box import left_align_text_box
-
-
-class TimeSelect(rx.State):
-    select_time: List[str] = ["오전", "오후"]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def click_button(self, click_data: List):
-        if click_data in self.select_time:
-            self.select_time.remove(click_data)
-        else:
-            self.select_time.append(click_data)
 
 
 @need_login
@@ -36,45 +22,57 @@ def make_meeting_time() -> rx.Component:
         rx.center(
             rx.vstack(
                 rx.cond(
-                    TimeSelect.select_time.contains("오전"),
+                    MakeMeetingNameState.select_time.contains("오전"),
                     make_meeting_time_button(
                         main_text="오전",
                         sub_text="06:00 ~ 12:00",
-                        on_click_func=TimeSelect.click_button("오전"),
+                        on_click_func=MakeMeetingNameState.click_time_select_button(
+                            "오전"
+                        ),
                         text_color="#3A7DFF",
                     ),
                     make_meeting_time_button(
                         main_text="오전",
                         sub_text="06:00 ~ 12:00",
-                        on_click_func=TimeSelect.click_button("오전"),
+                        on_click_func=MakeMeetingNameState.click_time_select_button(
+                            "오전"
+                        ),
                     ),
                 ),
                 rx.cond(
-                    TimeSelect.select_time.contains("오후"),
+                    MakeMeetingNameState.select_time.contains("오후"),
                     make_meeting_time_button(
                         main_text="오후",
                         sub_text="06:00 ~ 12:00",
-                        on_click_func=TimeSelect.click_button("오후"),
+                        on_click_func=MakeMeetingNameState.click_time_select_button(
+                            "오후"
+                        ),
                         text_color="#3A7DFF",
                     ),
                     make_meeting_time_button(
                         main_text="오후",
                         sub_text="06:00 ~ 12:00",
-                        on_click_func=TimeSelect.click_button("오후"),
+                        on_click_func=MakeMeetingNameState.click_time_select_button(
+                            "오후"
+                        ),
                     ),
                 ),
                 rx.cond(
-                    TimeSelect.select_time.contains("저녁"),
+                    MakeMeetingNameState.select_time.contains("저녁"),
                     make_meeting_time_button(
                         main_text="저녁",
                         sub_text="06:00 ~ 12:00",
-                        on_click_func=TimeSelect.click_button("저녁"),
+                        on_click_func=MakeMeetingNameState.click_time_select_button(
+                            "저녁"
+                        ),
                         text_color="#3A7DFF",
                     ),
                     make_meeting_time_button(
                         main_text="저녁",
                         sub_text="06:00 ~ 12:00",
-                        on_click_func=TimeSelect.click_button("저녁"),
+                        on_click_func=MakeMeetingNameState.click_time_select_button(
+                            "저녁"
+                        ),
                     ),
                 ),
             ),

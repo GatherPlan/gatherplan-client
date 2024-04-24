@@ -150,3 +150,43 @@ def text_for_each(text: str):
         align="right",
         width="230px",
     )
+
+
+def check_meeting_box_with_clipboard(text1: str, text2: Any):
+    return rx.box(
+        rx.hstack(
+            rx.text(
+                text1,
+                font_size=TextSize.SMALL,
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.BLACK,
+                padding_left="10px",
+                width="100px",
+                padding_top="3px",
+            ),
+            rx.box(
+                rx.text(
+                    text2,
+                    font_size=TextSize.TINY_SMALL,
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    color=AppColor.GRAY_TEXT,
+                    font_weight="700",
+                    align="right",
+                    width="170px",
+                    padding_top="5px",
+                ),
+            ),
+            rx.box(
+                rx.button(
+                    rx.icon("copy"),
+                    on_click=rx.set_clipboard(text2),
+                    margin_right="20px",
+                ),
+                width="50px",
+            ),
+        ),
+        border_bottom="1px solid #E0E0E0",
+        padding="5px",
+        width="360px",
+    )
