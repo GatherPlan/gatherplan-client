@@ -1,6 +1,8 @@
 import reflex as rx
 from .index import index
+from .join_meeting.enter_meeting_code import enter_meeting_code
 from .make_meeting.make_meeting_check import make_meeting_check
+from .make_meeting.make_meeting_result import make_meeting_result
 from .make_meeting.make_meeting_timeline import make_meeting_time
 from .sign_up import sign_up
 from .make_meeting.make_meeting import make_meeting
@@ -16,3 +18,5 @@ app.add_page(make_meeting_detail, route="/make_meeting_detail")
 app.add_page(make_meeting_date, route="/make_meeting_date")
 app.add_page(make_meeting_time, route="/make_meeting_time")
 app.add_page(make_meeting_check, route="/make_meeting_check")
+app.add_page(make_meeting_result, route="/make_meeting_result")
+app.add_page(enter_meeting_code, route="/enter_meeting_code")
