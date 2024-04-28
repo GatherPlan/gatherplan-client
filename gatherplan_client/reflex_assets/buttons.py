@@ -44,7 +44,9 @@ def basic_button(button_text: str = "", type: str = "submit"):
     )
 
 
-def second_basic_button(button_text: str = "", type: str = "submit"):
+def second_basic_button(
+    button_text: str = "", type: str = "submit", redirect_url: str = "/"
+):
     return rx.button(
         button_text,
         width="348px",
@@ -53,10 +55,11 @@ def second_basic_button(button_text: str = "", type: str = "submit"):
         color=AppColor.WHITE,
         type=type,
         background_color=AppColor.LIGHT_GRAY_TEXT,
+        on_click=rx.redirect(redirect_url),
     )
 
 
-def small_button(button_text: str = ""):
+def small_button(button_text: str = "", redirect_url: str = "/"):
     return rx.button(
         button_text,
         width="110px",
@@ -64,6 +67,7 @@ def small_button(button_text: str = ""):
         color="#A3A3A3",
         type="button",
         background_color="#FFFFFF",
+        on_click=rx.redirect(redirect_url),
     )
 
 
