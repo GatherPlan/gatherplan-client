@@ -10,7 +10,7 @@ from gatherplan_client.reflex_assets.schema import TextSize, AppFontFamily, AppC
 from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 
-def join_meeting_detail() -> rx.Component:
+def join_meeting_date() -> rx.Component:
     from gatherplan_client.make_meeting.make_meeting_date import location_button
 
     return rx.vstack(

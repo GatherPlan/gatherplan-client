@@ -13,7 +13,7 @@ from gatherplan_client.reflex_assets.text_box import (
 
 def join_login(func):
     def inner():
-        return rx.cond(LoginState.login_token == "", join_meeting_not_logined(), func())
+        return rx.cond(LoginState.login_token != "", join_meeting_not_logined(), func())
 
     return inner
 
@@ -147,7 +147,7 @@ def join_meeting_not_logined() -> rx.Component:
                     color=AppColor.WHITE,
                     type="submit",
                     background_color=AppColor.MAIN_BACKGROUND,
-                    on_click=rx.redirect("/enter_meeting_code"),
+                    on_click=rx.redirect("/join_meeting_date"),
                 ),
             ),
             width="100%",
