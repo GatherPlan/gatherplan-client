@@ -3,7 +3,7 @@ from .index import index
 from .join_meeting.enter_meeting_code import enter_meeting_code
 from .make_meeting.make_meeting_check import make_meeting_check
 from .make_meeting.make_meeting_result import make_meeting_result
-from .make_meeting.make_meeting_timeline import make_meeting_time
+from .make_meeting.make_meeting_time import make_meeting_time
 from .sign_up import sign_up
 from .make_meeting.make_meeting import make_meeting
 from .make_meeting.make_meeting_date import make_meeting_date

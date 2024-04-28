@@ -4,7 +4,7 @@ from gatherplan_client.login import need_login
 from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.reflex_assets.buffer_box import buffer_box
 from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import TextSize, AppColor, AppFontFamily
+from gatherplan_client.reflex_assets.schema import TextSize, AppColor
 from gatherplan_client.reflex_assets.text_box import (
     left_align_text_box,
     check_meeting_box,
@@ -15,7 +15,7 @@ from gatherplan_client.reflex_assets.text_box import (
 @need_login
 def make_meeting_check() -> rx.Component:
     return rx.vstack(
-        header("약속만들기"),
+        header("약속만들기", "/make_meeting_time"),
         left_align_text_box(
             "약속 정보를 확인해주세요",
             "약속 정보 수정은 현황보기에서 진행할 수 있습니다.",

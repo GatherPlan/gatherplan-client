@@ -12,7 +12,7 @@ from gatherplan_client.reflex_assets.text_box import left_align_text_box
 @need_login
 def make_meeting() -> rx.Component:
     return rx.vstack(
-        header("약속만들기"),
+        header("약속만들기", "/"),
         left_align_text_box(
             "약속 이름을 정해주세요",
             "상대방이 이해하기 좋은 이름으로 만들어요!",
