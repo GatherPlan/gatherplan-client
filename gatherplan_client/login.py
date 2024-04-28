@@ -22,11 +22,14 @@ class LoginState(rx.State):
     email: str = ""
     password: str = ""
     login_token: str = "temp"
-    error_message: str = ""
+    nick_name: str = ""
+    auth_number: str = ""
+    error_message: str = "SomeThing Wrong"
 
     def handle_submit(self, form_data: dict):
         """Handle the form submit."""
         self.form_data = form_data
+        print(self.form_data)
         if self.login():
             return rx.redirect(f"{self.router.page.path}")
         else:
@@ -45,6 +48,18 @@ class LoginState(rx.State):
             return True
         else:
             return False
+
+    def sign_up(self, form_data: dict):
+        """Handle the form submit."""
+        self.form_data = form_data
+
+        return rx.redirect("/")
+
+    def start_not_member_login(self, form_data: dict):
+        """Handle the form submit."""
+        self.form_data = form_data
+
+        return rx.redirect("/join_meeting_detail")
 
 
 @rx.page(route="/login")
@@ -72,7 +87,7 @@ def login() -> rx.Component:
                     rx.hstack(
                         small_button("아이디 찾기"),
                         small_button("비밀번호 찾기"),
-                        small_button("회원가입"),
+                        small_button("회원가입", "/sign_up"),
                         padding_top="10px",
                         width="100%",
                     ),
@@ -96,7 +111,9 @@ def login() -> rx.Component:
             height="15%",
         ),
         rx.center(
-            second_basic_button("비회원으로 시작하기"),
+            # second_basic_button(
+            #     "비회원으로 시작하기", redirect_url="/not_member_login"
+            # ),
             width="100%",
             height="15%",
         ),
