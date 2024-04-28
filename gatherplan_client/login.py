@@ -59,7 +59,7 @@ class LoginState(rx.State):
         """Handle the form submit."""
         self.form_data = form_data
 
-        return rx.redirect("/join_meeting_detail")
+        return rx.redirect("/join_meeting_date")
 
 
 @rx.page(route="/login")
