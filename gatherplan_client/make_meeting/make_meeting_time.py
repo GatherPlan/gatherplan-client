@@ -12,7 +12,7 @@ from gatherplan_client.reflex_assets.text_box import left_align_text_box
 @need_login
 def make_meeting_time() -> rx.Component:
     return rx.vstack(
-        header("약속만들기"),
+        header("약속만들기", "/make_meeting_date"),
         left_align_text_box(
             "약속 시간대를 골라주세요",
             "사용자 지정은 중복 선택이 불가합니다.",

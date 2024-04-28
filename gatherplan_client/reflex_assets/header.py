@@ -16,7 +16,7 @@ def main_header(main_text: str):
     )
 
 
-def header(main_text: str):
+def header(main_text: str, back_button_url: str):
     return rx.vstack(
         rx.box(
             rx.hstack(
@@ -24,6 +24,7 @@ def header(main_text: str):
                     rx.icon(tag="chevron-left"),
                     color=AppColor.BLACK,
                     background_color=AppColor.WHITE,
+                    on_click=rx.redirect(back_button_url),
                 ),
                 rx.text(
                     main_text,

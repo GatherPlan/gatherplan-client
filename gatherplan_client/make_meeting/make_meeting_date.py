@@ -132,7 +132,7 @@ def location_button(display_data: List):
 @need_login
 def make_meeting_date() -> rx.Component:
     return rx.vstack(
-        header("약속만들기"),
+        header("약속만들기", "/make_meeting_detail"),
         left_align_text_box(
             "약속 날짜를 선택해 주세요",
             "최대 30일까지 선택할 수 있어요",
