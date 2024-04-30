@@ -9,7 +9,7 @@ from gatherplan_client.reflex_assets.text_box import (
 
 def join_meeting_time() -> rx.Component:
     return rx.vstack(
-        header("약속 참여하기", "/enter_meeting_code"),
+        header("약속 참여하기", "/join_meeting_date"),
         left_align_text_box(
             "참여할 약속 시간을 정해주세요",
             "--",
@@ -17,6 +17,7 @@ def join_meeting_time() -> rx.Component:
             sub_font_size=TextSize.TINY,
             height="15%",
         ),
+        # Time Slot 구현 필요
         spacing="0",
         height="100vh",
     )
