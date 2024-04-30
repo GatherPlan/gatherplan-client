@@ -1,17 +1,186 @@
+from typing import List
+
 import reflex as rx
 
 from gatherplan_client.join_meeting.join_state import JoinState
-from gatherplan_client.make_meeting.make_meeting_state import MakeMeetingNameState
 from gatherplan_client.reflex_assets.buffer_box import buffer_box
-from gatherplan_client.reflex_assets.buttons import basic_button
-from gatherplan_client.reflex_assets.form_box import form_box, form_box_with_value
 from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import TextSize, AppFontFamily, AppColor
 from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 
+def calendar_button(
+    display_data: List,
+    text_color: AppColor = AppColor.BLACK,
+    background_color: AppColor = AppColor.WHITE,
+    disable: bool = False,
+):
+    return rx.button(
+        display_data[0].to_string(json=False).split("-")[2],
+        width="50px",
+        height="36px",
+        color=text_color,
+        font_size="16px",
+        type="button",
+        disabled=disable,
+        background_color=background_color,
+        on_click=JoinState.click_button(display_data[0]),
+    )
+
+
+def location_button(display_data: List):
+    return rx.cond(
+        JoinState.checked_data[display_data[0]],
+        rx.cond(
+            JoinState.holiday_data[display_data[0]] == "sun",
+            rx.cond(
+                JoinState.holiday_data[display_data[0]] == "prev",
+                calendar_button(
+                    display_data=display_data,
+                    text_color=AppColor.RED,
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disable=True,
+                ),
+                rx.cond(
+                    display_data[1],
+                    calendar_button(
+                        display_data=display_data,
+                        text_color=AppColor.RED,
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        disable=True,
+                    ),
+                    calendar_button(
+                        display_data=display_data,
+                        text_color=AppColor.RED,
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        disable=True,
+                    ),
+                ),
+            ),
+            rx.cond(
+                JoinState.holiday_data[display_data[0]] == "sat",
+                rx.cond(
+                    JoinState.holiday_data[display_data[0]] == "prev",
+                    calendar_button(
+                        display_data=display_data,
+                        text_color=AppColor.BLUE,
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        disable=True,
+                    ),
+                    rx.cond(
+                        display_data[1],
+                        calendar_button(
+                            display_data=display_data,
+                            text_color=AppColor.BLUE,
+                            background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                            disable=True,
+                        ),
+                        calendar_button(
+                            display_data=display_data,
+                            text_color=AppColor.BLUE,
+                            background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                            disable=True,
+                        ),
+                    ),
+                ),
+                rx.cond(
+                    JoinState.holiday_data[display_data[0]] == "prev",
+                    calendar_button(
+                        display_data=display_data,
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        disable=True,
+                    ),
+                    rx.cond(
+                        display_data[1],
+                        calendar_button(
+                            display_data=display_data,
+                            background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                            disable=True,
+                            text_color=AppColor.WHITE,
+                        ),
+                        calendar_button(
+                            display_data=display_data,
+                            background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                            disable=True,
+                        ),
+                    ),
+                ),
+            ),
+        ),
+        rx.cond(
+            JoinState.holiday_data[display_data[0]] == "sun",
+            rx.cond(
+                JoinState.holiday_data[display_data[0]] == "prev",
+                calendar_button(
+                    display_data=display_data,
+                    text_color=AppColor.RED,
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disable=True,
+                ),
+                rx.cond(
+                    display_data[1],
+                    calendar_button(
+                        display_data=display_data,
+                        text_color=AppColor.RED,
+                        background_color=AppColor.SKY_BLUE,
+                    ),
+                    calendar_button(
+                        display_data=display_data,
+                        text_color=AppColor.RED,
+                        background_color=AppColor.WHITE,
+                    ),
+                ),
+            ),
+            rx.cond(
+                JoinState.holiday_data[display_data[0]] == "sat",
+                rx.cond(
+                    JoinState.holiday_data[display_data[0]] == "prev",
+                    calendar_button(
+                        display_data=display_data,
+                        text_color=AppColor.BLUE,
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        disable=True,
+                    ),
+                    rx.cond(
+                        display_data[1],
+                        calendar_button(
+                            display_data=display_data,
+                            text_color=AppColor.BLUE,
+                            background_color=AppColor.SKY_BLUE,
+                        ),
+                        calendar_button(
+                            display_data=display_data,
+                            text_color=AppColor.BLUE,
+                            background_color=AppColor.WHITE,
+                        ),
+                    ),
+                ),
+                rx.cond(
+                    JoinState.holiday_data[display_data[0]] == "prev",
+                    calendar_button(
+                        display_data=display_data,
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        disable=True,
+                    ),
+                    rx.cond(
+                        display_data[1],
+                        calendar_button(
+                            display_data=display_data,
+                            background_color=AppColor.SKY_BLUE,
+                            text_color=AppColor.WHITE,
+                        ),
+                        calendar_button(
+                            display_data=display_data,
+                            background_color=AppColor.WHITE,
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    )
+
+
 def join_meeting_date() -> rx.Component:
-    from gatherplan_client.make_meeting.make_meeting_date import location_button
 
     return rx.vstack(
         header("약속 참여하기", "/"),
@@ -26,21 +195,21 @@ def join_meeting_date() -> rx.Component:
                 rx.center(
                     rx.button(
                         rx.icon(tag="chevron-left"),
-                        on_click=MakeMeetingNameState.month_decrement,
+                        on_click=JoinState.month_decrement,
                         width="48px",
                         height="40px",
                         color=AppColor.BLACK,
                         background_color=AppColor.WHITE,
                     ),
                     rx.center(
-                        MakeMeetingNameState.setting_time_display,
+                        JoinState.setting_time_display,
                         width="100px",
                         height="40px",
                         align="center",
                     ),
                     rx.button(
                         rx.icon(tag="chevron-right"),
-                        on_click=MakeMeetingNameState.month_increment,
+                        on_click=JoinState.month_increment,
                         width="48px",
                         height="40px",
                         color=AppColor.BLACK,
@@ -64,7 +233,7 @@ def join_meeting_date() -> rx.Component:
                         rx.center("금", width="50px"),
                         rx.center("토", color=AppColor.BLUE, width="50px"),
                         rx.foreach(
-                            MakeMeetingNameState.display_data,
+                            JoinState.display_data,
                             location_button,
                         ),
                         columns="7",
@@ -83,7 +252,7 @@ def join_meeting_date() -> rx.Component:
                         color=AppColor.WHITE,
                         type="submit",
                         background_color=AppColor.MAIN_BACKGROUND,
-                        on_click=rx.redirect("/make_meeting_time"),
+                        on_click=rx.redirect("/join_meeting_time"),
                     ),
                     width="100%",
                 ),

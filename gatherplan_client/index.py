@@ -4,7 +4,7 @@ from gatherplan_client.reflex_assets.buttons import index_button
 from gatherplan_client.reflex_assets.schema import AppColor
 from gatherplan_client.reflex_assets.text_box import left_align_text_box
 from gatherplan_client.reflex_assets.buffer_box import buffer_box
-from gatherplan_client.reflex_assets.header import header, main_header
+from gatherplan_client.reflex_assets.header import main_header
 
 
 class State(rx.State):

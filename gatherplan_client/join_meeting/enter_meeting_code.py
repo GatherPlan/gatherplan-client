@@ -3,7 +3,6 @@ import reflex as rx
 from gatherplan_client.join_meeting.join_state import JoinState
 from gatherplan_client.make_meeting.make_meeting_state import MakeMeetingNameState
 from gatherplan_client.reflex_assets.buttons import basic_button
-from gatherplan_client.reflex_assets.form_box import form_box, form_box_with_value
 from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import TextSize, AppFontFamily
 from gatherplan_client.reflex_assets.text_box import left_align_text_box

@@ -4,7 +4,6 @@ from gatherplan_client.reflex_assets.buffer_box import buffer_box
 from gatherplan_client.reflex_assets.buttons import (
     basic_button,
     small_button,
-    second_basic_button,
 )
 from gatherplan_client.reflex_assets.form_box import form_box
 from gatherplan_client.reflex_assets.text_box import center_align_text_box
