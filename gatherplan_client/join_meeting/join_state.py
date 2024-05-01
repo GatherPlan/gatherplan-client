@@ -15,8 +15,13 @@ class JoinState(rx.State):
     meeting_location: str = ""
     select_location_detail_location: str = ""
     meeting_date: List[str] = ["2024-5-3", "2024-5-12"]
-    meeting_time: List[str] = []
+    meeting_time: List[str] = ["오전", "오후"]
     host_name: str = ""
+
+    joiner_set_meeting_time: Dict[str, str] = {
+        "2024-5-3": ["오전", "오후"],
+        "2024-5-12": ["오전", "오후"],
+    }
 
     # TODO: meeting state랑 같은 함수를 공유할 수는 없을까?
     # CalendarSelect Data
@@ -37,11 +42,13 @@ class JoinState(rx.State):
         if self.display_data[click_data]:
             self.select_data.remove(click_data)
             self.display_data[click_data] = False
+            self.joiner_set_meeting_time.pop(click_data)
         else:
             self.select_data.append(click_data)
             self.display_data[click_data] = True
+            self.joiner_set_meeting_time[click_data] = self.meeting_time
 
-        print(self.select_data)
+        print(self.joiner_set_meeting_time)
 
     def month_decrement(self):
         self.setting_time = self.setting_time - relativedelta(months=1)
