@@ -39,7 +39,7 @@ def join_meeting_time() -> rx.Component:
                             font_size=TextSize.SMALL,
                             font_weight="700",
                         ),
-                        spacing=0,
+                        spacing="0",
                     ),
                     rx.box(
                         rx.foreach(
