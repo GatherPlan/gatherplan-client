@@ -84,7 +84,7 @@ jobs:
       with:
         address: "argocd.gatherplan.site"
         token: ${{ secrets.ARGOCD_TOKEN }}
-        insecure: false
+        insecure: true
         appName: "gatherplan-client-front"
 
 #      TODO: secure option
