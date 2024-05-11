@@ -77,4 +77,12 @@ jobs:
         createPR: false
         message: 'Update Image Version to ${{ steps.meta.outputs.github_sha }}'
         token: ${{ secrets.PPI_GITHUB_TOKEN }}
-#        workDir: gatherplan-client-front
+
+    - uses: actions/checkout@v2
+    - name: Sync ArgoCD Application
+      uses: omegion/argocd-actions@v1
+      with:
+        address: "argocd.gatherplan.site"
+        token: ${{ secrets.ARGOCD_TOKEN }}
+        action: sync
+        appName: "gatherplan-client-front"
