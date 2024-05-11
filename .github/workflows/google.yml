@@ -75,6 +75,6 @@ jobs:
         branch: main
         targetBranch: main
         createPR: false
-        message: 'Update Image Version to ${{ env.IMG_TAG }}'
+        message: 'Update Image Version to ${{ steps.meta.outputs.github_sha }}'
         token: ${{ secrets.PPI_GITHUB_TOKEN }}
 #        workDir: gatherplan-client-front
