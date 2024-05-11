@@ -9,6 +9,7 @@ env:
   GAR_LOCATION: us-east1 # TODO: update region of the Artifact Registry
   REPOSITORY: gatherplan # TODO: update to Artifact Registry docker repository
   IMAGE: gatherplan-client
+  IMG_TAG: v${GITHUB_SHA::7}
 
 jobs:
   setup-build-publish-deploy:
@@ -42,14 +43,14 @@ jobs:
     - name: Build
       run: |-
         docker build \
-          --tag "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA" \
+          --tag "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:${{ env.IMG_TAG }}" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
           .
     # Push the Docker image to Google Artifact Registry
     - name: Publish
       run: |-
-        docker push "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA"
+        docker push "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:${{ env.IMG_TAG }}"
 
 
     - name: Checkout Target Repository
@@ -64,11 +65,11 @@ jobs:
       with:
         valueFile: gatherplan-client-front/values-overriding.yaml
         propertyPath: 'image.tag'
-        value: $GITHUB_SHA
+        value: ${{ env.IMG_TAG }}
         repository: ppippi-dev/helm-chart
         branch: main
         targetBranch: main
         createPR: false
-        message: 'Update Image Version to $GITHUB_SHA'
+        message: 'Update Image Version to ${{ env.IMG_TAG }}'
         token: ${{ secrets.PPI_GITHUB_TOKEN }}
 #        workDir: gatherplan-client-front
