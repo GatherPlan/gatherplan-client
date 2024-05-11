@@ -62,7 +62,7 @@ jobs:
     - name: Update Image Version in the related HelmChart values.yaml
       uses: fjogeleit/yaml-update-action@main
       with:
-        valueFile: 'gatherplan-client-front/values-overriding.yaml'
+        valueFile: 'values-overriding.yaml'
         propertyPath: 'image.tag'
         value: $GITHUB_SHA
         repository: ppippi-dev/helm-chart
@@ -71,4 +71,4 @@ jobs:
         createPR: false
         message: 'Update Image Version to $GITHUB_SHA'
         token: ${{ secrets.PPI_GITHUB_TOKEN }}
-        workDir: gatherplan-helm-front
+        workDir: gatherplan-client-front
