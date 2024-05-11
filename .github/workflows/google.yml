@@ -60,12 +60,17 @@ jobs:
 #        path: gatherplan-client-front
         token: ${{ secrets.PPI_GITHUB_TOKEN }}
 
+    - name: Create GITHUB_SHA_SHORT
+      id: meta
+      run: |
+        echo "github_sha=${{ env.IMG_TAG }}" >> $GITHUB_OUTPUT
+
     - name: Update Image Version in the related HelmChart values.yaml
       uses: fjogeleit/yaml-update-action@main
       with:
         valueFile: gatherplan-client-front/values-overriding.yaml
         propertyPath: 'image.tag'
-        value: ${{ env.IMG_TAG }}
+        value: ${{ steps.meta.outputs.github_sha }}
         repository: ppippi-dev/helm-chart
         branch: main
         targetBranch: main
