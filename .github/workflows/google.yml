@@ -50,3 +50,25 @@ jobs:
     - name: Publish
       run: |-
         docker push "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA"
+
+
+    - name: Checkout Target Repository
+      uses: actions/checkout@v3
+      with:
+        repository: ppippi-dev/helm-chart
+        path: gatherplan-helm-front
+        token: ${{ secrets.PPI_GITHUB_TOKEN }}
+
+    - name: Update Image Version in the related HelmChart values.yaml
+      uses: fjogeleit/yaml-update-action@main
+      with:
+        valueFile: 'helm-chart/gatherplan-clinet-front/values-overriding.yaml'
+        propertyPath: 'image.tag'
+        value: $GITHUB_SHA
+        repository: gatherplan-helm-front
+        branch: deployment/$GITHUB_SHA
+        targetBranch: main
+        createPR: false
+        message: 'Update Image Version to $GITHUB_SHA'
+        token: ${{ secrets.PPI_GITHUB_TOKEN }}
+        workDir: gatherplan-helm-front
