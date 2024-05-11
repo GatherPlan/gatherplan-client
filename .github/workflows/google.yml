@@ -80,9 +80,17 @@ jobs:
 
     - uses: actions/checkout@v2
     - name: Sync ArgoCD Application
-      uses: omegion/argocd-actions@v1
+      uses: safe2008/argocd-app-actions@main
       with:
         address: "argocd.gatherplan.site"
         token: ${{ secrets.ARGOCD_TOKEN }}
-        action: sync
+        insecure: false
         appName: "gatherplan-client-front"
+
+#      TODO: secure option
+#      uses: omegion/argocd-actions@v1
+#      with:
+#        address: "argocd.gatherplan.site"
+#        token: ${{ secrets.ARGOCD_TOKEN }}
+#        action: sync
+#        appName: "gatherplan-client-front"
