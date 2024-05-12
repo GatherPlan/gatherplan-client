@@ -53,16 +53,18 @@ jobs:
         docker push "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:${{ env.IMG_TAG }}"
 
 
-    - name: Checkout Target Repository
-      uses: actions/checkout@v3
-      with:
-        repository: ppippi-dev/helm-chart
-        token: ${{ secrets.PPI_GITHUB_TOKEN }}
+
 
     - name: Create GITHUB_SHA_SHORT
       id: meta
       run: |
         echo "github_sha=${{ env.IMG_TAG }}" >> $GITHUB_OUTPUT
+
+    - name: Checkout Target Repository - for front
+      uses: actions/checkout@v3
+      with:
+        repository: ppippi-dev/helm-chart
+        token: ${{ secrets.PPI_GITHUB_TOKEN }}
 
     - name: Update Image Version in the related HelmChart values.yaml - front
       uses: fjogeleit/yaml-update-action@main
@@ -86,6 +88,12 @@ jobs:
         action: sync
         appName: "gatherplan-client-front"
 
+
+    - name: Checkout Target Repository - for back
+      uses: actions/checkout@v3
+      with:
+        repository: ppippi-dev/helm-chart
+        token: ${{ secrets.PPI_GITHUB_TOKEN }}
 
     - name: Update Image Version in the related HelmChart values.yaml - back
       uses: fjogeleit/yaml-update-action@main
