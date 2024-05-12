@@ -52,9 +52,6 @@ jobs:
       run: |-
         docker push "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:${{ env.IMG_TAG }}"
 
-
-
-
     - name: Create GITHUB_SHA_SHORT
       id: meta
       run: |
@@ -87,7 +84,6 @@ jobs:
         token: ${{ secrets.ARGOCD_TOKEN }}
         action: sync
         appName: "gatherplan-client-front"
-
 
     - name: Checkout Target Repository - for back
       uses: actions/checkout@v3
