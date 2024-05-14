@@ -9,7 +9,8 @@ env:
   GAR_LOCATION: us-east1 # TODO: update region of the Artifact Registry
   REPOSITORY: gatherplan # TODO: update to Artifact Registry docker repository
   IMAGE: gatherplan-client
-  IMG_TAG: v${GITHUB_SHA::7}
+  IMG_TAG: latest
+#  IMG_TAG: v${GITHUB_SHA::7}
 
 jobs:
   setup-build-publish-deploy:
