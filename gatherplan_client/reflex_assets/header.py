@@ -21,19 +21,22 @@ def header(main_text: str, back_button_url: str):
         rx.box(
             rx.hstack(
                 rx.button(
-                    rx.icon(tag="chevron-left"),
+                    rx.icon(
+                        tag="chevron-left",
+                        size=24,
+                        # color=AppColor.MAIN_COLOR,
+                        stroke_width=3,
+                    ),
                     color=AppColor.BLACK,
                     background_color=AppColor.WHITE,
                     on_click=rx.redirect(back_button_url),
+                    padding="0px",
                 ),
-                rx.text(
-                    main_text,
-                    color=AppColor.BLACK,
-                    font_size=TextSize.SMALL_MEDIUM,
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    height="40px",
-                    font_weight="600",
-                    background_color=AppColor.WHITE,
+                rx.image(
+                    src="/images/index_logo.png",
+                    width="140px",
+                    height="30px",
+                    padding_top="2px",
                 ),
                 spacing="0",
             ),

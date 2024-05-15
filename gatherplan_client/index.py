@@ -2,8 +2,6 @@ import reflex as rx
 
 from gatherplan_client.reflex_assets.buttons import index_button
 from gatherplan_client.reflex_assets.schema import AppColor, TextSize, AppFontFamily
-from gatherplan_client.reflex_assets.text_box import left_align_text_box
-from gatherplan_client.reflex_assets.buffer_box import buffer_box
 
 
 class State(rx.State):
@@ -75,9 +73,14 @@ def index() -> rx.Component:
                     color=AppColor.BLACK,
                     padding_left="10px",
                 ),
-                align="left",
+                width="360px",
             ),
-            rx.video(url="https://youtu.be/yLupcG_eFag", width="330px", height="185px"),
+            rx.video(
+                url="https://youtu.be/yLupcG_eFag",
+                width="330px",
+                height="185px",
+                align="center",
+            ),
             width="100%",
             height="35%",
             align="center",

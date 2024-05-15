@@ -42,6 +42,7 @@ class MakeMeetingNameState(rx.State):
 
     def handle_submit(self, form_data: dict):
         """Handle the form submit."""
+        print(form_data)
         self.form_data = form_data
         self.meeting_name = form_data.get("meeting_name")
         return rx.redirect("/make_meeting_detail")
