@@ -1,10 +1,9 @@
 import reflex as rx
 
 from gatherplan_client.reflex_assets.buttons import index_button
-from gatherplan_client.reflex_assets.schema import AppColor
+from gatherplan_client.reflex_assets.schema import AppColor, TextSize, AppFontFamily
 from gatherplan_client.reflex_assets.text_box import left_align_text_box
 from gatherplan_client.reflex_assets.buffer_box import buffer_box
-from gatherplan_client.reflex_assets.header import main_header
 
 
 class State(rx.State):
@@ -13,13 +12,57 @@ class State(rx.State):
 
 def index() -> rx.Component:
     return rx.vstack(
-        main_header("Gather Plan"),
-        buffer_box("5%"),
-        left_align_text_box(
-            "새로운 모임을 계획해보세요",
-            "서로 가능한 날짜를 선택하여 모임 날짜를 조정해보세요",
+        rx.vstack(
+            rx.image(
+                src="/images/index_logo.png",
+                width="280px",
+                height="50px",
+                margin_top="15px",
+                margin_bottom="15px",
+            ),
+            width="100%",
+            height="15%",
+            align="center",
         ),
         rx.vstack(
+            rx.box(
+                rx.text(
+                    "이런 모임은 어떠세요?",
+                    font_size=TextSize.TINY_SMALL,
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    font_weight="700",
+                    color=AppColor.BLACK,
+                    padding_left="10px",
+                ),
+                align="left",
+            ),
+            rx.video(url="https://youtu.be/yLupcG_eFag", width="330px", height="185px"),
+            width="100%",
+            height="35%",
+            align="center",
+        ),
+        rx.vstack(
+            rx.box(
+                rx.vstack(
+                    rx.text(
+                        "새로운 모임을 계획해보세요",
+                        font_size=TextSize.TINY_SMALL,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                        padding_left="10px",
+                    ),
+                    rx.text(
+                        "서로 가능한 날짜를 선택하여 모임 날짜를 조정해보세요",
+                        font_size=TextSize.TINY,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        color=AppColor.GRAY_TEXT,
+                        font_weight="700",
+                        padding_left="10px",
+                    ),
+                ),
+                width="360px",
+            ),
             index_button(
                 main_text="만들기",
                 sub_text="새로운 약속을 생성해보세요",
