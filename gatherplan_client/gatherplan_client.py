@@ -14,6 +14,10 @@ from .make_meeting.make_meeting_date import make_meeting_date
 from .make_meeting.make_meeting_detail import make_meeting_detail
 
 
+def health_check() -> rx.Component:
+    return rx.box("pong")
+
+
 app = rx.App(stylesheets=["fonts/myfont.css"], title="GatherPlan")
 app.add_page(index, route="/")
 app.add_page(sign_up, route="/sign_up")
@@ -28,3 +32,4 @@ app.add_page(join_meeting, route="/join_meeting")
 app.add_page(not_member_login, route="/not_member_login")
 app.add_page(join_meeting_date, route="/join_meeting_date")
 app.add_page(join_meeting_time, route="/join_meeting_time")
+app.add_page(health_check, route="/ping")
