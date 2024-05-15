@@ -9,8 +9,8 @@ def left_align_text_box(
     main_text: str,
     sub_text: str,
     height: str = "20%",
-    main_font_size: TextSize = TextSize.MEDIUM,
-    sub_font_size: TextSize = TextSize.SMALL,
+    main_font_size: TextSize = TextSize.SMALL_MEDIUM,
+    sub_font_size: TextSize = TextSize.TINY_SMALL,
 ):
     return rx.vstack(
         rx.box(
