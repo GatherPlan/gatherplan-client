@@ -5,6 +5,7 @@ from enum import Enum
 @dataclass
 class AppColor(str, Enum):
     MAIN_BACKGROUND: str = "#3A7DFF"
+    MAIN_COLOR: str = "#4E5CDC"
     GRAY_TEXT: str = "#797979"
     LIGHT_GRAY_TEXT: str = "#D1D1D1"
     BACKGROUND_COLOR: str = "#FAFAFA"

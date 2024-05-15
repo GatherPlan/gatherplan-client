@@ -40,7 +40,7 @@ def basic_button(button_text: str = "", type: str = "submit"):
         padding="20px",
         color=AppColor.WHITE,
         type=type,
-        background_color=AppColor.MAIN_BACKGROUND,
+        background_color=AppColor.MAIN_COLOR,
     )
 
 

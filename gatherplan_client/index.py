@@ -15,8 +15,8 @@ def index() -> rx.Component:
         rx.vstack(
             rx.image(
                 src="/images/index_logo.png",
-                width="280px",
-                height="50px",
+                width="300px",
+                height="60px",
                 margin_top="15px",
                 margin_bottom="15px",
             ),
