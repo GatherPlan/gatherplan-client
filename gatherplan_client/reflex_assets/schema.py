@@ -19,7 +19,7 @@ class AppColor(str, Enum):
 @dataclass
 class AppFontFamily(str, Enum):
     JALNAN_GOTHIC: str = "JalnanGothic"
-    DEFAULT_FONT: str = "Pretendard-Regular"
+    DEFAULT_FONT: str = "Pretendard"
 
 
 @dataclass

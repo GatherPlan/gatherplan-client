@@ -26,23 +26,6 @@ def index() -> rx.Component:
         ),
         rx.vstack(
             rx.box(
-                rx.text(
-                    "이런 모임은 어떠세요?",
-                    font_size=TextSize.TINY_SMALL,
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    color=AppColor.BLACK,
-                    padding_left="10px",
-                ),
-                align="left",
-            ),
-            rx.video(url="https://youtu.be/yLupcG_eFag", width="330px", height="185px"),
-            width="100%",
-            height="35%",
-            align="center",
-        ),
-        rx.vstack(
-            rx.box(
                 rx.vstack(
                     rx.text(
                         "새로운 모임을 계획해보세요",
@@ -80,6 +63,23 @@ def index() -> rx.Component:
             ),
             width="100%",
             height="50%",
+            align="center",
+        ),
+        rx.vstack(
+            rx.box(
+                rx.text(
+                    "이런 모임은 어떠세요?",
+                    font_size=TextSize.TINY_SMALL,
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    font_weight="700",
+                    color=AppColor.BLACK,
+                    padding_left="10px",
+                ),
+                align="left",
+            ),
+            rx.video(url="https://youtu.be/yLupcG_eFag", width="330px", height="185px"),
+            width="100%",
+            height="35%",
             align="center",
         ),
         spacing="0",
