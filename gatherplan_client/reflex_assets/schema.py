@@ -14,7 +14,8 @@ class AppColor(str, Enum):
     BLACK: str = "#000000"
     RED: str = "#FF0000"
     BLUE: str = "#0000FF"
-    SKY_BLUE: str = "0085FF"
+    SKY_BLUE: str = "#0085FF"
+    SUB_TEXT: str = "#D9D9D9"
 
 
 @dataclass

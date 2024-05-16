@@ -5,7 +5,7 @@ from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.reflex_assets.buttons import basic_button
 from gatherplan_client.reflex_assets.form_box import form_box
 from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import TextSize
+from gatherplan_client.reflex_assets.schema import TextSize, AppFontFamily, AppColor
 from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 
@@ -29,33 +29,76 @@ def location_button(button_text: str):
 def make_meeting_detail() -> rx.Component:
     return rx.vstack(
         header("약속만들기", "/make_meeting"),
-        left_align_text_box(
-            "약속 장소를 정해주세요",
-            "행정구역 또는 구체적인 장소를 입력해주세요",
-            main_font_size=TextSize.TINY_SMALL,
-            sub_font_size=TextSize.TINY,
-        ),
         rx.center(
-            rx.vstack(
-                rx.form(
-                    rx.hstack(
-                        form_box(
-                            explain_text="약속장소",
-                            placeholder_text="약속장소를 입력해주세요",
-                            form_value="location",
+            rx.text(
+                "약속 만들기",
+                font_size="20px",
+                padding_top="28px",
+                padding_bottom="40px",
+                padding_left="10px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                width="360px",
+            ),
+            width="100%",
+            height="15%",
+        ),
+        rx.form(
+            rx.center(
+                rx.vstack(
+                    rx.text(
+                        "약속 장소",
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        padding_left="10px",
+                        color=AppColor.BLACK,
+                        width="360px",
+                    ),
+                    rx.text(
+                        "행정구역 또는 장소 이름으로 검색합니다.",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        color=AppColor.GRAY_TEXT,
+                        font_weight="700",
+                        padding_left="10px",
+                        padding_bottom="5px",
+                        width="360px",
+                    ),
+                    align="center",
+                    width="100%",
+                ),
+            ),
+            rx.center(
+                rx.hstack(
+                    rx.box(
+                        rx.input(
+                            placeholder="약속장소를 입력해주세요",
+                            name="location",
+                            font_size="10px",
+                            height="35px",
+                            border_radius="35px",
+                            type="text",
                         ),
-                        rx.drawer.root(
-                            rx.drawer.trigger(
-                                rx.button(
-                                    "검색",
-                                    type="button",
-                                    height="48px",
-                                    margin_top="15px",
-                                )
-                            ),
-                            rx.drawer.overlay(z_index="5"),
-                            rx.drawer.portal(
-                                rx.drawer.content(
+                        padding_bottom="20px",
+                        padding_left="10px",
+                        width="300px",
+                    ),
+                    rx.drawer.root(
+                        rx.drawer.trigger(
+                            rx.button(
+                                "검색",
+                                type="button",
+                                height="35px",
+                                width="50px",
+                                background_color=AppColor.MAIN_COLOR,
+                                font_size="12px",
+                            )
+                        ),
+                        rx.drawer.overlay(z_index="5"),
+                        rx.drawer.portal(
+                            rx.drawer.content(
+                                rx.center(
                                     rx.tabs.root(
                                         rx.tabs.list(
                                             rx.tabs.trigger(
@@ -77,43 +120,99 @@ def make_meeting_detail() -> rx.Component:
                                             value="tab1",
                                         ),
                                         rx.tabs.content(
-                                            rx.text("item on tab 2"),
+                                            rx.grid(
+                                                rx.foreach(
+                                                    MakeMeetingNameState.search_location,
+                                                    location_button,
+                                                ),
+                                                columns="1",
+                                            ),
                                             value="tab2",
                                         ),
                                         default_value="tab1",
                                         width="360px",
-                                        align="center",
+                                        height="100%",
                                     ),
-                                    align="center",
-                                    top="auto",
-                                    right="auto",
-                                    height="60%",
                                     width="100%",
-                                    padding="2em",
-                                    background_color="#FFF",
-                                    border_radius="2em 2em 0 0",
-                                )
-                            ),
-                            direction="bottom",
+                                ),
+                                align="center",
+                                top="auto",
+                                right="auto",
+                                height="60%",
+                                width="100%",
+                                padding="2em",
+                                background_color="#FFF",
+                                border_radius="2em 2em 0 0",
+                            )
                         ),
+                        direction="bottom",
                     ),
-                    rx.cond(
-                        MakeMeetingNameState.select_location == "",
-                        rx.text(""),
-                        left_align_text_box(
-                            MakeMeetingNameState.select_location,
-                            "선택한 장소를 확인하고, 다음 단계로 이동하세요",
-                            main_font_size=TextSize.TINY_SMALL,
-                            sub_font_size=TextSize.TINY,
-                        ),
-                    ),
-                    basic_button("다음"),
-                    on_submit=MakeMeetingNameState.handle_detail_submit,
-                    align="center",
-                    width="345px",
-                ),
+                    width="360px",
+                )
             ),
+            rx.center(
+                rx.cond(
+                    MakeMeetingNameState.select_location == "",
+                    rx.vstack(""),
+                    rx.vstack(
+                        rx.box(
+                            rx.vstack(
+                                rx.text(
+                                    "선택한 장소",
+                                    font_size="12px",
+                                    font_family=AppFontFamily.DEFAULT_FONT,
+                                    font_weight="700",
+                                    color=AppColor.SUB_TEXT,
+                                    padding_left="10px",
+                                ),
+                                rx.hstack(
+                                    rx.text(
+                                        MakeMeetingNameState.select_location,
+                                        font_size="14px",
+                                        font_family=AppFontFamily.DEFAULT_FONT,
+                                        font_weight="700",
+                                        color=AppColor.BLACK,
+                                        padding_left="10px",
+                                        width="280px",
+                                    ),
+                                    rx.text(
+                                        "행정구역",
+                                        font_size="12px",
+                                        font_family=AppFontFamily.DEFAULT_FONT,
+                                        font_weight="700",
+                                        color="#6D6D6D",
+                                        padding_left="10px",
+                                        padding_top="2px",
+                                        width="80",
+                                    ),
+                                ),
+                            ),
+                            width="360px",
+                        ),
+                        width="100%",
+                        align="center",
+                        padding_top="20px",
+                    ),
+                ),
+                width="100%",
+            ),
+            rx.box(width="100%", height="50%"),
+            rx.center(
+                rx.button(
+                    "다음",
+                    width="348px",
+                    height="35px",
+                    padding_left="10px",
+                    color=AppColor.WHITE,
+                    type="submit",
+                    background_color=AppColor.MAIN_COLOR,
+                ),
+                width="100%",
+            ),
+            on_submit=MakeMeetingNameState.handle_detail_submit,
             width="100%",
+            align="center",
+            height="70%",
         ),
         spacing="0",
         height="100vh",

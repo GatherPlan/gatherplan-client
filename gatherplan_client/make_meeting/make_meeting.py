@@ -104,7 +104,7 @@ def make_meeting() -> rx.Component:
                 rx.button(
                     "다음",
                     width="348px",
-                    height="48px",
+                    height="35px",
                     padding_left="10px",
                     color=AppColor.WHITE,
                     type="submit",
