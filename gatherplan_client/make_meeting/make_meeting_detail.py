@@ -2,11 +2,8 @@ import reflex as rx
 
 from gatherplan_client.login import need_login
 from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
-from gatherplan_client.reflex_assets.buttons import basic_button
-from gatherplan_client.reflex_assets.form_box import form_box
 from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import TextSize, AppFontFamily, AppColor
-from gatherplan_client.reflex_assets.text_box import left_align_text_box
+from gatherplan_client.reflex_assets.schema import AppFontFamily, AppColor
 
 
 def location_button(button_text: str):
