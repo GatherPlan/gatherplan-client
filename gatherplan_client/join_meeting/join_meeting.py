@@ -21,7 +21,7 @@ def join_login(func):
 @join_login
 def join_meeting() -> rx.Component:
     return rx.vstack(
-        header("약속 참여하기", "/enter_meeting_code"),
+        header("/enter_meeting_code"),
         left_align_text_box(
             "참여하려는 약속 정보를 확인해주세요",
             "약속 정보 수정은 현황보기에서 진행할 수 있습니다.",
@@ -95,7 +95,7 @@ def join_meeting() -> rx.Component:
 
 def join_meeting_not_logined() -> rx.Component:
     return rx.vstack(
-        header("약속 참여하기", "/enter_meeting_code"),
+        header("/enter_meeting_code"),
         left_align_text_box(
             "참여하려는 약속 정보를 확인해주세요",
             "약속 정보 수정은 현황보기에서 진행할 수 있습니다.",

@@ -16,6 +16,7 @@ class MakeMeetingNameState(rx.State):
     # TODO: default value init
     form_data: dict = {}
     meeting_name: str = "세 얼간이 점심약속"
+    meeting_memo: str = "점심이나 먹죵"
     input_location: str = ""
     search_location: List[str] = ["성수동1", "성수동2", "성수동3", "성수동4"]
     select_location: str = "서울숲카페거리"
@@ -42,9 +43,9 @@ class MakeMeetingNameState(rx.State):
 
     def handle_submit(self, form_data: dict):
         """Handle the form submit."""
-        print(form_data)
         self.form_data = form_data
         self.meeting_name = form_data.get("meeting_name")
+        self.meeting_memo = form_data.get("meeting_memo")
         return rx.redirect("/make_meeting_detail")
 
     def handle_detail_submit(self, form_data: dict):

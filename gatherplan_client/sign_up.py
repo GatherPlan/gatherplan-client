@@ -13,7 +13,7 @@ from gatherplan_client.reflex_assets.header import header
 def sign_up() -> rx.Component:
 
     return rx.vstack(
-        header("로그인하기", "/login"),
+        header("/login"),
         buffer_box("8%"),
         center_align_text_box(
             main_text="회원가입", sub_text="게더플랜에서 모임의 약속을 잡아보세요"

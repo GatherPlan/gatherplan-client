@@ -14,7 +14,7 @@ from gatherplan_client.reflex_assets.text_box import center_align_text_box
 def not_member_login() -> rx.Component:
 
     return rx.vstack(
-        header("임시 회원가입", "/"),
+        header("/"),
         buffer_box("8%"),
         center_align_text_box(
             main_text="회원 정보를 입력해주세요",

@@ -2,58 +2,124 @@ import reflex as rx
 
 from gatherplan_client.login import need_login
 from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
-from gatherplan_client.reflex_assets.buffer_box import buffer_box
 from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import TextSize, AppColor
-from gatherplan_client.reflex_assets.text_box import (
-    left_align_text_box,
-    check_meeting_box,
-    check_meeting_box_for_each,
-)
+from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
 
 
 @need_login
 def make_meeting_check() -> rx.Component:
+    from gatherplan_client.reflex_assets.text_box import text_for_each
+
     return rx.vstack(
-        header("약속만들기", "/make_meeting_time"),
-        left_align_text_box(
-            "약속 정보를 확인해주세요",
-            "약속 정보 수정은 현황보기에서 진행할 수 있습니다.",
-            main_font_size=TextSize.TINY_SMALL,
-            sub_font_size=TextSize.TINY,
-            height="15%",
+        header("/make_meeting_date"),
+        rx.center(
+            rx.vstack(
+                rx.text(
+                    "선택한 약속 정보를 확인해주세요",
+                    font_size="18px",
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    font_weight="700",
+                    color=AppColor.BLACK,
+                    align="center",
+                    width="360px",
+                ),
+                rx.text(
+                    "약속 정보 변경은 약속 현황보기에서 가능합니다.",
+                    font_size="12px",
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    color=AppColor.GRAY_TEXT,
+                    font_weight="700",
+                    align="center",
+                    width="360px",
+                ),
+            ),
+            width="100%",
+            height="20%",
         ),
         rx.center(
-            rx.scroll_area(
-                rx.center(
-                    check_meeting_box("약속이름", MakeMeetingNameState.meeting_name),
-                    check_meeting_box(
-                        "약속장소",
-                        MakeMeetingNameState.select_location,
-                        MakeMeetingNameState.select_location_detail_location,
+            rx.vstack(
+                rx.box(
+                    rx.text(
+                        "약속이름",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
                     ),
-                    check_meeting_box_for_each(
-                        "약속날짜",
-                        MakeMeetingNameState.select_data,
+                    rx.text(
+                        MakeMeetingNameState.meeting_name,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
                     ),
-                    check_meeting_box_for_each(
-                        "약속 후보 시간",
-                        MakeMeetingNameState.select_time,
-                    ),
-                    direction="column",
-                    spacing="3",
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
                 ),
-                type="scroll",
-                scrollbars="vertical",
-                style={
-                    "width": "360px",
-                    "padding": "10px",
-                },
+                rx.box(
+                    rx.text(
+                        "약속장소",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        MakeMeetingNameState.select_location,
+                        # MakeMeetingNameState.select_location_detail_location,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.text(
+                        "약속 후보 날짜",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.box(
+                        # TODO: string formating 수정 필요
+                        rx.hstack(
+                            rx.foreach(MakeMeetingNameState.select_data, text_for_each),
+                            width="360px",
+                        )
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.text(
+                        "공지사항",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        MakeMeetingNameState.meeting_memo,
+                        # MakeMeetingNameState.select_location_detail_location,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
             ),
             width="100%",
             height="60%",
         ),
-        buffer_box("5%"),
         rx.center(
             rx.button(
                 "약속 만들기",

@@ -133,7 +133,7 @@ def location_button(display_data: List):
 @need_login
 def make_meeting_date() -> rx.Component:
     return rx.vstack(
-        header("약속만들기", "/make_meeting_detail"),
+        header("/make_meeting_detail"),
         rx.center(
             rx.text(
                 "약속 만들기",

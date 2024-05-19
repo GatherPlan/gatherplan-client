@@ -183,7 +183,7 @@ def location_button(display_data: List):
 def join_meeting_date() -> rx.Component:
 
     return rx.vstack(
-        header("약속 참여하기", "/join_meeting"),
+        header("/join_meeting"),
         left_align_text_box(
             "참여할 약속 날짜를 선택해주세요",
             "호스트가 설정한 약속 날짜 중에서 참여할 날짜를 선택합니다.",

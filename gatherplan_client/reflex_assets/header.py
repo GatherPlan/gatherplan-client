@@ -16,7 +16,7 @@ def main_header(main_text: str):
     )
 
 
-def header(main_text: str, back_button_url: str):
+def header(back_button_url: str):
     return rx.vstack(
         rx.box(
             rx.hstack(

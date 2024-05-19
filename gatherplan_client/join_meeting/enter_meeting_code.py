@@ -10,7 +10,7 @@ from gatherplan_client.reflex_assets.text_box import left_align_text_box
 
 def enter_meeting_code() -> rx.Component:
     return rx.vstack(
-        header("약속 참여하기", "/"),
+        header("/"),
         left_align_text_box(
             "약속 코드를 입력해주세요",
             "약속 코드는 20자리 영소문자입니다.",

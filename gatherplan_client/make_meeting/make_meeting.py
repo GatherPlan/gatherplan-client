@@ -9,7 +9,7 @@ from gatherplan_client.reflex_assets.schema import AppFontFamily, AppColor
 @need_login
 def make_meeting() -> rx.Component:
     return rx.vstack(
-        header("약속만들기", "/"),  # 5%
+        header("/"),  # 5%
         rx.center(
             rx.text(
                 "약속 만들기",

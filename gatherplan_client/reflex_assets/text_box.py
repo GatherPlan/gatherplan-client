@@ -139,19 +139,6 @@ def check_meeting_box_for_each(text1: str, text2: Any):
     )
 
 
-def text_for_each(text: str):
-    return rx.text(
-        text,
-        font_size=TextSize.SMALL,
-        font_family=AppFontFamily.DEFAULT_FONT,
-        color=AppColor.GRAY_TEXT,
-        font_weight="700",
-        padding_right="20px",
-        align="right",
-        width="230px",
-    )
-
-
 def check_meeting_box_with_clipboard(text1: str, text2: Any):
     return rx.box(
         rx.hstack(
@@ -189,4 +176,14 @@ def check_meeting_box_with_clipboard(text1: str, text2: Any):
         border_bottom="1px solid #E0E0E0",
         padding="5px",
         width="360px",
+    )
+
+
+def text_for_each(text: str):
+    return rx.text(
+        text,
+        font_size="14px",
+        font_family=AppFontFamily.DEFAULT_FONT,
+        color=AppColor.BLACK,
+        font_weight="700",
     )

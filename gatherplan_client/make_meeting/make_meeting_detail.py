@@ -25,7 +25,7 @@ def location_button(button_text: str):
 @need_login
 def make_meeting_detail() -> rx.Component:
     return rx.vstack(
-        header("약속만들기", "/make_meeting"),
+        header("/make_meeting"),
         rx.center(
             rx.text(
                 "약속 만들기",
