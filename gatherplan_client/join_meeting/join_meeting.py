@@ -3,11 +3,9 @@ import reflex as rx
 from gatherplan_client.join_meeting.join_state import JoinState
 from gatherplan_client.login import LoginState
 from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import TextSize, AppColor
+from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
 from gatherplan_client.reflex_assets.text_box import (
-    left_align_text_box,
-    check_meeting_box,
-    check_meeting_box_for_each,
+    text_for_each,
 )
 
 
@@ -22,63 +20,173 @@ def join_login(func):
 def join_meeting() -> rx.Component:
     return rx.vstack(
         header("/enter_meeting_code"),
-        left_align_text_box(
-            "참여하려는 약속 정보를 확인해주세요",
-            "약속 정보 수정은 현황보기에서 진행할 수 있습니다.",
-            main_font_size=TextSize.TINY_SMALL,
-            sub_font_size=TextSize.TINY,
+        rx.center(
+            rx.text(
+                "약속 정보",
+                font_size="20px",
+                padding_top="28px",
+                padding_bottom="40px",
+                padding_left="10px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                width="360px",
+            ),
+            width="100%",
             height="15%",
         ),
         rx.center(
-            rx.scroll_area(
-                rx.center(
-                    check_meeting_box("약속이름", JoinState.meeting_name),
-                    check_meeting_box(
-                        "약속장소",
-                        JoinState.meeting_location,
-                        JoinState.select_location_detail_location,
+            rx.vstack(
+                rx.box(
+                    rx.text(
+                        "약속이름",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
                     ),
-                    check_meeting_box_for_each(
-                        "약속날짜",
-                        JoinState.meeting_date,
+                    rx.text(
+                        JoinState.meeting_name,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
                     ),
-                    check_meeting_box_for_each(
-                        "약속 후보 시간",
-                        JoinState.meeting_time,
-                    ),
-                    check_meeting_box(
-                        "모임장",
-                        JoinState.host_name,
-                    ),
-                    direction="column",
-                    spacing="3",
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
                 ),
-                type="scroll",
-                scrollbars="vertical",
-                style={
-                    "width": "360px",
-                    "padding": "10px",
-                },
+                rx.box(
+                    rx.text(
+                        "약속장소",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        JoinState.meeting_location,
+                        # JoinState.select_location_detail_location,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.text(
+                        "약속 후보 날짜",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.box(
+                        # TODO: string formating 수정 필요
+                        rx.hstack(
+                            rx.foreach(JoinState.meeting_date, text_for_each),
+                            width="360px",
+                        )
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.text(
+                        "공지사항",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        JoinState.meeting_memo,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.text(
+                                "약속코드",
+                                font_size="12px",
+                                font_family=AppFontFamily.DEFAULT_FONT,
+                                font_weight="700",
+                                color=AppColor.GRAY_TEXT,
+                            ),
+                            rx.button(
+                                rx.icon("copy"),
+                                on_click=rx.set_clipboard(JoinState.meeting_code),
+                                width="12px",
+                                height="12px",
+                                padding="0",
+                                color=AppColor.GRAY_TEXT,
+                                background_color=AppColor.WHITE,
+                            ),
+                        ),
+                        rx.box(
+                            rx.text(
+                                JoinState.meeting_code,
+                                font_size="14px",
+                                font_family=AppFontFamily.DEFAULT_FONT,
+                                color=AppColor.BLACK,
+                                font_weight="700",
+                                width="170px",
+                            ),
+                        ),
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.text(
+                        "모임장",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        JoinState.host_name,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
             ),
             width="100%",
-            height="55%",
+            height="60%",
         ),
         rx.center(
             rx.vstack(
                 rx.button(
                     "로그인",
                     width="348px",
-                    height="48px",
+                    height="35px",
                     padding="20px",
                     color=AppColor.WHITE,
                     type="submit",
-                    background_color=AppColor.MAIN_BACKGROUND,
+                    background_color=AppColor.MAIN_COLOR,
                     on_click=rx.redirect("/login"),
                 ),
                 rx.button(
                     "비회원으로 시작하기",
                     width="348px",
-                    height="48px",
+                    height="35px",
                     padding="20px",
                     color=AppColor.BLACK,
                     type="submit",
@@ -96,57 +204,167 @@ def join_meeting() -> rx.Component:
 def join_meeting_not_logined() -> rx.Component:
     return rx.vstack(
         header("/enter_meeting_code"),
-        left_align_text_box(
-            "참여하려는 약속 정보를 확인해주세요",
-            "약속 정보 수정은 현황보기에서 진행할 수 있습니다.",
-            main_font_size=TextSize.TINY_SMALL,
-            sub_font_size=TextSize.TINY,
+        rx.center(
+            rx.text(
+                "약속 정보",
+                font_size="20px",
+                padding_top="28px",
+                padding_bottom="40px",
+                padding_left="10px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                width="360px",
+            ),
+            width="100%",
             height="15%",
         ),
         rx.center(
-            rx.scroll_area(
-                rx.center(
-                    check_meeting_box("약속이름", JoinState.meeting_name),
-                    check_meeting_box(
-                        "약속장소",
-                        JoinState.meeting_location,
-                        JoinState.select_location_detail_location,
+            rx.vstack(
+                rx.box(
+                    rx.text(
+                        "약속이름",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
                     ),
-                    check_meeting_box_for_each(
-                        "약속날짜",
-                        JoinState.meeting_date,
+                    rx.text(
+                        JoinState.meeting_name,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
                     ),
-                    check_meeting_box_for_each(
-                        "약속 후보 시간",
-                        JoinState.meeting_time,
-                    ),
-                    check_meeting_box(
-                        "모임장",
-                        JoinState.host_name,
-                    ),
-                    direction="column",
-                    spacing="3",
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
                 ),
-                type="scroll",
-                scrollbars="vertical",
-                style={
-                    "width": "360px",
-                    "padding": "10px",
-                },
+                rx.box(
+                    rx.text(
+                        "약속장소",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        JoinState.meeting_location,
+                        # JoinState.select_location_detail_location,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.text(
+                        "약속 후보 날짜",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.box(
+                        # TODO: string formating 수정 필요
+                        rx.hstack(
+                            rx.foreach(JoinState.meeting_date, text_for_each),
+                            width="360px",
+                        )
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.text(
+                        "공지사항",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        JoinState.meeting_memo,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.text(
+                                "약속코드",
+                                font_size="12px",
+                                font_family=AppFontFamily.DEFAULT_FONT,
+                                font_weight="700",
+                                color=AppColor.GRAY_TEXT,
+                            ),
+                            rx.button(
+                                rx.icon("copy"),
+                                on_click=rx.set_clipboard(JoinState.meeting_code),
+                                width="12px",
+                                height="12px",
+                                padding="0",
+                                color=AppColor.GRAY_TEXT,
+                                background_color=AppColor.WHITE,
+                            ),
+                        ),
+                        rx.box(
+                            rx.text(
+                                JoinState.meeting_code,
+                                font_size="14px",
+                                font_family=AppFontFamily.DEFAULT_FONT,
+                                color=AppColor.BLACK,
+                                font_weight="700",
+                                width="170px",
+                            ),
+                        ),
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
+                rx.box(
+                    rx.text(
+                        "모임장",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        JoinState.host_name,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
             ),
             width="100%",
-            height="55%",
+            height="65%",
         ),
         rx.center(
             rx.vstack(
                 rx.button(
                     "참여하기",
                     width="348px",
-                    height="48px",
+                    height="35px",
                     padding="20px",
                     color=AppColor.WHITE,
                     type="submit",
-                    background_color=AppColor.MAIN_BACKGROUND,
+                    background_color=AppColor.MAIN_COLOR,
                     on_click=rx.redirect("/join_meeting_date"),
                 ),
             ),

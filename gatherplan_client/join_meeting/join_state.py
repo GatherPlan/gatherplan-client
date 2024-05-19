@@ -13,15 +13,10 @@ class JoinState(rx.State):
     meeting_code: str = ""
     meeting_name: str = ""
     meeting_location: str = ""
+    meeting_memo: str = ""
     select_location_detail_location: str = ""
     meeting_date: List[str] = ["2024-5-3", "2024-5-12"]
-    meeting_time: List[str] = ["오전", "오후"]
     host_name: str = ""
-
-    joiner_set_meeting_time: Dict[str, str] = {
-        "2024-5-3": ["오전", "오후"],
-        "2024-5-12": ["오전", "오후"],
-    }
 
     # TODO: meeting state랑 같은 함수를 공유할 수는 없을까?
     # CalendarSelect Data
@@ -29,6 +24,7 @@ class JoinState(rx.State):
     checked_data: Dict[str, bool] = {}
     holiday_data: Dict[str, str] = {}
     select_data: List[str] = []
+    click_date: str = ""
 
     setting_time = datetime.datetime.now()
     setting_time_display = setting_time.strftime("%Y-%m")
@@ -39,16 +35,17 @@ class JoinState(rx.State):
         self._setting_month_calendar()
 
     def click_button(self, click_data: List):
+        print(click_data)
+        self.click_date = click_data
         if self.display_data[click_data]:
             self.select_data.remove(click_data)
             self.display_data[click_data] = False
-            self.joiner_set_meeting_time.pop(click_data)
         else:
             self.select_data.append(click_data)
             self.display_data[click_data] = True
-            self.joiner_set_meeting_time[click_data] = self.meeting_time
 
-        print(self.joiner_set_meeting_time)
+    def click_time_button(self, text: str):
+        print(text)
 
     def month_decrement(self):
         self.setting_time = self.setting_time - relativedelta(months=1)
@@ -126,5 +123,4 @@ class JoinState(rx.State):
         self.meeting_location = "서울시 강남구 역삼동"
         self.select_location_detail_location = "역삼역 3번 출구"
         self.meeting_date = ["2024-4-3", "2024-4-12"]
-        self.meeting_time = ["오전", "오후"]
         self.host_name = "이재훈"
