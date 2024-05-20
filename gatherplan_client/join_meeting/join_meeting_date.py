@@ -7,18 +7,90 @@ from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import AppFontFamily, AppColor
 
 
-def time_button(text):
-    return rx.button(
-        text,
-        type="button",
-        background_color=AppColor.SUB_TEXT,
-        color=AppColor.BLACK,
-        width="60px",
-        height="22px",
-        font_size="8px",
-        on_click=JoinState.click_time_button(text),
-        margin="5px",
+def time_button(time_data_to_button_click: List):
+    return rx.cond(
+        time_data_to_button_click[1] == 0,
+        rx.box(
+            rx.button(
+                time_data_to_button_click[0],
+                type="button",
+                background_color=AppColor.SUB_TEXT,
+                color=AppColor.BLACK,
+                width="60px",
+                height="22px",
+                font_size="8px",
+                on_click=JoinState.click_time_button(time_data_to_button_click[0]),
+                margin="5px",
+            ),
+            background_color=AppColor.WHITE,
+        ),
+        rx.cond(
+            time_data_to_button_click[1] == 1,
+            rx.box(
+                rx.button(
+                    time_data_to_button_click[0],
+                    type="button",
+                    background_color=AppColor.BLUE,
+                    color=AppColor.WHITE,
+                    width="60px",
+                    height="22px",
+                    font_size="8px",
+                    on_click=JoinState.click_time_button(time_data_to_button_click[0]),
+                    margin="5px",
+                ),
+                background_color=AppColor.BLUE,
+            ),
+            rx.cond(
+                time_data_to_button_click[1] == 2,
+                rx.box(
+                    rx.button(
+                        time_data_to_button_click[0],
+                        type="button",
+                        background_color=AppColor.BLUE,
+                        color=AppColor.WHITE,
+                        width="60px",
+                        height="22px",
+                        font_size="8px",
+                        on_click=JoinState.click_time_button(
+                            time_data_to_button_click[0]
+                        ),
+                        margin="5px",
+                    ),
+                    background_color=AppColor.BLUE,
+                ),
+                rx.box(
+                    rx.button(
+                        time_data_to_button_click[0],
+                        type="button",
+                        background_color=AppColor.SKY_BLUE,
+                        color=AppColor.WHITE,
+                        width="60px",
+                        height="22px",
+                        font_size="8px",
+                        on_click=JoinState.click_time_button(
+                            time_data_to_button_click[0]
+                        ),
+                        margin="5px",
+                    ),
+                    background_color=AppColor.SKY_BLUE,
+                ),
+            ),
+        ),
     )
+
+    # return rx.box(
+    #     rx.button(
+    #         time_data_to_button_click[0],
+    #         type="button",
+    #         background_color=AppColor.SUB_TEXT,
+    #         color=AppColor.BLACK,
+    #         width="60px",
+    #         height="22px",
+    #         font_size="8px",
+    #         on_click=JoinState.click_time_button(time_data_to_button_click[0]),
+    #         margin="5px",
+    #     ),
+    # )
 
 
 def calendar_button(
@@ -96,33 +168,7 @@ def calendar_button(
                             ),
                             rx.grid(
                                 rx.foreach(
-                                    [
-                                        "00:00",
-                                        "01:00",
-                                        "02:00",
-                                        "03:00",
-                                        "04:00",
-                                        "05:00",
-                                        "06:00",
-                                        "07:00",
-                                        "08:00",
-                                        "09:00",
-                                        "10:00",
-                                        "11:00",
-                                        "12:00",
-                                        "13:00",
-                                        "14:00",
-                                        "15:00",
-                                        "16:00",
-                                        "17:00",
-                                        "18:00",
-                                        "19:00",
-                                        "20:00",
-                                        "21:00",
-                                        "22:00",
-                                        "23:00",
-                                        "23:59",
-                                    ],
+                                    JoinState.time_data_to_button_click,
                                     time_button,
                                 ),
                                 columns="5",
@@ -133,15 +179,17 @@ def calendar_button(
                             height="200px",
                         ),
                         rx.center(
-                            rx.button(
-                                "일정추가",
-                                width="348px",
-                                height="35px",
-                                padding="20px",
-                                color=AppColor.WHITE,
-                                type="submit",
-                                background_color=AppColor.MAIN_COLOR,
-                                on_click=rx.redirect("/join_meeting_time"),
+                            rx.drawer.close(
+                                rx.button(
+                                    "일정추가",
+                                    width="348px",
+                                    height="35px",
+                                    padding="20px",
+                                    color=AppColor.WHITE,
+                                    type="submit",
+                                    background_color=AppColor.MAIN_COLOR,
+                                    on_click=JoinState.add_meeting_schedule(),
+                                )
                             ),
                             width="100%",
                         ),

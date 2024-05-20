@@ -18,6 +18,36 @@ class JoinState(rx.State):
     meeting_date: List[str] = ["2024-5-3", "2024-5-12"]
     host_name: str = ""
 
+    # time button click
+    first_click_time: str = ""
+    time_data_to_button_click: Dict[str, bool] = {
+        "00:00": 0,
+        "01:00": 0,
+        "02:00": 0,
+        "03:00": 0,
+        "04:00": 0,
+        "05:00": 0,
+        "06:00": 0,
+        "07:00": 0,
+        "08:00": 0,
+        "09:00": 0,
+        "10:00": 0,
+        "11:00": 0,
+        "12:00": 0,
+        "13:00": 0,
+        "14:00": 0,
+        "15:00": 0,
+        "16:00": 0,
+        "17:00": 0,
+        "18:00": 0,
+        "19:00": 0,
+        "20:00": 0,
+        "21:00": 0,
+        "22:00": 0,
+        "23:00": 0,
+        "23:59": 0,
+    }
+
     # TODO: meeting state랑 같은 함수를 공유할 수는 없을까?
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
@@ -44,8 +74,78 @@ class JoinState(rx.State):
             self.select_data.append(click_data)
             self.display_data[click_data] = True
 
-    def click_time_button(self, text: str):
-        print(text)
+    def add_meeting_schedule(self):
+        print(self.time_data_to_button_click)
+
+    def click_time_button(self, click_time: str):
+        """
+        0: no click
+        1: first click
+        2: end click
+        3: range
+        """
+
+        if self.time_data_to_button_click[click_time] != 0:
+            self.time_data_to_button_click = {
+                "00:00": 0,
+                "01:00": 0,
+                "02:00": 0,
+                "03:00": 0,
+                "04:00": 0,
+                "05:00": 0,
+                "06:00": 0,
+                "07:00": 0,
+                "08:00": 0,
+                "09:00": 0,
+                "10:00": 0,
+                "11:00": 0,
+                "12:00": 0,
+                "13:00": 0,
+                "14:00": 0,
+                "15:00": 0,
+                "16:00": 0,
+                "17:00": 0,
+                "18:00": 0,
+                "19:00": 0,
+                "20:00": 0,
+                "21:00": 0,
+                "22:00": 0,
+                "23:00": 0,
+                "23:59": 0,
+            }
+            self.time_data_to_button_click[click_time] = 1
+            self.first_click_time = click_time
+            return
+
+        # 첫 클릭이 없을 땐
+        if self.first_click_time == "":
+            self.time_data_to_button_click[click_time] = 1
+            self.first_click_time = click_time
+
+        # 첫 클릭은 있고 두 번째 클릭이 없을 땐
+        elif self.first_click_time != "":
+
+            self.time_data_to_button_click[click_time] = 2
+
+            start = datetime.datetime.strptime(self.first_click_time, "%H:%M")
+            end = datetime.datetime.strptime(click_time, "%H:%M")
+
+            if end <= start:
+                self.time_data_to_button_click[click_time] = 0
+                self.time_data_to_button_click[self.first_click_time] = 0
+                self.first_click_time = ""
+                return
+
+            while start <= end:
+                time_key = start.strftime("%H:%M")
+                if (
+                    time_key in self.time_data_to_button_click
+                    and self.time_data_to_button_click[time_key] == 0
+                ):
+                    self.time_data_to_button_click[time_key] = 3
+                start += datetime.timedelta(hours=1)
+
+            self.first_click_time = ""
 
     def month_decrement(self):
         self.setting_time = self.setting_time - relativedelta(months=1)
