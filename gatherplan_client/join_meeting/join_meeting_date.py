@@ -10,87 +10,43 @@ from gatherplan_client.reflex_assets.schema import AppFontFamily, AppColor
 def time_button(time_data_to_button_click: List):
     return rx.cond(
         time_data_to_button_click[1] == 0,
-        rx.box(
+        rx.button(
+            time_data_to_button_click[0],
+            type="button",
+            background_color=AppColor.SUB_TEXT,
+            color=AppColor.BLACK,
+            width="60px",
+            height="22px",
+            font_size="8px",
+            on_click=JoinState.click_time_button(time_data_to_button_click[0]),
+            margin="5px",
+        ),
+        rx.cond(
+            time_data_to_button_click[1] == 1,
             rx.button(
                 time_data_to_button_click[0],
                 type="button",
-                background_color=AppColor.SUB_TEXT,
-                color=AppColor.BLACK,
+                background_color=AppColor.BLUE,
+                color=AppColor.WHITE,
                 width="60px",
                 height="22px",
                 font_size="8px",
                 on_click=JoinState.click_time_button(time_data_to_button_click[0]),
                 margin="5px",
             ),
-            background_color=AppColor.WHITE,
-        ),
-        rx.cond(
-            time_data_to_button_click[1] == 1,
-            rx.box(
-                rx.button(
-                    time_data_to_button_click[0],
-                    type="button",
-                    background_color=AppColor.BLUE,
-                    color=AppColor.WHITE,
-                    width="60px",
-                    height="22px",
-                    font_size="8px",
-                    on_click=JoinState.click_time_button(time_data_to_button_click[0]),
-                    margin="5px",
-                ),
-                background_color=AppColor.BLUE,
-            ),
-            rx.cond(
-                time_data_to_button_click[1] == 2,
-                rx.box(
-                    rx.button(
-                        time_data_to_button_click[0],
-                        type="button",
-                        background_color=AppColor.BLUE,
-                        color=AppColor.WHITE,
-                        width="60px",
-                        height="22px",
-                        font_size="8px",
-                        on_click=JoinState.click_time_button(
-                            time_data_to_button_click[0]
-                        ),
-                        margin="5px",
-                    ),
-                    background_color=AppColor.BLUE,
-                ),
-                rx.box(
-                    rx.button(
-                        time_data_to_button_click[0],
-                        type="button",
-                        background_color=AppColor.SKY_BLUE,
-                        color=AppColor.WHITE,
-                        width="60px",
-                        height="22px",
-                        font_size="8px",
-                        on_click=JoinState.click_time_button(
-                            time_data_to_button_click[0]
-                        ),
-                        margin="5px",
-                    ),
-                    background_color=AppColor.SKY_BLUE,
-                ),
+            rx.button(
+                time_data_to_button_click[0],
+                type="button",
+                background_color=AppColor.MAIN_COLOR,
+                color=AppColor.WHITE,
+                width="60px",
+                height="22px",
+                font_size="8px",
+                on_click=JoinState.click_time_button(time_data_to_button_click[0]),
+                margin="5px",
             ),
         ),
     )
-
-    # return rx.box(
-    #     rx.button(
-    #         time_data_to_button_click[0],
-    #         type="button",
-    #         background_color=AppColor.SUB_TEXT,
-    #         color=AppColor.BLACK,
-    #         width="60px",
-    #         height="22px",
-    #         font_size="8px",
-    #         on_click=JoinState.click_time_button(time_data_to_button_click[0]),
-    #         margin="5px",
-    #     ),
-    # )
 
 
 def calendar_button(
@@ -188,7 +144,9 @@ def calendar_button(
                                     color=AppColor.WHITE,
                                     type="submit",
                                     background_color=AppColor.MAIN_COLOR,
-                                    on_click=JoinState.add_meeting_schedule(),
+                                    on_click=JoinState.add_meeting_schedule(
+                                        JoinState.click_date
+                                    ),
                                 )
                             ),
                             width="100%",
@@ -472,26 +430,7 @@ def join_meeting_date() -> rx.Component:
                 ),
                 rx.scroll_area(
                     rx.flex(
-                        rx.text(
-                            """Three fundamental aspects of typography are legibility, readability, and
-                        aesthetics. Although in a non-technical sense “legible” and “readable”
-                        are often used synonymously, typographically they are separate but
-                        related concepts.""",
-                        ),
-                        rx.text(
-                            """Legibility describes how easily individual characters can be
-                        distinguished from one another. It is described by Walter Tracy as “the
-                        quality of being decipherable and recognisable”. For instance, if a “b”
-                        and an “h”, or a “3” and an “8”, are difficult to distinguish at small
-                        sizes, this is a problem of legibility.""",
-                        ),
-                        rx.text(
-                            """Typographers are concerned with legibility insofar as it is their job to
-                        select the correct font to use. Brush Script is an example of a font
-                        containing many characters that might be difficult to distinguish. The
-                        selection of cases influences the legibility of typography because using
-                        only uppercase letters (all-caps) reduces legibility.""",
-                        ),
+                        rx.text(JoinState.display_select_date),
                         direction="column",
                         spacing="4",
                     ),

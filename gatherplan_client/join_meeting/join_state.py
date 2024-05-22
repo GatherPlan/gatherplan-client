@@ -17,6 +17,8 @@ class JoinState(rx.State):
     select_location_detail_location: str = ""
     meeting_date: List[str] = ["2024-5-3", "2024-5-12"]
     host_name: str = ""
+    post_data: Dict = {}
+    display_select_date: str = ""
 
     # time button click
     first_click_time: str = ""
@@ -65,24 +67,63 @@ class JoinState(rx.State):
         self._setting_month_calendar()
 
     def click_button(self, click_data: List):
-        print(click_data)
         self.click_date = click_data
-        if self.display_data[click_data]:
-            self.select_data.remove(click_data)
-            self.display_data[click_data] = False
-        else:
-            self.select_data.append(click_data)
-            self.display_data[click_data] = True
 
-    def add_meeting_schedule(self):
-        print(self.time_data_to_button_click)
+    def add_meeting_schedule(self, date):
+        intervals = []
+        start_time = None
+        prev_key = None
+
+        for key, value in self.time_data_to_button_click.items():
+            if value == 2:
+                if start_time is None:
+                    start_time = key
+                prev_key = key
+            else:
+                if start_time is not None:
+                    intervals.append({"start": start_time, "end": prev_key})
+                    start_time = None
+
+        # Handle the case where the last interval ends at the last key
+        if start_time is not None:
+            intervals.append({"start": start_time, "end": prev_key})
+
+        self.post_data[date] = intervals
+        self.display_data[date] = True
+        self.display_select_date += f"{date} {intervals}"
+        self.time_data_to_button_click = {
+            "00:00": 0,
+            "01:00": 0,
+            "02:00": 0,
+            "03:00": 0,
+            "04:00": 0,
+            "05:00": 0,
+            "06:00": 0,
+            "07:00": 0,
+            "08:00": 0,
+            "09:00": 0,
+            "10:00": 0,
+            "11:00": 0,
+            "12:00": 0,
+            "13:00": 0,
+            "14:00": 0,
+            "15:00": 0,
+            "16:00": 0,
+            "17:00": 0,
+            "18:00": 0,
+            "19:00": 0,
+            "20:00": 0,
+            "21:00": 0,
+            "22:00": 0,
+            "23:00": 0,
+            "23:59": 0,
+        }
 
     def click_time_button(self, click_time: str):
         """
         0: no click
         1: first click
-        2: end click
-        3: range
+        2: range
         """
 
         if self.time_data_to_button_click[click_time] != 0:
@@ -138,11 +179,8 @@ class JoinState(rx.State):
 
             while start <= end:
                 time_key = start.strftime("%H:%M")
-                if (
-                    time_key in self.time_data_to_button_click
-                    and self.time_data_to_button_click[time_key] == 0
-                ):
-                    self.time_data_to_button_click[time_key] = 3
+                if time_key in self.time_data_to_button_click:
+                    self.time_data_to_button_click[time_key] = 2
                 start += datetime.timedelta(hours=1)
 
             self.first_click_time = ""
