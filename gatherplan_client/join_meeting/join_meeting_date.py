@@ -203,7 +203,7 @@ def calendar_button(
                 width="100%",
                 padding="2em",
                 background_color="#FFF",
-                border_radius="2em 2em 0 0",
+                border_radius="1em 1em 0 0",
             )
         ),
         direction="bottom",
