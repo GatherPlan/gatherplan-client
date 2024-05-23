@@ -18,7 +18,8 @@ class JoinState(rx.State):
     meeting_date: List[str] = ["2024-5-3", "2024-5-12"]
     host_name: str = ""
     post_data: Dict = {}
-    display_select_date: str = ""
+    display_select_date: List = []
+    # display_select_date: str = ""
 
     # time button click
     first_click_time: str = ""
@@ -90,7 +91,13 @@ class JoinState(rx.State):
 
         self.post_data[date] = intervals
         self.display_data[date] = True
-        self.display_select_date += f"{date} {intervals}"
+
+        display_select_date_temp = f"{date} "
+
+        for interval in intervals:
+            display_select_date_temp += f" {interval['start']}-{interval['end']},"
+
+        self.display_select_date.append(display_select_date_temp[:-1])
         self.time_data_to_button_click = {
             "00:00": 0,
             "01:00": 0,

@@ -49,6 +49,17 @@ def time_button(time_data_to_button_click: List):
     )
 
 
+def display_select_date(display_select_date: str):
+    return rx.text(
+        display_select_date,
+        font_size="14px",
+        font_family=AppFontFamily.DEFAULT_FONT,
+        font_weight="700",
+        color=AppColor.BLACK,
+        padding_left="10px",
+    )
+
+
 def calendar_button(
     display_data: List,
     text_color: AppColor = AppColor.BLACK,
@@ -430,7 +441,10 @@ def join_meeting_date() -> rx.Component:
                 ),
                 rx.scroll_area(
                     rx.flex(
-                        rx.text(JoinState.display_select_date),
+                        rx.foreach(
+                            JoinState.display_select_date,
+                            display_select_date,
+                        ),
                         direction="column",
                         spacing="4",
                     ),
