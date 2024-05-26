@@ -57,7 +57,7 @@ def index() -> rx.Component:
             index_button(
                 main_text="현황보기",
                 sub_text="누가 참석할 수 있는지 확인해보세요",
-                redirect_url="/",
+                redirect_url="/check_meeting",
             ),
             width="100%",
             height="50%",

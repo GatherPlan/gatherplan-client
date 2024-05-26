@@ -263,6 +263,11 @@ class JoinState(rx.State):
 
         return rx.redirect("/join_meeting")
 
+    def handle_result_submit(self):
+        """Handle the form submit."""
+        self._get_meeting_info()
+        return rx.redirect("/join_meeting_result")
+
     def _get_meeting_info(self):
         self.meeting_name = "세얼간이의 점심약속"
         self.meeting_location = "서울시 강남구 역삼동"

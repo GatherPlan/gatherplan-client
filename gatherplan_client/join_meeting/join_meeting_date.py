@@ -465,7 +465,7 @@ def join_meeting_date() -> rx.Component:
                 color=AppColor.WHITE,
                 type="submit",
                 background_color=AppColor.MAIN_COLOR,
-                on_click=rx.redirect("/join_meeting_time"),
+                on_click=rx.redirect("/join_meeting_check"),
             ),
             width="100%",
         ),
