@@ -1,5 +1,3 @@
-from typing import Dict
-
 import reflex as rx
 
 from gatherplan_client.check_meeting.check_state import CheckState
@@ -11,71 +9,14 @@ from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
 def check_login(func):
     def inner():
         return rx.cond(
-            LoginState.login_token != "", check_meeting_not_logined(), func()
+            LoginState.login_token != "", check_meeting_detail_not_logined(), func()
         )
 
     return inner
 
 
-def list_view(items: Dict):
-    return rx.button(
-        rx.hstack(
-            rx.box(
-                rx.text(
-                    items["meeting_name"],
-                    font_size="14px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    color=AppColor.BLACK,
-                    padding_left="10px",
-                ),
-                rx.text(
-                    items["host_name"],
-                    font_size="12px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    color=AppColor.GRAY_TEXT,
-                    padding_left="10px",
-                ),
-                width="140px",
-                height="40px",
-            ),
-            rx.center(
-                rx.text(
-                    items["meeting_notice"],
-                    font_size="10px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    color=AppColor.GRAY_TEXT,
-                    padding_left="10px",
-                ),
-                width="160px",
-                height="40px",
-            ),
-            rx.center(
-                rx.text(
-                    items["meeting_state"],
-                    font_size="10px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    color=AppColor.GREEN,
-                    padding_left="10px",
-                ),
-                height="40px",
-            ),
-        ),
-        background_color=AppColor.WHITE,
-        border="1px solid #D9D9D9",
-        border_radius="10px",
-        height="50px",
-        width="360px",
-        padding="0px",
-        on_click=CheckState.handle_meeting_detail(items["meeting_name"]),
-    )
-
-
 @check_login
-def check_meeting() -> rx.Component:
+def check_meeting_detail() -> rx.Component:
     return rx.vstack(
         header("/"),
         rx.center(
@@ -97,12 +38,12 @@ def check_meeting() -> rx.Component:
     )
 
 
-def check_meeting_not_logined() -> rx.Component:
+def check_meeting_detail_not_logined() -> rx.Component:
     return rx.vstack(
-        header("/"),
+        header("/check_meeting"),
         rx.center(
             rx.text(
-                "약속 현황보기",
+                CheckState.detail_meeting_name,
                 font_size="20px",
                 padding_top="28px",
                 padding_bottom="40px",
@@ -165,37 +106,6 @@ def check_meeting_not_logined() -> rx.Component:
                     ),
                     width="360px",
                 )
-            ),
-            rx.scroll_area(
-                rx.flex(
-                    rx.box(
-                        rx.vstack(
-                            rx.box(
-                                rx.vstack(
-                                    rx.text(
-                                        "검색결과",
-                                        font_size="12px",
-                                        font_family=AppFontFamily.DEFAULT_FONT,
-                                        font_weight="700",
-                                        color=AppColor.SUB_TEXT,
-                                        padding_left="10px",
-                                    ),
-                                    rx.foreach(CheckState.meeting_list, list_view),
-                                ),
-                                width="360px",
-                            ),
-                            width="100%",
-                            align="center",
-                            padding_top="20px",
-                        ),
-                        width="100%",
-                    ),
-                    direction="column",
-                    spacing="4",
-                ),
-                type="scroll",
-                scrollbars="vertical",
-                style={"height": "70%"},
             ),
             on_submit=CheckState.handle_detail_submit,
             width="100%",

@@ -1,6 +1,7 @@
 import reflex as rx
 
 from .check_meeting.check_meeting import check_meeting
+from .check_meeting.check_meeting_detail import check_meeting_detail
 from .index import index
 from .join_meeting.join_meeting_result import join_meeting_result
 from .join_meeting.join_meeting_check import join_meeting_check
@@ -35,4 +36,5 @@ app.add_page(join_meeting_date, route="/join_meeting_date")
 app.add_page(join_meeting_check, route="/join_meeting_check")
 app.add_page(join_meeting_result, route="/join_meeting_result")
 app.add_page(check_meeting, route="/check_meeting")
+app.add_page(check_meeting_detail, route="/check_meeting_detail")
 app.add_page(health_check, route="/ping")

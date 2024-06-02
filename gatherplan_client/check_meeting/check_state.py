@@ -24,9 +24,15 @@ class CheckState(rx.State):
             "meeting_state": "미정",
         },
     ]
+    detail_meeting_name: str = ""
 
     def handle_detail_submit(self, meeting_name: str):
+        print("test")
         for meeting in self.meeting_list:
             if meeting["meeting_name"] == meeting_name:
                 return meeting
         return None
+
+    def handle_meeting_detail(self, meeting_name: str):
+        self.detail_meeting_name = meeting_name
+        return rx.redirect("/check_meeting_detail")
