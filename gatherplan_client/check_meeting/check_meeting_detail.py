@@ -44,7 +44,7 @@ def check_meeting_detail_not_logined() -> rx.Component:
         header("/check_meeting"),
         rx.center(
             rx.text(
-                "약속 만들기",
+                "약속 현황보기",
                 # CheckState.detail_meeting_name,
                 font_size="20px",
                 padding_top="28px",
@@ -52,7 +52,29 @@ def check_meeting_detail_not_logined() -> rx.Component:
                 padding_left="10px",
                 font_family=AppFontFamily.DEFAULT_FONT,
                 font_weight="700",
-                width="360px",
+                width="300px",
+            ),
+            rx.button(
+                rx.icon(
+                    tag="settings",
+                    size=24,
+                    # color=AppColor.MAIN_COLOR,
+                    stroke_width=1,
+                ),
+                color=AppColor.BLACK,
+                background_color=AppColor.WHITE,
+                padding="0px",
+            ),
+            rx.button(
+                rx.icon(
+                    tag="share",
+                    size=24,
+                    # color=AppColor.MAIN_COLOR,
+                    stroke_width=1,
+                ),
+                color=AppColor.BLACK,
+                background_color=AppColor.WHITE,
+                padding_left="5px",
             ),
             width="100%",
             height="10%",
@@ -226,6 +248,124 @@ def check_meeting_detail_not_logined() -> rx.Component:
                     rx.center(
                         rx.vstack(
                             rx.button(
+                                "참여 취소하기",
+                                width="348px",
+                                height="35px",
+                                padding="20px",
+                                color=AppColor.BLACK,
+                                type="submit",
+                                background_color=AppColor.SUB_TEXT,
+                                on_click=rx.redirect("/join_meeting_date"),
+                            ),
+                        ),
+                        width="100%",
+                        padding_top="10px",
+                    ),
+                    value="tab1",
+                ),
+                rx.tabs.content(
+                    # tab2
+                    rx.center(
+                        rx.vstack(
+                            rx.hstack(
+                                rx.button(
+                                    rx.icon(tag="chevron-left"),
+                                    on_click=CheckState.month_decrement,
+                                    width="48px",
+                                    height="40px",
+                                    margin_left="50px",
+                                    color=AppColor.BLACK,
+                                    background_color=AppColor.WHITE,
+                                ),
+                                rx.center(
+                                    CheckState.setting_time_display,
+                                    width="100px",
+                                    height="40px",
+                                    align="center",
+                                    font_family=AppFontFamily.DEFAULT_FONT,
+                                    font_weight="600",
+                                ),
+                                rx.button(
+                                    rx.icon(tag="chevron-right"),
+                                    on_click=CheckState.month_increment,
+                                    width="48px",
+                                    height="40px",
+                                    color=AppColor.BLACK,
+                                    background_color=AppColor.WHITE,
+                                ),
+                                align="center",
+                            ),
+                            rx.grid(
+                                rx.center("일", color=AppColor.RED, width="40px"),
+                                rx.center("월", width="40px"),
+                                rx.center("화", width="40px"),
+                                rx.center("수", width="40px"),
+                                rx.center("목", width="40px"),
+                                rx.center("금", width="40px"),
+                                rx.center("토", color=AppColor.BLUE, width="40px"),
+                                rx.foreach(
+                                    JoinState.display_data,
+                                    location_button,
+                                ),
+                                columns="7",
+                                align="center",
+                                width="320px",
+                            ),
+                        ),
+                        color=AppColor.BLACK,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        width="100%",
+                        font_weight="400",
+                        background_color=AppColor.WHITE,
+                        height="35%",
+                    ),
+                    rx.center(
+                        rx.vstack(
+                            rx.box(
+                                rx.text(
+                                    "선택한 일정",
+                                    font_size="14px",
+                                    font_family=AppFontFamily.DEFAULT_FONT,
+                                    font_weight="700",
+                                    color=AppColor.GRAY_TEXT,
+                                    padding_left="10px",
+                                ),
+                                width="360px",
+                            ),
+                            rx.scroll_area(
+                                rx.flex(
+                                    rx.foreach(
+                                        JoinState.display_select_date,
+                                        display_select_date,
+                                    ),
+                                    direction="column",
+                                    spacing="4",
+                                ),
+                                type="always",
+                                scrollbars="vertical",
+                                style={"height": 140, "width": 360},
+                            ),
+                        ),
+                        width="100%",
+                        height="30%",
+                    ),
+                    rx.center(
+                        rx.button(
+                            "선택완료",
+                            width="348px",
+                            height="35px",
+                            padding="20px",
+                            color=AppColor.WHITE,
+                            type="submit",
+                            background_color=AppColor.MAIN_COLOR,
+                            on_click=rx.redirect("/join_meeting_check"),
+                        ),
+                        width="100%",
+                    ),
+                    rx.center(
+                        rx.vstack(
+                            rx.button(
                                 "참여하기",
                                 width="348px",
                                 height="35px",
@@ -237,12 +377,23 @@ def check_meeting_detail_not_logined() -> rx.Component:
                             ),
                         ),
                         width="100%",
+                    ),
+                    rx.center(
+                        rx.vstack(
+                            rx.button(
+                                "참여 취소하기",
+                                width="348px",
+                                height="35px",
+                                padding="20px",
+                                color=AppColor.BLACK,
+                                type="submit",
+                                background_color=AppColor.SUB_TEXT,
+                                on_click=rx.redirect("/join_meeting_date"),
+                            ),
+                        ),
+                        width="100%",
                         padding_top="10px",
                     ),
-                    value="tab1",
-                ),
-                rx.tabs.content(
-                    rx.text("item on tab 2"),
                     value="tab2",
                 ),
                 width="360px",
