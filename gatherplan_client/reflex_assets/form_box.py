@@ -95,3 +95,30 @@ def form_box_with_button(
             width="345px",
         ),
     )
+
+
+rx.box(
+    rx.text(
+        "이메일",
+        font_size="10px",
+        font_family=AppFontFamily.DEFAULT_FONT,
+    ),
+    rx.hstack(
+        rx.input(
+            placeholder="2~8자리",
+            name="email",
+            font_size="16px",
+            height="48px",
+            border_radius="35px",
+            type="text",
+            width="290px",
+        ),
+        rx.button(
+            "인증요청",
+            width="50px",
+            height="48px",
+        ),
+        padding_bottom="20px",
+        width="345px",
+    ),
+),
