@@ -1,5 +1,6 @@
 import reflex as rx
 
+from gatherplan_client.backend_rouuter import BACKEND_URL
 from gatherplan_client.login import need_login
 from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.reflex_assets.header import header
@@ -20,6 +21,25 @@ def location_button(button_text: str):
             background_color="#FFFFFF",
         )
     )
+
+
+class SearchLocation(rx.State):
+    text: str = "성수동"
+
+    def sign_up_send_auth_number(self):
+        print(self.text)
+        # data = {"email": self.input_location}
+        # import requests
+        #
+        # response = requests.post(
+        #     f"{BACKEND_URL}/api/v1/users/auth", headers=HEADER, json=data
+        # )
+        # if response.status_code == 200:
+        #     return rx.window_alert(f"{self.text}로 인증번호가 전송되었습니다.")
+        #
+        # else:
+        #     print(response.json())
+        #     return rx.window_alert(f"error")
 
 
 @need_login
@@ -70,6 +90,7 @@ def make_meeting_detail() -> rx.Component:
                 rx.hstack(
                     rx.box(
                         rx.input(
+                            on_blur=SearchLocation.set_text,
                             placeholder="약속장소를 입력해주세요",
                             name="location",
                             font_size="10px",
@@ -90,6 +111,7 @@ def make_meeting_detail() -> rx.Component:
                                 width="50px",
                                 background_color=AppColor.MAIN_COLOR,
                                 font_size="12px",
+                                on_click=SearchLocation.sign_up_send_auth_number,
                             )
                         ),
                         rx.drawer.overlay(z_index="5"),
@@ -145,7 +167,7 @@ def make_meeting_detail() -> rx.Component:
                         direction="bottom",
                     ),
                     width="360px",
-                )
+                ),
             ),
             rx.center(
                 rx.cond(
@@ -201,7 +223,7 @@ def make_meeting_detail() -> rx.Component:
                     height="35px",
                     padding_left="10px",
                     color=AppColor.WHITE,
-                    type="submit",
+                    type="button",
                     background_color=AppColor.MAIN_COLOR,
                 ),
                 width="100%",

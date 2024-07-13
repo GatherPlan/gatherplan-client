@@ -17,7 +17,7 @@ class MakeMeetingNameState(rx.State):
     form_data: dict = {}
     meeting_name: str = "세 얼간이 점심약속"
     meeting_memo: str = "점심이나 먹죵"
-    input_location: str = ""
+    input_location: str = "ㅇ"
     search_location: List[str] = ["성수동1", "성수동2", "성수동3", "성수동4"]
     select_location: str = "서울숲카페거리"
     select_location_detail_location: str = "서울 성동구 성수동 1가 000-00"
@@ -56,6 +56,7 @@ class MakeMeetingNameState(rx.State):
     def handle_location_submit(self, form_data: dict):
         """Handle the form submit."""
         self.select_location = form_data.get("input_location")
+        print(self.select_location)
 
     def click_button(self, click_data: List):
         if self.display_data[click_data]:
@@ -135,3 +136,7 @@ class MakeMeetingNameState(rx.State):
         print(meeting_data)
 
         return rx.redirect("/make_meeting_result")
+
+    def search_location_info(self):
+
+        print(self.input_location)
