@@ -10,7 +10,7 @@ from gatherplan_client.reflex_assets.text_box import (
 
 
 @need_login
-def make_meeting_result() -> rx.Component:
+def make_meeting_result(login_token) -> rx.Component:
     return rx.vstack(
         header("/make_meeting_check"),
         rx.center(

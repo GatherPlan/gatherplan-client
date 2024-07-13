@@ -8,7 +8,7 @@ from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
 
 
 @need_login
-def join_meeting_check() -> rx.Component:
+def join_meeting_check(login_token) -> rx.Component:
     return rx.vstack(
         header("/join_meeting_date"),
         rx.center(

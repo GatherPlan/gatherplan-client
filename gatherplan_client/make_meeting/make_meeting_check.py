@@ -7,7 +7,7 @@ from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
 
 
 @need_login
-def make_meeting_check() -> rx.Component:
+def make_meeting_check(login_token) -> rx.Component:
     from gatherplan_client.reflex_assets.text_box import text_for_each
 
     return rx.vstack(
@@ -106,7 +106,6 @@ def make_meeting_check() -> rx.Component:
                     ),
                     rx.text(
                         MakeMeetingNameState.meeting_memo,
-                        # MakeMeetingNameState.select_location_detail_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -129,7 +128,7 @@ def make_meeting_check() -> rx.Component:
                 color=AppColor.WHITE,
                 type="submit",
                 background_color=AppColor.MAIN_COLOR,
-                on_click=MakeMeetingNameState.handle_result_submit,
+                on_click=MakeMeetingNameState.handle_result_submit(login_token),
             ),
             width="100%",
         ),

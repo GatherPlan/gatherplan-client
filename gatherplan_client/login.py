@@ -13,7 +13,9 @@ from gatherplan_client.reflex_assets.text_box import center_align_text_box
 
 def need_login(func):
     def inner():
-        return rx.cond(LoginState.login_token != "", login(), func())
+        return rx.cond(
+            LoginState.login_token == "", login(), func(LoginState.login_token)
+        )
 
     return inner
 

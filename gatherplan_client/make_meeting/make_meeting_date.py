@@ -131,7 +131,7 @@ def location_button(display_data: List):
 
 
 @need_login
-def make_meeting_date() -> rx.Component:
+def make_meeting_date(login_token) -> rx.Component:
     return rx.vstack(
         header("/make_meeting_detail"),
         rx.center(

@@ -8,6 +8,10 @@ import calendar
 from gatherplan_client.additional_holiday import additional_holiday
 import datetime
 from typing import List, Dict
+import requests
+
+from gatherplan_client.backend_rouuter import BACKEND_URL, HEADER
+from gatherplan_client.login import LoginState
 
 
 class MakeMeetingNameState(rx.State):
@@ -15,12 +19,13 @@ class MakeMeetingNameState(rx.State):
 
     # TODO: default value init
     form_data: dict = {}
-    meeting_name: str = "세 얼간이 점심약속"
-    meeting_memo: str = "점심이나 먹죵"
-    input_location: str = "ㅇ"
-    search_location: List[str] = ["성수동1", "성수동2", "성수동3", "성수동4"]
-    select_location: str = "서울숲카페거리"
-    select_location_detail_location: str = "서울 성동구 성수동 1가 000-00"
+    meeting_name: str = ""
+    meeting_memo: str = ""
+    input_location: str = ""
+    search_location: List[str] = ["Loading..."]
+    search_location_place: List[str] = ["Loading..."]
+    select_location: str = ""
+    select_location_detail_location: str = ""
 
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
@@ -49,14 +54,13 @@ class MakeMeetingNameState(rx.State):
         return rx.redirect("/make_meeting_detail")
 
     def handle_detail_submit(self, form_data: dict):
-        """Handle the form submit."""
-        self.input_location = form_data.get("input_location")
+        print(self.select_location)
+
         return rx.redirect("/make_meeting_date")
 
     def handle_location_submit(self, form_data: dict):
         """Handle the form submit."""
         self.select_location = form_data.get("input_location")
-        print(self.select_location)
 
     def click_button(self, click_data: List):
         if self.display_data[click_data]:
@@ -125,7 +129,20 @@ class MakeMeetingNameState(rx.State):
         else:
             self.select_time.append(click_data)
 
-    def handle_result_submit(self):
+    def handle_result_submit(self, login_token):
+        print(login_token)
+        data = {
+            "appointmentName": self.meeting_name,
+            "notice": self.meeting_memo,
+            "address": {
+                "locationType": "DETAIL_ADDRESS",
+                "fullAddress": self.select_location,
+                "placeName": "성수역 2호선 2번출구",
+                "placeUrl": "http://place.map.kakao.com/7942972",
+            },
+            "candidateDateList": ["2024-03-18", "2024-03-20"],
+        }
+
         meeting_data = {
             "meeting_name": self.meeting_name,
             "meeting_location": self.select_location,
@@ -139,4 +156,15 @@ class MakeMeetingNameState(rx.State):
 
     def search_location_info(self):
 
-        print(self.input_location)
+        params = {"keyword": self.input_location, "page": 1, "size": 10}
+
+        response = requests.get(
+            f"{BACKEND_URL}/api/v1/region/district", headers=HEADER, params=params
+        )
+        self.search_location = [i["address"] for i in response.json()["data"]]
+
+        response = requests.get(
+            f"{BACKEND_URL}/api/v1/region/place", headers=HEADER, params=params
+        )
+
+        self.search_location_place = [i["placeName"] for i in response.json()["data"]]
