@@ -5,4 +5,7 @@ BACKEND_URL = os.getenv(
     "https://test-backed.gatherplan.site",
 )
 
-HEADER = {"accept": "*/*", "Content-Type": "application/json"}
+HEADER = {
+    "accept": "*/*",
+    "Content-Type": "application/json",
+}
