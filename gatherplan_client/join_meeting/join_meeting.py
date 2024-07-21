@@ -125,7 +125,7 @@ def join_meeting() -> rx.Component:
                             ),
                             rx.button(
                                 rx.icon("copy"),
-                                on_click=rx.set_clipboard(JoinState.meeting_code),
+                                on_click=rx.set_clipboard(JoinState.appointment_code),
                                 width="12px",
                                 height="12px",
                                 padding="0",
@@ -135,7 +135,7 @@ def join_meeting() -> rx.Component:
                         ),
                         rx.box(
                             rx.text(
-                                JoinState.meeting_code,
+                                JoinState.appointment_code,
                                 font_size="14px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 color=AppColor.BLACK,

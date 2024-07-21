@@ -11,7 +11,6 @@ from typing import List, Dict
 import requests
 
 from gatherplan_client.backend_rouuter import BACKEND_URL, HEADER
-from gatherplan_client.login import LoginState
 
 
 class MakeMeetingNameState(rx.State):
@@ -30,16 +29,13 @@ class MakeMeetingNameState(rx.State):
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
     holiday_data: Dict[str, str] = {}
-    select_data: List[str] = ["2024-4-3", "2024-4-12"]
+    select_data: List[str] = []
 
     setting_time = datetime.datetime.now()
     setting_time_display = setting_time.strftime("%Y-%m")
 
-    # TimeSelect Data
-    select_time: List[str] = ["오전", "오후"]
-
     # MeetingCode Data
-    meeting_code: str = "abcd efgh ijkl mnop qrst"
+    meeting_code: str = "오버라이딩테스트"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -54,8 +50,6 @@ class MakeMeetingNameState(rx.State):
         return rx.redirect("/make_meeting_detail")
 
     def handle_detail_submit(self, form_data: dict):
-        print(self.select_location)
-
         return rx.redirect("/make_meeting_date")
 
     def handle_location_submit(self, form_data: dict):
@@ -123,14 +117,15 @@ class MakeMeetingNameState(rx.State):
             if clicked_data in self.display_data.keys():
                 self.display_data[clicked_data] = True
 
-    def click_time_select_button(self, click_data: List):
-        if click_data in self.select_time:
-            self.select_time.remove(click_data)
-        else:
-            self.select_time.append(click_data)
-
     def handle_result_submit(self, login_token):
-        print(login_token)
+        meeting_dates_dt = [
+            datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y-%m-%d")
+            for date in list(self.select_data)
+        ]
+        header = HEADER
+        header["Authorization"] = login_token
+
+        # TODO: address 수정 필요
         data = {
             "appointmentName": self.meeting_name,
             "notice": self.meeting_memo,
@@ -140,19 +135,21 @@ class MakeMeetingNameState(rx.State):
                 "placeName": "성수역 2호선 2번출구",
                 "placeUrl": "http://place.map.kakao.com/7942972",
             },
-            "candidateDateList": ["2024-03-18", "2024-03-20"],
+            "candidateDateList": meeting_dates_dt,
         }
 
-        meeting_data = {
-            "meeting_name": self.meeting_name,
-            "meeting_location": self.select_location,
-            "meeting_location_detail": self.select_location_detail_location,
-            "meeting_date": list(self.select_data),
-            "meeting_time": list(self.select_time),
-        }
-        print(meeting_data)
+        response = requests.post(
+            f"{BACKEND_URL}/api/v1/appointments", headers=header, json=data
+        )
 
-        return rx.redirect("/make_meeting_result")
+        if response.status_code == 200:
+            return rx.redirect(
+                f"/make_meeting_result/{response.json()['appointmentCode']}"
+            )
+
+        else:
+            print(response.json())
+            return rx.window_alert(f"error")
 
     def search_location_info(self):
 

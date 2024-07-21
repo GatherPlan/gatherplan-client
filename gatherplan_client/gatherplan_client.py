@@ -28,8 +28,11 @@ app.add_page(make_meeting, route="/make_meeting")
 app.add_page(make_meeting_detail, route="/make_meeting_detail")
 app.add_page(make_meeting_date, route="/make_meeting_date")
 app.add_page(make_meeting_check, route="/make_meeting_check")
-app.add_page(make_meeting_result, route="/make_meeting_result")
+app.add_page(make_meeting_result, route="/make_meeting_result/[meeting_code]")
+app.add_page(enter_meeting_code, route="/enter_meeting_code/[meeting_code]")
 app.add_page(enter_meeting_code, route="/enter_meeting_code")
+
+
 app.add_page(join_meeting, route="/join_meeting")
 app.add_page(not_member_login, route="/not_member_login")
 app.add_page(join_meeting_date, route="/join_meeting_date")

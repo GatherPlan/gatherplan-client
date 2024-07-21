@@ -1,6 +1,7 @@
 import reflex as rx
 
-from gatherplan_client.login import need_login
+from gatherplan_client.backend_rouuter import FRONTEND_URL
+from gatherplan_client.join_meeting.enter_meeting_code import EnterCodeState
 from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
@@ -9,8 +10,7 @@ from gatherplan_client.reflex_assets.text_box import (
 )
 
 
-@need_login
-def make_meeting_result(login_token) -> rx.Component:
+def make_meeting_result() -> rx.Component:
     return rx.vstack(
         header("/make_meeting_check"),
         rx.center(
@@ -129,9 +129,7 @@ def make_meeting_result(login_token) -> rx.Component:
                             ),
                             rx.button(
                                 rx.icon("copy"),
-                                on_click=rx.set_clipboard(
-                                    MakeMeetingNameState.meeting_code
-                                ),
+                                on_click=rx.set_clipboard(EnterCodeState.meeting_code),
                                 width="12px",
                                 height="12px",
                                 padding="0",
@@ -141,7 +139,7 @@ def make_meeting_result(login_token) -> rx.Component:
                         ),
                         rx.box(
                             rx.text(
-                                MakeMeetingNameState.meeting_code,
+                                EnterCodeState.meeting_code,
                                 font_size="14px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 color=AppColor.BLACK,
@@ -172,12 +170,13 @@ def make_meeting_result(login_token) -> rx.Component:
                 ),
                 rx.button(
                     "공유하기",
-                    disabled=True,
                     width="348px",
                     height="35px",
                     padding="20px",
                     color=AppColor.BLACK,
-                    type="submit",
+                    on_click=rx.set_clipboard(
+                        f"{FRONTEND_URL}/enter_meeting_code/{EnterCodeState.meeting_code}"
+                    ),
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     margin_top="20px",
                 ),

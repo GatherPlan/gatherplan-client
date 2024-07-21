@@ -6,6 +6,12 @@ from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import AppFontFamily, AppColor
 
 
+class EnterCodeState(rx.State):
+    @rx.var
+    def meeting_code(self) -> str:
+        return self.router.page.params.get("meeting_code", "")
+
+
 def enter_meeting_code() -> rx.Component:
     return rx.vstack(
         header("/"),
@@ -35,7 +41,7 @@ def enter_meeting_code() -> rx.Component:
                         padding_left="10px",
                     ),
                     rx.text(
-                        "10자리 영소문자입니다.",
+                        "12자리 영소문자입니다.",
                         font_size="12px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         color=AppColor.GRAY_TEXT,
@@ -45,7 +51,7 @@ def enter_meeting_code() -> rx.Component:
                     ),
                     rx.box(
                         rx.input(
-                            value=MakeMeetingNameState.meeting_code,
+                            value=EnterCodeState.meeting_code,
                             name="enter_code",
                             font_size=AppFontFamily.DEFAULT_FONT,
                             height="35px",

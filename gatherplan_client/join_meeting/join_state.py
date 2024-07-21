@@ -7,10 +7,14 @@ from pytimekr import pytimekr
 
 from gatherplan_client.additional_holiday import additional_holiday
 import calendar
+import requests
+
+from gatherplan_client.backend_rouuter import BACKEND_URL, HEADER
 
 
 class JoinState(rx.State):
     meeting_code: str = ""
+    appointment_code: str = ""
     meeting_name: str = ""
     meeting_location: str = ""
     meeting_memo: str = ""
@@ -257,20 +261,31 @@ class JoinState(rx.State):
 
     def handle_submit(self, form_data: dict):
         """Handle the form submit."""
-        print(form_data)
-
-        self._get_meeting_info()
+        self._get_meeting_info(form_data["enter_code"])
 
         return rx.redirect("/join_meeting")
 
     def handle_result_submit(self):
         """Handle the form submit."""
-        self._get_meeting_info()
+        self._get_meeting_info("test")
         return rx.redirect("/join_meeting_result")
 
-    def _get_meeting_info(self):
-        self.meeting_name = "세얼간이의 점심약속"
-        self.meeting_location = "서울시 강남구 역삼동"
-        self.select_location_detail_location = "역삼역 3번 출구"
-        self.meeting_date = ["2024-4-3", "2024-4-12"]
-        self.host_name = "이재훈"
+    def _get_meeting_info(self, enter_code: str):
+
+        response = requests.get(
+            f"{BACKEND_URL}/api/v1/appointments/preview",
+            headers={"accept": "*/*"},
+            params={"appointmentCode": enter_code},
+        )
+
+        if response.status_code == 200:
+            data = response.json()
+            self.meeting_name = data["appointmentName"]
+            self.meeting_location = data["address"]["fullAddress"]
+            self.meeting_memo = data["notice"]
+            self.meeting_date = data["candidateDateList"]
+            self.host_name = data["hostName"]
+            self.appointment_code = data["appointmentCode"]
+        else:
+            print(response.json())
+            return rx.window_alert(f"존재하지 않는 약속 코드입니다.")
