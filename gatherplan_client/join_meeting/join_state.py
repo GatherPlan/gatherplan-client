@@ -19,7 +19,7 @@ class JoinState(rx.State):
     meeting_location: str = ""
     meeting_memo: str = ""
     select_location_detail_location: str = ""
-    meeting_date: List[str] = ["2024-5-3", "2024-5-12"]
+    meeting_date: List[str] = []
     host_name: str = ""
     post_data: Dict = {}
     display_select_date: List = []
@@ -228,6 +228,9 @@ class JoinState(rx.State):
             1,
             calendar.monthrange(self.setting_time.year, self.setting_time.month)[1] + 1,
         ):
+            if 1 <= self.setting_time.month <= 9:
+                temp_month = f"0{self.setting_time.month}"
+
             self.display_data[
                 f"{self.setting_time.year}-{self.setting_time.month}-{i}"
             ] = False
@@ -245,13 +248,11 @@ class JoinState(rx.State):
                 in kr_holidays
                 else "sat" if weekday == 5 else "normal"
             )
-
             self.checked_data[
                 f"{self.setting_time.year}-{self.setting_time.month}-{i}"
             ] = (
                 False
-                if f"{self.setting_time.year}-{self.setting_time.month}-{i}"
-                in self.meeting_date
+                if f"{self.setting_time.year}-{temp_month}-{i}" in self.meeting_date
                 else True
             )
 
@@ -286,6 +287,8 @@ class JoinState(rx.State):
             self.meeting_date = data["candidateDateList"]
             self.host_name = data["hostName"]
             self.appointment_code = data["appointmentCode"]
+
+            self._setting_month_calendar()
         else:
             print(response.json())
             return rx.window_alert(f"존재하지 않는 약속 코드입니다.")

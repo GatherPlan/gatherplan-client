@@ -166,7 +166,9 @@ def make_meeting_result() -> rx.Component:
                     color=AppColor.WHITE,
                     type="submit",
                     background_color=AppColor.MAIN_COLOR,
-                    on_click=rx.redirect("/enter_meeting_code"),
+                    on_click=rx.redirect(
+                        f"/enter_meeting_code/{EnterCodeState.meeting_code}"
+                    ),
                 ),
                 rx.button(
                     "공유하기",
