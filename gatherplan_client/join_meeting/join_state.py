@@ -9,7 +9,7 @@ from gatherplan_client.additional_holiday import additional_holiday
 import calendar
 import requests
 
-from gatherplan_client.backend_rouuter import BACKEND_URL, HEADER
+from gatherplan_client.backend_rouuter import BACKEND_URL
 
 
 class JoinState(rx.State):
@@ -55,7 +55,6 @@ class JoinState(rx.State):
         "23:59": 0,
     }
 
-    # TODO: meeting state랑 같은 함수를 공유할 수는 없을까?
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
     checked_data: Dict[str, bool] = {}
@@ -252,10 +251,10 @@ class JoinState(rx.State):
                 f"{self.setting_time.year}-{self.setting_time.month}-{i}"
             ] = (
                 False
-                if f"{self.setting_time.year}-{temp_month}-{i}" in self.meeting_date
+                if f"{self.setting_time.year}-{temp_month:02}-{i:02}"
+                in self.meeting_date
                 else True
             )
-
         for clicked_data in self.select_data:
             if clicked_data in self.display_data.keys():
                 self.display_data[clicked_data] = True
@@ -269,10 +268,28 @@ class JoinState(rx.State):
     def handle_result_submit(self):
         """Handle the form submit."""
         self._get_meeting_info("test")
+
         return rx.redirect("/join_meeting_result")
 
     def _get_meeting_info(self, enter_code: str):
 
+        # {
+        #     "appointmentCode": "abcd1234efgh",
+        #     "selectedDateTimeList": [
+        #         {
+        #             "selectedDate": "2024-04-10",
+        #             "selectedStartTime": "15:00",
+        #             "selectedEndTime": "18:00"
+        #         },
+        #         {
+        #             "selectedDate": "2024-04-10",
+        #             "selectedStartTime": "19:00",
+        #             "selectedEndTime": "21:00"
+        #         }
+        #     ],
+        #     "nickname": "이재훈"
+        # }
+        print()
         response = requests.get(
             f"{BACKEND_URL}/api/v1/appointments/preview",
             headers={"accept": "*/*"},
