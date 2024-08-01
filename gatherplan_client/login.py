@@ -50,6 +50,7 @@ class LoginState(rx.State):
         self.form_data = form_data
 
         if self.login():
+            self.error_message = ""
             return rx.redirect(f"{self.router.page.path}")
         else:
             self.error_message = "로그인 실패"

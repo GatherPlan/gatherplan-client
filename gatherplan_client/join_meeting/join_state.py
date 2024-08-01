@@ -1,4 +1,5 @@
 import datetime
+import json
 from typing import List, Dict
 
 import reflex as rx
@@ -9,7 +10,7 @@ from gatherplan_client.additional_holiday import additional_holiday
 import calendar
 import requests
 
-from gatherplan_client.backend_rouuter import BACKEND_URL
+from gatherplan_client.backend_rouuter import BACKEND_URL, HEADER
 
 
 class JoinState(rx.State):
@@ -23,6 +24,7 @@ class JoinState(rx.State):
     host_name: str = ""
     post_data: Dict = {}
     display_select_date: List = []
+    display_: List[dict] = []
     # display_select_date: str = ""
 
     # time button click
@@ -95,12 +97,37 @@ class JoinState(rx.State):
         self.post_data[date] = intervals
         self.display_data[date] = True
 
+        split_date_string = date.split("-")
         display_select_date_temp = f"{date} "
 
         for interval in intervals:
+            select_date_temp = {
+                "selectedDate": f"{split_date_string[0]}-{int(split_date_string[1]):02}-{int(split_date_string[2]):02}",
+                "selectedStartTime": interval["start"],
+                "selectedEndTime": interval["end"],
+            }
             display_select_date_temp += f" {interval['start']}-{interval['end']},"
+            self.select_data.append(select_date_temp)
 
-        self.display_select_date.append(display_select_date_temp[:-1])
+            self.display_select_date.append(display_select_date_temp[:-1])
+
+        # {
+        #     "appointmentCode": "abcd1234efgh",
+        #     "selectedDateTimeList": [
+        #         {
+        #             "selectedDate": "2024-04-10",
+        #             "selectedStartTime": "15:00",
+        #             "selectedEndTime": "18:00"
+        #         },
+        #         {
+        #             "selectedDate": "2024-04-10",
+        #             "selectedStartTime": "19:00",
+        #             "selectedEndTime": "21:00"
+        #         }
+        #     ],
+        #     "nickname": "이재훈"
+        # }
+
         self.time_data_to_button_click = {
             "00:00": 0,
             "01:00": 0,
@@ -265,31 +292,17 @@ class JoinState(rx.State):
 
         return rx.redirect("/join_meeting")
 
-    def handle_result_submit(self):
+    def handle_result_submit(self, login_token):
         """Handle the form submit."""
-        self._get_meeting_info("test")
+        response = self._post_join_meeting(login_token)
 
-        return rx.redirect("/join_meeting_result")
+        if response.status_code == 200:
+            return rx.redirect(f"/join_meeting_result")
+        else:
+            print(response.json())
+            return rx.window_alert(f"error")
 
     def _get_meeting_info(self, enter_code: str):
-
-        # {
-        #     "appointmentCode": "abcd1234efgh",
-        #     "selectedDateTimeList": [
-        #         {
-        #             "selectedDate": "2024-04-10",
-        #             "selectedStartTime": "15:00",
-        #             "selectedEndTime": "18:00"
-        #         },
-        #         {
-        #             "selectedDate": "2024-04-10",
-        #             "selectedStartTime": "19:00",
-        #             "selectedEndTime": "21:00"
-        #         }
-        #     ],
-        #     "nickname": "이재훈"
-        # }
-        print()
         response = requests.get(
             f"{BACKEND_URL}/api/v1/appointments/preview",
             headers={"accept": "*/*"},
@@ -309,3 +322,19 @@ class JoinState(rx.State):
         else:
             print(response.json())
             return rx.window_alert(f"존재하지 않는 약속 코드입니다.")
+
+    def _post_join_meeting(self, login_token):
+
+        header = HEADER
+        header["Authorization"] = login_token
+        response = requests.post(
+            f"{BACKEND_URL}/api/v1/appointments/join",
+            headers=header,
+            json={
+                "appointmentCode": self.appointment_code,
+                "selectedDateTimeList": self.get_value(self.select_data),
+                "nickname": "이재훈",
+            },
+        )
+
+        return response
