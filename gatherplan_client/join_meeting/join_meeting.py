@@ -181,7 +181,7 @@ def join_meeting() -> rx.Component:
                     color=AppColor.WHITE,
                     type="submit",
                     background_color=AppColor.MAIN_COLOR,
-                    on_click=rx.redirect("/login"),
+                    on_click=rx.redirect("/login_join_meeting"),
                 ),
                 rx.button(
                     "비회원으로 시작하기",

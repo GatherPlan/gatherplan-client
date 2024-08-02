@@ -56,6 +56,17 @@ class LoginState(rx.State):
             self.error_message = "로그인 실패"
             return None
 
+    def handle_submit_join_meeting(self, form_data: dict):
+        """Handle the form submit."""
+        self.form_data = form_data
+
+        if self.login():
+            self.error_message = ""
+            return rx.redirect("/join_meeting")
+        else:
+            self.error_message = "로그인 실패"
+            return None
+
     def login(self):
         data = {
             "email": self.form_data["email"],
@@ -130,6 +141,66 @@ def login() -> rx.Component:
                         width="100%",
                     ),
                     on_submit=LoginState.handle_submit,
+                    reset_on_submit=False,
+                    align="center",
+                    width="345px",
+                ),
+                rx.center(
+                    LoginState.error_message,
+                    font_size="12px",
+                    color="#FF0000",
+                    width="100%",
+                ),
+            ),
+            width="100%",
+            height="60%",
+        ),
+        rx.box(
+            width="100%",
+            height="15%",
+        ),
+        rx.center(
+            # second_basic_button(
+            #     "비회원으로 시작하기", redirect_url="/not_member_login"
+            # ),
+            width="100%",
+            height="15%",
+        ),
+        spacing="0",
+        height="100vh",
+    )
+
+
+@rx.page(route="/login_join_meeting")
+def login_join_meeting() -> rx.Component:
+    return rx.vstack(
+        buffer_box("8%"),
+        center_align_text_box(
+            main_text="Gather Plan", sub_text="게더플랜에서 모임의 약속을 잡아보세요"
+        ),
+        rx.center(
+            rx.vstack(
+                rx.form(
+                    form_box(
+                        explain_text="이메일",
+                        placeholder_text="2~8자리",
+                        form_value="email",
+                    ),
+                    form_box(
+                        explain_text="비밀번호",
+                        placeholder_text="2~8자리",
+                        form_value="password",
+                        type="password",
+                    ),
+                    basic_button("로그인"),
+                    rx.hstack(
+                        small_button("아이디 찾기"),
+                        small_button("비밀번호 찾기"),
+                        small_button("회원가입", "/sign_up"),
+                        padding_top="10px",
+                        width="100%",
+                    ),
+                    on_submit=LoginState.handle_submit_join_meeting,
                     reset_on_submit=False,
                     align="center",
                     width="345px",
