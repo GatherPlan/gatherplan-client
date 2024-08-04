@@ -1,5 +1,6 @@
 import requests
 import reflex as rx
+import json
 
 from gatherplan_client.backend_rouuter import BACKEND_URL, HEADER
 from gatherplan_client.reflex_assets.buffer_box import buffer_box
@@ -14,7 +15,9 @@ from gatherplan_client.reflex_assets.text_box import center_align_text_box
 def need_login(func):
     def inner():
         return rx.cond(
-            LoginState.login_token == "", login(), func(LoginState.login_token)
+            LoginState.login_token == "",
+            login(),
+            func(LoginState.login_token, LoginState.nick_name),
         )
 
     return inner
@@ -78,6 +81,8 @@ class LoginState(rx.State):
 
         if response.status_code == 200:
             token = response.headers["Authorization"]
+            decoded_str = json.loads(response.content.decode("utf-8"))
+            self.nick_name = decoded_str["name"]
             self.login_token = token
             return True
         else:

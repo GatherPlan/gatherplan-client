@@ -7,7 +7,7 @@ from gatherplan_client.reflex_assets.schema import AppFontFamily, AppColor
 
 
 @need_login
-def make_meeting(login_token) -> rx.Component:
+def make_meeting(login_token, nick_name) -> rx.Component:
     return rx.vstack(
         header("/"),  # 5%
         rx.center(

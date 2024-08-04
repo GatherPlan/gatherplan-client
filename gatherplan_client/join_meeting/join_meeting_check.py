@@ -8,7 +8,7 @@ from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
 
 
 @need_login
-def join_meeting_check(login_token) -> rx.Component:
+def join_meeting_check(login_token, nick_name) -> rx.Component:
     return rx.vstack(
         header("/join_meeting_date"),
         rx.center(
@@ -185,7 +185,7 @@ def join_meeting_check(login_token) -> rx.Component:
                 color=AppColor.WHITE,
                 type="submit",
                 background_color=AppColor.MAIN_COLOR,
-                on_click=JoinState.handle_result_submit(login_token),
+                on_click=JoinState.handle_result_submit(login_token, nick_name),
             ),
             width="100%",
         ),

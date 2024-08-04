@@ -292,9 +292,9 @@ class JoinState(rx.State):
 
         return rx.redirect("/join_meeting")
 
-    def handle_result_submit(self, login_token):
+    def handle_result_submit(self, login_token, nick_name):
         """Handle the form submit."""
-        response = self._post_join_meeting(login_token)
+        response = self._post_join_meeting(login_token, nick_name)
 
         if response.status_code == 200:
             return rx.redirect(f"/join_meeting_result")
@@ -323,7 +323,7 @@ class JoinState(rx.State):
             print(response.json())
             return rx.window_alert(f"존재하지 않는 약속 코드입니다.")
 
-    def _post_join_meeting(self, login_token):
+    def _post_join_meeting(self, login_token, nick_name):
 
         header = HEADER
         header["Authorization"] = login_token
@@ -333,7 +333,7 @@ class JoinState(rx.State):
             json={
                 "appointmentCode": self.appointment_code,
                 "selectedDateTimeList": self.get_value(self.select_data),
-                "nickname": "이재훈",
+                "nickname": nick_name,
             },
         )
 

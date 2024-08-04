@@ -11,7 +11,7 @@ from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
 def check_login(func):
     def inner():
         return rx.cond(
-            LoginState.login_token != "", check_meeting_not_logined(), func()
+            LoginState.login_token == "", check_meeting_not_logined(), func()
         )
 
     return inner

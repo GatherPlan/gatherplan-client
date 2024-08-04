@@ -23,7 +23,7 @@ def location_button(button_text: str):
 
 
 @need_login
-def make_meeting_detail(login_token) -> rx.Component:
+def make_meeting_detail(login_token, nick_name) -> rx.Component:
     return rx.vstack(
         header("/make_meeting"),
         rx.center(
