@@ -73,7 +73,6 @@ class CheckState(rx.State):
     }
 
     def handle_detail_submit(self, meeting_name: str):
-        print("test")
         for meeting in self.meeting_list:
             if meeting["meeting_name"] == meeting_name:
                 return meeting

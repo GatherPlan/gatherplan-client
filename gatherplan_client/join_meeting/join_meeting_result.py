@@ -65,7 +65,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        JoinState.select_location_detail_location,
+                        JoinState.meeting_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -130,7 +130,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                             ),
                             rx.button(
                                 rx.icon("copy"),
-                                on_click=rx.set_clipboard(JoinState.meeting_code),
+                                on_click=rx.set_clipboard(JoinState.appointment_code),
                                 width="12px",
                                 height="12px",
                                 padding="0",
@@ -140,7 +140,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                         ),
                         rx.box(
                             rx.text(
-                                JoinState.meeting_code,
+                                JoinState.appointment_code,
                                 font_size="14px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 color=AppColor.BLACK,
