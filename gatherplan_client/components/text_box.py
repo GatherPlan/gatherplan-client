@@ -2,7 +2,7 @@ from typing import Any
 
 import reflex as rx
 
-from gatherplan_client.reflex_assets.schema import TextSize, AppFontFamily, AppColor
+from gatherplan_client.components.schema import TextSize, AppFontFamily, AppColor
 
 
 def left_align_text_box(

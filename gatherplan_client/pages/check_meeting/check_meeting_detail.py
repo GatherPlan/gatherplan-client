@@ -2,10 +2,10 @@ from typing import List
 
 import reflex as rx
 
-from gatherplan_client.check_meeting.check_state import CheckState
-from gatherplan_client.login import LoginState
-from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
+from gatherplan_client.backend.check_state import CheckState
+from gatherplan_client.backend.login_state import LoginState
+from gatherplan_client.components.header import header
+from gatherplan_client.components.schema import AppColor, AppFontFamily
 
 
 def check_login(func):

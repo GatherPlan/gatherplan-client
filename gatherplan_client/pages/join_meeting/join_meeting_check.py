@@ -1,22 +1,20 @@
 import reflex as rx
 
-from gatherplan_client.backend_rouuter import FRONTEND_URL
-from gatherplan_client.join_meeting.enter_meeting_code import EnterCodeState
-from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
-from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
-from gatherplan_client.reflex_assets.text_box import (
-    text_for_each,
-)
+from gatherplan_client.pages.join_meeting.join_meeting_date import display_select_date
+from gatherplan_client.backend.join_state import JoinState
+from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.components.header import header
+from gatherplan_client.components.schema import AppColor, AppFontFamily
 
 
-def make_meeting_result() -> rx.Component:
+@need_login
+def join_meeting_check(login_token, nick_name) -> rx.Component:
     return rx.vstack(
-        header("/make_meeting_check"),
+        header("/join_meeting_date"),
         rx.center(
             rx.vstack(
                 rx.text(
-                    "정상적으로 약속이 생성되었습니다.",
+                    "선택한 약속 참여 일정을 확인해주세요.",
                     font_size="18px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     font_weight="700",
@@ -25,7 +23,7 @@ def make_meeting_result() -> rx.Component:
                     width="360px",
                 ),
                 rx.text(
-                    "약속 정보를 확인하고 참여자들에게 공유해보세요.",
+                    "참여하기를 눌러 약속 참여를 완료주세요.",
                     font_size="12px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     color=AppColor.GRAY_TEXT,
@@ -48,7 +46,7 @@ def make_meeting_result() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        MakeMeetingNameState.meeting_name,
+                        JoinState.meeting_name,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -67,8 +65,7 @@ def make_meeting_result() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        MakeMeetingNameState.select_location,
-                        # MakeMeetingNameState.select_location_detail_location,
+                        JoinState.meeting_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -79,23 +76,28 @@ def make_meeting_result() -> rx.Component:
                     height="50px",
                 ),
                 rx.box(
-                    rx.text(
-                        "약속 후보 날짜",
-                        font_size="12px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.GRAY_TEXT,
-                    ),
-                    rx.box(
-                        # TODO: string formating 수정 필요
-                        rx.hstack(
-                            rx.foreach(MakeMeetingNameState.select_data, text_for_each),
+                    rx.vstack(
+                        rx.box(
+                            rx.text(
+                                "선택한 일정",
+                                font_size="14px",
+                                font_family=AppFontFamily.DEFAULT_FONT,
+                                font_weight="700",
+                                color=AppColor.GRAY_TEXT,
+                                padding_left="10px",
+                            ),
                             width="360px",
-                        )
+                        ),
+                        rx.flex(
+                            rx.foreach(
+                                JoinState.display_select_date,
+                                display_select_date,
+                            ),
+                            direction="column",
+                            spacing="4",
+                        ),
                     ),
-                    width="360px",
-                    padding_left="10px",
-                    height="50px",
+                    width="100%",
                 ),
                 rx.box(
                     rx.text(
@@ -106,8 +108,7 @@ def make_meeting_result() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        MakeMeetingNameState.meeting_memo,
-                        # MakeMeetingNameState.select_location_detail_location,
+                        JoinState.meeting_memo,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -129,7 +130,7 @@ def make_meeting_result() -> rx.Component:
                             ),
                             rx.button(
                                 rx.icon("copy"),
-                                on_click=rx.set_clipboard(EnterCodeState.meeting_code),
+                                on_click=rx.set_clipboard(JoinState.appointment_code),
                                 width="12px",
                                 height="12px",
                                 padding="0",
@@ -139,7 +140,7 @@ def make_meeting_result() -> rx.Component:
                         ),
                         rx.box(
                             rx.text(
-                                EnterCodeState.meeting_code,
+                                JoinState.appointment_code,
                                 font_size="14px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 color=AppColor.BLACK,
@@ -152,36 +153,39 @@ def make_meeting_result() -> rx.Component:
                     padding_left="10px",
                     height="50px",
                 ),
+                rx.box(
+                    rx.text(
+                        "모임장",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
+                    ),
+                    rx.text(
+                        JoinState.host_name,
+                        font_size="14px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
             ),
             width="100%",
-            height="50%",
+            height="60%",
         ),
         rx.center(
-            rx.vstack(
-                rx.button(
-                    "참여하기",
-                    width="348px",
-                    height="35px",
-                    padding="20px",
-                    color=AppColor.WHITE,
-                    type="submit",
-                    background_color=AppColor.MAIN_COLOR,
-                    on_click=rx.redirect(
-                        f"/enter_meeting_code/{EnterCodeState.meeting_code}"
-                    ),
-                ),
-                rx.button(
-                    "공유하기",
-                    width="348px",
-                    height="35px",
-                    padding="20px",
-                    color=AppColor.BLACK,
-                    on_click=rx.set_clipboard(
-                        f"{FRONTEND_URL}/enter_meeting_code/{EnterCodeState.meeting_code}"
-                    ),
-                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
-                    margin_top="20px",
-                ),
+            rx.button(
+                "참여하기",
+                width="348px",
+                height="35px",
+                padding="20px",
+                color=AppColor.WHITE,
+                type="submit",
+                background_color=AppColor.MAIN_COLOR,
+                on_click=JoinState.handle_result_submit(login_token, nick_name),
             ),
             width="100%",
         ),

@@ -1,10 +1,10 @@
 import reflex as rx
 
-from gatherplan_client.join_meeting.join_meeting_date import display_select_date
-from gatherplan_client.join_meeting.join_state import JoinState
-from gatherplan_client.login import need_login
-from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
+from gatherplan_client.pages.join_meeting.join_meeting_date import display_select_date
+from gatherplan_client.backend.join_state import JoinState
+from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.components.header import header
+from gatherplan_client.components.schema import AppColor, AppFontFamily
 
 
 @need_login

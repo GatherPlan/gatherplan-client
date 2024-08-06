@@ -1,9 +1,9 @@
 import reflex as rx
 
-from gatherplan_client.login import need_login
-from gatherplan_client.make_meeting.make_meeting_state import MakeMeetingNameState
-from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import AppFontFamily, AppColor
+from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.backend.make_meeting_state import MakeMeetingNameState
+from gatherplan_client.components.header import header
+from gatherplan_client.components.schema import AppFontFamily, AppColor
 
 
 @need_login

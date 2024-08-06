@@ -2,9 +2,9 @@ from typing import List
 
 import reflex as rx
 
-from gatherplan_client.join_meeting.join_state import JoinState
-from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import AppFontFamily, AppColor
+from gatherplan_client.backend.join_state import JoinState
+from gatherplan_client.components.header import header
+from gatherplan_client.components.schema import AppFontFamily, AppColor
 
 
 def time_button(time_data_to_button_click: List):

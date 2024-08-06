@@ -1,6 +1,6 @@
 import reflex as rx
 
-from gatherplan_client.reflex_assets.schema import TextSize, AppColor, AppFontFamily
+from gatherplan_client.components.schema import TextSize, AppColor, AppFontFamily
 
 
 def main_header(main_text: str):

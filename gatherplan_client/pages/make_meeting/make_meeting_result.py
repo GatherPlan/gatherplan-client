@@ -1,21 +1,22 @@
 import reflex as rx
 
-from gatherplan_client.login import need_login
-from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
-from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
+from gatherplan_client.backend.backend_rouuter import FRONTEND_URL
+from gatherplan_client.pages.join_meeting.enter_meeting_code import EnterCodeState
+from gatherplan_client.pages.make_meeting.make_meeting import MakeMeetingNameState
+from gatherplan_client.components.header import header
+from gatherplan_client.components.schema import AppColor, AppFontFamily
+from gatherplan_client.components.text_box import (
+    text_for_each,
+)
 
 
-@need_login
-def make_meeting_check(login_token, nick_name) -> rx.Component:
-    from gatherplan_client.reflex_assets.text_box import text_for_each
-
+def make_meeting_result() -> rx.Component:
     return rx.vstack(
-        header("/make_meeting_date"),
+        header("/make_meeting_check"),
         rx.center(
             rx.vstack(
                 rx.text(
-                    "선택한 약속 정보를 확인해주세요",
+                    "정상적으로 약속이 생성되었습니다.",
                     font_size="18px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     font_weight="700",
@@ -24,7 +25,7 @@ def make_meeting_check(login_token, nick_name) -> rx.Component:
                     width="360px",
                 ),
                 rx.text(
-                    "약속 정보 변경은 약속 현황보기에서 가능합니다.",
+                    "약속 정보를 확인하고 참여자들에게 공유해보세요.",
                     font_size="12px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     color=AppColor.GRAY_TEXT,
@@ -106,6 +107,7 @@ def make_meeting_check(login_token, nick_name) -> rx.Component:
                     ),
                     rx.text(
                         MakeMeetingNameState.meeting_memo,
+                        # MakeMeetingNameState.select_location_detail_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -115,20 +117,71 @@ def make_meeting_check(login_token, nick_name) -> rx.Component:
                     padding_left="10px",
                     height="50px",
                 ),
+                rx.box(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.text(
+                                "약속코드",
+                                font_size="12px",
+                                font_family=AppFontFamily.DEFAULT_FONT,
+                                font_weight="700",
+                                color=AppColor.GRAY_TEXT,
+                            ),
+                            rx.button(
+                                rx.icon("copy"),
+                                on_click=rx.set_clipboard(EnterCodeState.meeting_code),
+                                width="12px",
+                                height="12px",
+                                padding="0",
+                                color=AppColor.GRAY_TEXT,
+                                background_color=AppColor.WHITE,
+                            ),
+                        ),
+                        rx.box(
+                            rx.text(
+                                EnterCodeState.meeting_code,
+                                font_size="14px",
+                                font_family=AppFontFamily.DEFAULT_FONT,
+                                color=AppColor.BLACK,
+                                font_weight="700",
+                                width="170px",
+                            ),
+                        ),
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
+                ),
             ),
             width="100%",
-            height="60%",
+            height="50%",
         ),
         rx.center(
-            rx.button(
-                "약속 만들기",
-                width="348px",
-                height="35px",
-                padding="20px",
-                color=AppColor.WHITE,
-                type="submit",
-                background_color=AppColor.MAIN_COLOR,
-                on_click=MakeMeetingNameState.handle_result_submit(login_token),
+            rx.vstack(
+                rx.button(
+                    "참여하기",
+                    width="348px",
+                    height="35px",
+                    padding="20px",
+                    color=AppColor.WHITE,
+                    type="submit",
+                    background_color=AppColor.MAIN_COLOR,
+                    on_click=rx.redirect(
+                        f"/enter_meeting_code/{EnterCodeState.meeting_code}"
+                    ),
+                ),
+                rx.button(
+                    "공유하기",
+                    width="348px",
+                    height="35px",
+                    padding="20px",
+                    color=AppColor.BLACK,
+                    on_click=rx.set_clipboard(
+                        f"{FRONTEND_URL}/enter_meeting_code/{EnterCodeState.meeting_code}"
+                    ),
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    margin_top="20px",
+                ),
             ),
             width="100%",
         ),

@@ -1,14 +1,14 @@
 import reflex as rx
 
-from gatherplan_client.login import LoginState
-from gatherplan_client.reflex_assets.buffer_box import buffer_box
-from gatherplan_client.reflex_assets.buttons import (
+from gatherplan_client.backend.login_state import LoginState
+from gatherplan_client.components.buffer_box import buffer_box
+from gatherplan_client.components.buttons import (
     basic_button,
 )
-from gatherplan_client.reflex_assets.header import header
+from gatherplan_client.components.header import header
 
-from gatherplan_client.reflex_assets.form_box import form_box
-from gatherplan_client.reflex_assets.text_box import center_align_text_box
+from gatherplan_client.components.form_box import form_box
+from gatherplan_client.components.text_box import center_align_text_box
 
 
 def not_member_login() -> rx.Component:

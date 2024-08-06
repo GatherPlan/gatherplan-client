@@ -1,16 +1,16 @@
 import requests
 import reflex as rx
-import json
 
-from gatherplan_client.backend_rouuter import BACKEND_URL, HEADER
-from gatherplan_client.reflex_assets.buffer_box import buffer_box
-from gatherplan_client.reflex_assets.buttons import (
+from gatherplan_client.backend.login_state import LoginState
+from gatherplan_client.backend.backend_rouuter import BACKEND_URL, HEADER
+from gatherplan_client.components.buffer_box import buffer_box
+from gatherplan_client.components.buttons import (
     basic_button,
     small_button,
 )
-from gatherplan_client.reflex_assets.form_box import form_box
-from gatherplan_client.reflex_assets.schema import AppColor
-from gatherplan_client.reflex_assets.text_box import center_align_text_box
+from gatherplan_client.components.form_box import form_box
+from gatherplan_client.components.schema import AppColor
+from gatherplan_client.components.text_box import center_align_text_box
 
 
 def need_login(func):
@@ -38,83 +38,6 @@ class EmailAuth(rx.State):
         else:
             print(response.json())
             return rx.window_alert(f"error")
-
-
-class LoginState(rx.State):
-    form_data: dict = {}
-    email: str = ""
-    password: str = ""
-    login_token: str = ""
-    nick_name: str = ""
-    auth_number: str = ""
-    error_message: str = ""
-
-    def handle_submit(self, form_data: dict):
-        """Handle the form submit."""
-        self.form_data = form_data
-
-        if self.login():
-            self.error_message = ""
-            return rx.redirect(f"{self.router.page.path}")
-        else:
-            self.error_message = "로그인 실패"
-            return None
-
-    def handle_submit_join_meeting(self, form_data: dict):
-        """Handle the form submit."""
-        self.form_data = form_data
-
-        if self.login():
-            self.error_message = ""
-            return rx.redirect("/join_meeting")
-        else:
-            self.error_message = "로그인 실패"
-            return None
-
-    def login(self):
-        data = {
-            "email": self.form_data["email"],
-            "password": self.form_data["password"],
-        }
-        response = requests.post(
-            f"{BACKEND_URL}/api/v1/users/login", headers=HEADER, json=data
-        )
-
-        if response.status_code == 200:
-            token = response.headers["Authorization"]
-            decoded_str = json.loads(response.content.decode("utf-8"))
-            self.nick_name = decoded_str["name"]
-            self.login_token = token
-            return True
-        else:
-            return False
-
-    def sign_up(self, form_data: dict):
-        """Handle the form submit."""
-
-        data = {
-            "email": form_data["email"],
-            "authCode": form_data["auth_number"],
-            "name": form_data["nick_name"],
-            "password": form_data["password"],
-        }
-
-        response = requests.post(
-            f"{BACKEND_URL}/api/v1/users/join", headers=HEADER, json=data
-        )
-
-        if response.status_code == 200:
-            return rx.redirect("/login")
-
-        else:
-            print(response.json())
-            self.error_message = "error"
-
-    def start_not_member_login(self, form_data: dict):
-        """Handle the form submit."""
-        self.form_data = form_data
-
-        return rx.redirect("/join_meeting_date")
 
 
 @rx.page(route="/login")

@@ -1,7 +1,7 @@
 import reflex as rx
 
-from gatherplan_client.reflex_assets.buttons import index_button
-from gatherplan_client.reflex_assets.schema import AppColor, TextSize, AppFontFamily
+from gatherplan_client.components.buttons import index_button
+from gatherplan_client.components.schema import AppColor, TextSize, AppFontFamily
 
 
 class State(rx.State):

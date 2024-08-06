@@ -1,10 +1,10 @@
 from typing import List
 
 import reflex as rx
-from gatherplan_client.login import need_login
-from gatherplan_client.make_meeting.make_meeting import MakeMeetingNameState
-from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import TextSize, AppColor, AppFontFamily
+from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.pages.make_meeting.make_meeting import MakeMeetingNameState
+from gatherplan_client.components.header import header
+from gatherplan_client.components.schema import TextSize, AppColor, AppFontFamily
 
 
 def location_button(display_data: List):

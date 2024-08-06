@@ -1,20 +1,21 @@
 import reflex as rx
 
-from gatherplan_client.join_meeting.join_meeting_date import display_select_date
-from gatherplan_client.join_meeting.join_state import JoinState
-from gatherplan_client.login import need_login
-from gatherplan_client.reflex_assets.header import header
-from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
+from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.pages.make_meeting.make_meeting import MakeMeetingNameState
+from gatherplan_client.components.header import header
+from gatherplan_client.components.schema import AppColor, AppFontFamily
 
 
 @need_login
-def join_meeting_check(login_token, nick_name) -> rx.Component:
+def make_meeting_check(login_token, nick_name) -> rx.Component:
+    from gatherplan_client.components.text_box import text_for_each
+
     return rx.vstack(
-        header("/join_meeting_date"),
+        header("/make_meeting_date"),
         rx.center(
             rx.vstack(
                 rx.text(
-                    "선택한 약속 참여 일정을 확인해주세요.",
+                    "선택한 약속 정보를 확인해주세요",
                     font_size="18px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     font_weight="700",
@@ -23,7 +24,7 @@ def join_meeting_check(login_token, nick_name) -> rx.Component:
                     width="360px",
                 ),
                 rx.text(
-                    "참여하기를 눌러 약속 참여를 완료주세요.",
+                    "약속 정보 변경은 약속 현황보기에서 가능합니다.",
                     font_size="12px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     color=AppColor.GRAY_TEXT,
@@ -46,7 +47,7 @@ def join_meeting_check(login_token, nick_name) -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        JoinState.meeting_name,
+                        MakeMeetingNameState.meeting_name,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -65,7 +66,8 @@ def join_meeting_check(login_token, nick_name) -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        JoinState.meeting_location,
+                        MakeMeetingNameState.select_location,
+                        # MakeMeetingNameState.select_location_detail_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -76,28 +78,23 @@ def join_meeting_check(login_token, nick_name) -> rx.Component:
                     height="50px",
                 ),
                 rx.box(
-                    rx.vstack(
-                        rx.box(
-                            rx.text(
-                                "선택한 일정",
-                                font_size="14px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="700",
-                                color=AppColor.GRAY_TEXT,
-                                padding_left="10px",
-                            ),
-                            width="360px",
-                        ),
-                        rx.flex(
-                            rx.foreach(
-                                JoinState.display_select_date,
-                                display_select_date,
-                            ),
-                            direction="column",
-                            spacing="4",
-                        ),
+                    rx.text(
+                        "약속 후보 날짜",
+                        font_size="12px",
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.GRAY_TEXT,
                     ),
-                    width="100%",
+                    rx.box(
+                        # TODO: string formating 수정 필요
+                        rx.hstack(
+                            rx.foreach(MakeMeetingNameState.select_data, text_for_each),
+                            width="360px",
+                        )
+                    ),
+                    width="360px",
+                    padding_left="10px",
+                    height="50px",
                 ),
                 rx.box(
                     rx.text(
@@ -108,61 +105,7 @@ def join_meeting_check(login_token, nick_name) -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        JoinState.meeting_memo,
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
-                    ),
-                    width="360px",
-                    padding_left="10px",
-                    height="50px",
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.hstack(
-                            rx.text(
-                                "약속코드",
-                                font_size="12px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="700",
-                                color=AppColor.GRAY_TEXT,
-                            ),
-                            rx.button(
-                                rx.icon("copy"),
-                                on_click=rx.set_clipboard(JoinState.appointment_code),
-                                width="12px",
-                                height="12px",
-                                padding="0",
-                                color=AppColor.GRAY_TEXT,
-                                background_color=AppColor.WHITE,
-                            ),
-                        ),
-                        rx.box(
-                            rx.text(
-                                JoinState.appointment_code,
-                                font_size="14px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                color=AppColor.BLACK,
-                                font_weight="700",
-                                width="170px",
-                            ),
-                        ),
-                    ),
-                    width="360px",
-                    padding_left="10px",
-                    height="50px",
-                ),
-                rx.box(
-                    rx.text(
-                        "모임장",
-                        font_size="12px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.GRAY_TEXT,
-                    ),
-                    rx.text(
-                        JoinState.host_name,
+                        MakeMeetingNameState.meeting_memo,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -178,14 +121,14 @@ def join_meeting_check(login_token, nick_name) -> rx.Component:
         ),
         rx.center(
             rx.button(
-                "참여하기",
+                "약속 만들기",
                 width="348px",
                 height="35px",
                 padding="20px",
                 color=AppColor.WHITE,
                 type="submit",
                 background_color=AppColor.MAIN_COLOR,
-                on_click=JoinState.handle_result_submit(login_token, nick_name),
+                on_click=MakeMeetingNameState.handle_result_submit(login_token),
             ),
             width="100%",
         ),

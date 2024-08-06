@@ -1,6 +1,6 @@
 import reflex as rx
 
-from gatherplan_client.reflex_assets.schema import TextSize, AppColor, AppFontFamily
+from gatherplan_client.components.schema import TextSize, AppColor, AppFontFamily
 
 
 def index_button(main_text: str, sub_text: str = "", redirect_url: str = ""):
