@@ -119,6 +119,7 @@ Temporary Items
 __pycache__/
 __pypackages__/
 and can be added to the global gitignore or merged into this file.  For a more nuclear
+assets/external/
 be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
 build/
 celerybeat-schedule

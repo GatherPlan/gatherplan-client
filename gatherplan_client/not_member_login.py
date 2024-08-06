@@ -12,7 +12,6 @@ from gatherplan_client.reflex_assets.text_box import center_align_text_box
 
 
 def not_member_login() -> rx.Component:
-
     return rx.vstack(
         header("/"),
         buffer_box("8%"),

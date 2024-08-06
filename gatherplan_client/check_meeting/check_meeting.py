@@ -3,18 +3,9 @@ from typing import Dict
 import reflex as rx
 
 from gatherplan_client.check_meeting.check_state import CheckState
-from gatherplan_client.login import LoginState
+from gatherplan_client.login import LoginState, need_login
 from gatherplan_client.reflex_assets.header import header
 from gatherplan_client.reflex_assets.schema import AppColor, AppFontFamily
-
-
-def check_login(func):
-    def inner():
-        return rx.cond(
-            LoginState.login_token == "", check_meeting_not_logined(), func()
-        )
-
-    return inner
 
 
 def list_view(items: Dict):
@@ -74,30 +65,8 @@ def list_view(items: Dict):
     )
 
 
-@check_login
-def check_meeting() -> rx.Component:
-    return rx.vstack(
-        header("/"),
-        rx.center(
-            rx.text(
-                "약속 현황보기",
-                font_size="20px",
-                padding_top="28px",
-                padding_bottom="40px",
-                padding_left="10px",
-                font_family=AppFontFamily.DEFAULT_FONT,
-                font_weight="700",
-                width="360px",
-            ),
-            width="100%",
-            height="15%",
-        ),
-        spacing="0",
-        height="100vh",
-    )
-
-
-def check_meeting_not_logined() -> rx.Component:
+@need_login
+def check_meeting(login_token, nick_name) -> rx.Component:
     return rx.vstack(
         header("/"),
         rx.center(

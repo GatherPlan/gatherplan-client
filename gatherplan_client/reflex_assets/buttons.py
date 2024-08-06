@@ -1,5 +1,3 @@
-from typing import Any
-
 import reflex as rx
 
 from gatherplan_client.reflex_assets.schema import TextSize, AppColor, AppFontFamily
@@ -44,21 +42,6 @@ def basic_button(button_text: str = "", type: str = "submit"):
     )
 
 
-def second_basic_button(
-    button_text: str = "", type: str = "submit", redirect_url: str = "/"
-):
-    return rx.button(
-        button_text,
-        width="348px",
-        height="48px",
-        padding="20px",
-        color=AppColor.WHITE,
-        type=type,
-        background_color=AppColor.LIGHT_GRAY_TEXT,
-        on_click=rx.redirect(redirect_url),
-    )
-
-
 def small_button(button_text: str = "", redirect_url: str = "/"):
     return rx.button(
         button_text,
@@ -68,36 +51,4 @@ def small_button(button_text: str = "", redirect_url: str = "/"):
         type="button",
         background_color="#FFFFFF",
         on_click=rx.redirect(redirect_url),
-    )
-
-
-def make_meeting_time_button(
-    main_text: str,
-    sub_text: str = "",
-    on_click_func: Any = None,
-    text_color: str = "#000000",
-):
-    return rx.button(
-        rx.vstack(
-            rx.text(
-                main_text,
-                color=text_color,
-                font_size=TextSize.SMALL,
-                font_family=AppFontFamily.JALNAN_GOTHIC,
-            ),
-            rx.text(
-                sub_text,
-                color=AppColor.GRAY_TEXT,
-                font_size=TextSize.TINY,
-                font_family=AppFontFamily.JALNAN_GOTHIC,
-            ),
-            width="340px",
-        ),
-        width="340px",
-        height="76px",
-        padding="20px",
-        border_radius="15px",
-        border=f"3px solid {text_color}",
-        background_color=AppColor.WHITE,
-        on_click=on_click_func,
     )

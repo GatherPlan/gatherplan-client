@@ -9,6 +9,7 @@ from gatherplan_client.reflex_assets.buttons import (
     small_button,
 )
 from gatherplan_client.reflex_assets.form_box import form_box
+from gatherplan_client.reflex_assets.schema import AppColor
 from gatherplan_client.reflex_assets.text_box import center_align_text_box
 
 
@@ -165,9 +166,16 @@ def login() -> rx.Component:
             height="15%",
         ),
         rx.center(
-            # second_basic_button(
-            #     "비회원으로 시작하기", redirect_url="/not_member_login"
-            # ),
+            rx.button(
+                "비회원으로 시작하기",
+                width="348px",
+                height="48px",
+                padding="20px",
+                color=AppColor.WHITE,
+                type="button",
+                background_color=AppColor.LIGHT_GRAY_TEXT,
+                on_click=rx.redirect("/not_member_login"),
+            ),
             width="100%",
             height="15%",
         ),
@@ -225,9 +233,16 @@ def login_join_meeting() -> rx.Component:
             height="15%",
         ),
         rx.center(
-            # second_basic_button(
-            #     "비회원으로 시작하기", redirect_url="/not_member_login"
-            # ),
+            rx.button(
+                "비회원으로 시작하기",
+                width="348px",
+                height="48px",
+                padding="20px",
+                color=AppColor.WHITE,
+                type="button",
+                background_color=AppColor.LIGHT_GRAY_TEXT,
+                on_click=rx.redirect("/not_member_login"),
+            ),
             width="100%",
             height="15%",
         ),
