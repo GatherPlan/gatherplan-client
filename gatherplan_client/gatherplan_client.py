@@ -1,5 +1,7 @@
 import reflex as rx
 
+from gatherplan_client.backend.check_state import CheckState
+from gatherplan_client.backend.state import State
 from gatherplan_client.pages.check_meeting.check_meeting import check_meeting
 from gatherplan_client.pages.check_meeting.check_meeting_detail import check_meeting_detail
 from gatherplan_client.pages.index import index
@@ -38,6 +40,5 @@ app.add_page(not_member_login, route="/not_member_login")
 app.add_page(join_meeting_date, route="/join_meeting_date")
 app.add_page(join_meeting_check, route="/join_meeting_check")
 app.add_page(join_meeting_result, route="/join_meeting_result")
-app.add_page(check_meeting, route="/check_meeting")
 app.add_page(check_meeting_detail, route="/check_meeting_detail")
 app.add_page(health_check, route="/ping")

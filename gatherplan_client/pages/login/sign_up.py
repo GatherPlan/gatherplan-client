@@ -1,7 +1,7 @@
 import reflex as rx
 
 from gatherplan_client.pages.login.login import EmailAuth
-from gatherplan_client.backend.login_state import LoginState
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.buffer_box import buffer_box
 from gatherplan_client.components.schema import AppFontFamily, AppColor
 from gatherplan_client.components.text_box import center_align_text_box
@@ -97,7 +97,7 @@ def sign_up() -> rx.Component:
                         width="345px",
                     ),
                     rx.center(
-                        LoginState.error_message,
+                        State.error_message,
                         font_size="12px",
                         color="#FF0000",
                         width="100%",
@@ -112,7 +112,7 @@ def sign_up() -> rx.Component:
                         type="submit",
                         background_color=AppColor.MAIN_COLOR,
                     ),
-                    on_submit=LoginState.sign_up,
+                    on_submit=State.sign_up,
                     reset_on_submit=False,
                     align="center",
                     width="345px",

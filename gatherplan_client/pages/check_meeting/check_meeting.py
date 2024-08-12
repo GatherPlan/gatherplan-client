@@ -2,7 +2,7 @@ from typing import Dict
 
 import reflex as rx
 
-from gatherplan_client.backend.check_state import CheckState
+from gatherplan_client.backend.state import State
 from gatherplan_client.pages.login.login import need_login
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
@@ -61,10 +61,10 @@ def list_view(items: Dict):
         height="50px",
         width="360px",
         padding="0px",
-        on_click=CheckState.handle_meeting_detail(items["meeting_name"]),
+        on_click=State.check_appointments_detail(items["meeting_code"]),
     )
 
-
+@rx.page(route="/check_meeting", on_load=State.check_get_appointments_list)
 @need_login
 def check_meeting(login_token, nick_name) -> rx.Component:
     return rx.vstack(
@@ -114,7 +114,7 @@ def check_meeting(login_token, nick_name) -> rx.Component:
                     rx.box(
                         rx.input(
                             placeholder="홍길동",
-                            name="location",
+                            name="keyword",
                             font_size="10px",
                             height="35px",
                             border_radius="35px",
@@ -149,7 +149,7 @@ def check_meeting(login_token, nick_name) -> rx.Component:
                                         color=AppColor.SUB_TEXT,
                                         padding_left="10px",
                                     ),
-                                    rx.foreach(CheckState.meeting_list, list_view),
+                                    rx.foreach(State.check_meeting_list, list_view),
                                 ),
                                 width="360px",
                             ),
@@ -166,7 +166,7 @@ def check_meeting(login_token, nick_name) -> rx.Component:
                 scrollbars="vertical",
                 style={"height": "70%"},
             ),
-            on_submit=CheckState.handle_detail_submit,
+            on_submit=State.check_get_appointments_search,
             width="100%",
             align="center",
             height="70%",

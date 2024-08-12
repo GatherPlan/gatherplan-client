@@ -1,6 +1,6 @@
 import reflex as rx
 
-from gatherplan_client.backend.login_state import LoginState
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.buffer_box import buffer_box
 from gatherplan_client.components.buttons import (
     basic_button,
@@ -35,14 +35,14 @@ def not_member_login() -> rx.Component:
                         type="password",
                     ),
                     rx.center(
-                        LoginState.error_message,
+                        State.error_message,
                         font_size="12px",
                         color="#FF0000",
                         width="100%",
                         padding_bottom="120px",
                     ),
                     basic_button("시작하기"),
-                    on_submit=LoginState.start_not_member_login,
+                    on_submit=State.start_not_member_login,
                     reset_on_submit=True,
                     align="center",
                     width="345px",

@@ -1,7 +1,7 @@
 import reflex as rx
 
 from gatherplan_client.backend.join_state import JoinState
-from gatherplan_client.backend.login_state import LoginState
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
@@ -11,7 +11,7 @@ from gatherplan_client.components.text_box import (
 
 def join_login(func):
     def inner():
-        return rx.cond(LoginState.login_token != "", join_meeting_not_logined(), func())
+        return rx.cond(State.login_token != "", join_meeting_not_logined(), func())
 
     return inner
 

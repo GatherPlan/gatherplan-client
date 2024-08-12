@@ -1,7 +1,7 @@
 import requests
 import reflex as rx
 
-from gatherplan_client.backend.login_state import LoginState
+from gatherplan_client.backend.state import State
 from gatherplan_client.backend.backend_rouuter import BACKEND_URL, HEADER
 from gatherplan_client.components.buffer_box import buffer_box
 from gatherplan_client.components.buttons import (
@@ -16,9 +16,9 @@ from gatherplan_client.components.text_box import center_align_text_box
 def need_login(func):
     def inner():
         return rx.cond(
-            LoginState.login_token == "",
+            State.login_token == "",
             login(),
-            func(LoginState.login_token, LoginState.nick_name),
+            func(State.login_token, State.nick_name),
         )
 
     return inner
@@ -69,13 +69,13 @@ def login() -> rx.Component:
                         padding_top="10px",
                         width="100%",
                     ),
-                    on_submit=LoginState.handle_submit,
+                    on_submit=State.handle_submit,
                     reset_on_submit=False,
                     align="center",
                     width="345px",
                 ),
                 rx.center(
-                    LoginState.error_message,
+                    State.error_message,
                     font_size="12px",
                     color="#FF0000",
                     width="100%",
@@ -136,13 +136,13 @@ def login_join_meeting() -> rx.Component:
                         padding_top="10px",
                         width="100%",
                     ),
-                    on_submit=LoginState.handle_submit_join_meeting,
+                    on_submit=State.handle_submit_join_meeting,
                     reset_on_submit=False,
                     align="center",
                     width="345px",
                 ),
                 rx.center(
-                    LoginState.error_message,
+                    State.error_message,
                     font_size="12px",
                     color="#FF0000",
                     width="100%",
