@@ -10,6 +10,7 @@ from gatherplan_client.pages.login.login import need_login
 from gatherplan_client.components.calendar import display_select_date, location_button
 
 
+@rx.page(route="/check_meeting_detail")
 @need_login
 def check_meeting_detail(login_token, nick_name) -> rx.Component:
     return rx.vstack(
@@ -69,7 +70,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                     color=AppColor.GRAY_TEXT,
                                 ),
                                 rx.text(
-                                    CheckState.meeting_name,
+                                    State.meeting_name,
                                     font_size="14px",
                                     font_family=AppFontFamily.DEFAULT_FONT,
                                     font_weight="700",
@@ -88,7 +89,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                     color=AppColor.GRAY_TEXT,
                                 ),
                                 rx.text(
-                                    CheckState.select_location_detail_location,
+                                    State.address,
                                     font_size="14px",
                                     font_family=AppFontFamily.DEFAULT_FONT,
                                     font_weight="700",
@@ -113,7 +114,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                     ),
                                     rx.flex(
                                         rx.foreach(
-                                            CheckState.display_select_date,
+                                            State.candidate_list,
                                             display_select_date,
                                         ),
                                         direction="column",
@@ -131,7 +132,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                     color=AppColor.GRAY_TEXT,
                                 ),
                                 rx.text(
-                                    CheckState.meeting_memo,
+                                    State.meeting_notice,
                                     font_size="14px",
                                     font_family=AppFontFamily.DEFAULT_FONT,
                                     font_weight="700",
@@ -154,7 +155,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                         rx.button(
                                             rx.icon("copy"),
                                             on_click=rx.set_clipboard(
-                                                CheckState.meeting_code
+                                                State.check_detail_meeting_code
                                             ),
                                             width="12px",
                                             height="12px",
@@ -165,7 +166,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                     ),
                                     rx.box(
                                         rx.text(
-                                            CheckState.meeting_code,
+                                            State.check_detail_meeting_code,
                                             font_size="14px",
                                             font_family=AppFontFamily.DEFAULT_FONT,
                                             color=AppColor.BLACK,
@@ -187,7 +188,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                     color=AppColor.GRAY_TEXT,
                                 ),
                                 rx.text(
-                                    CheckState.host_name,
+                                    State.host_name,
                                     font_size="14px",
                                     font_family=AppFontFamily.DEFAULT_FONT,
                                     font_weight="700",

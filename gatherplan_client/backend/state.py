@@ -16,8 +16,21 @@ class State(rx.State):
     auth_number: str = ""
     error_message: str = ""
 
+    meeting_name: str = ""
+    host_name: str = ""
+    meeting_notice: str = ""
+    meeting_state: str = ""
+    address: str = ""
+    candidate_list: List = []
+    appointment_state: str = ""
+    is_participated: bool = False
+    is_host: bool = False
+    user_participation_info_list: List = []
+
     check_meeting_list: List[Dict[str, str]] = []
     check_detail_meeting_code: str = ""
+
+
 
     def handle_submit(self, form_data: dict):
         """Handle the form submit."""
@@ -118,5 +131,23 @@ class State(rx.State):
 
     def check_appointments_detail(self, meeting_code: str):
         self.check_detail_meeting_code = meeting_code
-        return rx.redirect("/check_meeting_detail")
+        header = HEADER
+        header["Authorization"] = self.login_token
 
+        response = requests.get(
+            f"{BACKEND_URL}/api/v1/appointments", headers=header, params={"appointmentCode":self.check_detail_meeting_code}
+        )
+
+        if response.status_code == 200:
+            self.meeting_name = response.json()["appointmentName"]
+            self.host_name = response.json()["hostName"]
+            self.meeting_notice = response.json()["notice"]
+            self.meeting_state = response.json()["appointmentState"]
+            # self.address = response.json()["address"]
+            self.address = ""
+            self.candidate_list = response.json()["candidateDateList"]
+            self.appointment_state = response.json()["appointmentState"]
+            self.is_participated = response.json()["isParticipated"]
+            self.is_host = response.json()["isHost"]
+            self.user_participation_info_list = response.json()["userParticipationInfoList"]
+            return rx.redirect("/check_meeting_detail")
