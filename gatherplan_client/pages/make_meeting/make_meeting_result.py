@@ -2,12 +2,12 @@ import reflex as rx
 
 from gatherplan_client.backend.backend_rouuter import FRONTEND_URL
 from gatherplan_client.pages.join_meeting.enter_meeting_code import EnterCodeState
-from gatherplan_client.pages.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
     text_for_each,
 )
+from gatherplan_client.backend.state import State
 
 
 def make_meeting_result() -> rx.Component:
@@ -48,7 +48,7 @@ def make_meeting_result() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        MakeMeetingNameState.meeting_name,
+                        State.meeting_name,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -67,7 +67,7 @@ def make_meeting_result() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        MakeMeetingNameState.select_location,
+                        State.select_location,
                         # MakeMeetingNameState.select_location_detail_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
@@ -89,7 +89,7 @@ def make_meeting_result() -> rx.Component:
                     rx.box(
                         # TODO: string formating 수정 필요
                         rx.hstack(
-                            rx.foreach(MakeMeetingNameState.select_data, text_for_each),
+                            rx.foreach(State.select_data, text_for_each),
                             width="360px",
                         )
                     ),
@@ -106,7 +106,7 @@ def make_meeting_result() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        MakeMeetingNameState.meeting_memo,
+                        State.meeting_memo,
                         # MakeMeetingNameState.select_location_detail_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,

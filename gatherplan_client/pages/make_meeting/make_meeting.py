@@ -1,9 +1,9 @@
 import reflex as rx
 
 from gatherplan_client.pages.login.login import need_login
-from gatherplan_client.backend.make_meeting_state import MakeMeetingNameState
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
+from gatherplan_client.backend.state import State
 
 
 @need_login
@@ -112,7 +112,7 @@ def make_meeting(login_token, nick_name) -> rx.Component:
                 ),
                 width="100%",
             ),
-            on_submit=MakeMeetingNameState.handle_submit,
+            on_submit=State.make_meeting_handle_submit,
             width="100%",
             height="80%",
             align="center",

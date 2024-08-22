@@ -1,15 +1,9 @@
 import reflex as rx
 
 from gatherplan_client.backend.join_state import JoinState
-from gatherplan_client.backend.make_meeting_state import MakeMeetingNameState
+from gatherplan_client.backend.state import EnterCodeState, State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
-
-
-class EnterCodeState(rx.State):
-    @rx.var
-    def meeting_code(self) -> str:
-        return self.router.page.params.get("meeting_code", "")
 
 
 def enter_meeting_code() -> rx.Component:
@@ -57,7 +51,7 @@ def enter_meeting_code() -> rx.Component:
                             height="35px",
                             border_radius="35px",
                             type="text",
-                            on_change=MakeMeetingNameState.set_meeting_code,
+                            on_change=State.set_meeting_code,
                         ),
                         width="348px",
                         padding_top="10px",

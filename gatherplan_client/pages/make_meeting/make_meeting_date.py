@@ -2,16 +2,16 @@ from typing import List
 
 import reflex as rx
 from gatherplan_client.pages.login.login import need_login
-from gatherplan_client.pages.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import TextSize, AppColor, AppFontFamily
+from gatherplan_client.backend.state import State
 
 
 def location_button(display_data: List):
     return rx.cond(
-        MakeMeetingNameState.holiday_data[display_data[0]] == "sun",
+        State.holiday_data[display_data[0]] == "sun",
         rx.cond(
-            MakeMeetingNameState.holiday_data[display_data[0]] == "prev",
+            State.holiday_data[display_data[0]] == "prev",
             rx.button(
                 display_data[0].to_string(json=False).split("-")[2],
                 width="50px",
@@ -21,7 +21,7 @@ def location_button(display_data: List):
                 type="button",
                 background_color=AppColor.BACKGROUND_GRAY_COLOR,
                 disabled=True,
-                on_click=MakeMeetingNameState.click_button(display_data[0]),
+                on_click=State.make_meeting_date_click_button(display_data[0]),
             ),
             rx.cond(
                 display_data[1],
@@ -34,7 +34,7 @@ def location_button(display_data: List):
                     type="button",
                     border="3px solid #4E5CDC",
                     background_color=AppColor.WHITE,
-                    on_click=MakeMeetingNameState.click_button(display_data[0]),
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
                 ),
                 rx.button(
                     display_data[0].to_string(json=False).split("-")[2],
@@ -44,14 +44,14 @@ def location_button(display_data: List):
                     font_size="16px",
                     type="button",
                     background_color=AppColor.WHITE,
-                    on_click=MakeMeetingNameState.click_button(display_data[0]),
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
                 ),
             ),
         ),
         rx.cond(
-            MakeMeetingNameState.holiday_data[display_data[0]] == "sat",
+            State.holiday_data[display_data[0]] == "sat",
             rx.cond(
-                MakeMeetingNameState.holiday_data[display_data[0]] == "prev",
+                State.holiday_data[display_data[0]] == "prev",
                 rx.button(
                     display_data[0].to_string(json=False).split("-")[2],
                     width="50px",
@@ -61,7 +61,7 @@ def location_button(display_data: List):
                     type="button",
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     disabled=True,
-                    on_click=MakeMeetingNameState.click_button(display_data[0]),
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
                 ),
                 rx.cond(
                     display_data[1],
@@ -74,7 +74,7 @@ def location_button(display_data: List):
                         type="button",
                         border="3px solid #4E5CDC",
                         background_color=AppColor.WHITE,
-                        on_click=MakeMeetingNameState.click_button(display_data[0]),
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
                     ),
                     rx.button(
                         display_data[0].to_string(json=False).split("-")[2],
@@ -84,12 +84,12 @@ def location_button(display_data: List):
                         font_size="16px",
                         type="button",
                         background_color=AppColor.WHITE,
-                        on_click=MakeMeetingNameState.click_button(display_data[0]),
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
                     ),
                 ),
             ),
             rx.cond(
-                MakeMeetingNameState.holiday_data[display_data[0]] == "prev",
+                State.holiday_data[display_data[0]] == "prev",
                 rx.button(
                     display_data[0].to_string(json=False).split("-")[2],
                     width="50px",
@@ -99,7 +99,7 @@ def location_button(display_data: List):
                     type="button",
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     disabled=True,
-                    on_click=MakeMeetingNameState.click_button(display_data[0]),
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
                 ),
                 rx.cond(
                     display_data[1],
@@ -112,7 +112,7 @@ def location_button(display_data: List):
                         type="button",
                         background_color=AppColor.WHITE,
                         border="3px solid #4E5CDC",
-                        on_click=MakeMeetingNameState.click_button(display_data[0]),
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
                     ),
                     rx.button(
                         display_data[0].to_string(json=False).split("-")[2],
@@ -122,7 +122,7 @@ def location_button(display_data: List):
                         font_size="16px",
                         type="button",
                         background_color=AppColor.WHITE,
-                        on_click=MakeMeetingNameState.click_button(display_data[0]),
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
                     ),
                 ),
             ),
@@ -176,7 +176,7 @@ def make_meeting_date(login_token, nick_name) -> rx.Component:
                 rx.hstack(
                     rx.button(
                         rx.icon(tag="chevron-left"),
-                        on_click=MakeMeetingNameState.month_decrement,
+                        on_click=State.month_decrement,
                         width="48px",
                         height="40px",
                         margin_left="74px",
@@ -184,14 +184,14 @@ def make_meeting_date(login_token, nick_name) -> rx.Component:
                         background_color=AppColor.WHITE,
                     ),
                     rx.center(
-                        MakeMeetingNameState.setting_time_display,
+                        State.setting_time_display,
                         width="100px",
                         height="40px",
                         align="center",
                     ),
                     rx.button(
                         rx.icon(tag="chevron-right"),
-                        on_click=MakeMeetingNameState.month_increment,
+                        on_click=State.month_increment,
                         width="48px",
                         height="40px",
                         color=AppColor.BLACK,
@@ -208,7 +208,7 @@ def make_meeting_date(login_token, nick_name) -> rx.Component:
                     rx.center("금", width="50px"),
                     rx.center("토", color=AppColor.BLUE, width="50px"),
                     rx.foreach(
-                        MakeMeetingNameState.display_data,
+                        State.display_data,
                         location_button,
                     ),
                     columns="7",

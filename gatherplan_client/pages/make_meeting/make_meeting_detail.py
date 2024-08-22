@@ -1,9 +1,9 @@
 import reflex as rx
 
 from gatherplan_client.pages.login.login import need_login
-from gatherplan_client.pages.make_meeting.make_meeting import MakeMeetingNameState
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
+from gatherplan_client.backend.state import State
 
 
 def location_button(button_text: str):
@@ -14,7 +14,7 @@ def location_button(button_text: str):
             height="36px",
             color="#A3A3A3",
             type="button",
-            on_click=MakeMeetingNameState.handle_location_submit(
+            on_click=State.make_meeting_detail_handle_location_submit(
                 {"input_location": button_text}
             ),
             background_color="#FFFFFF",
@@ -70,7 +70,7 @@ def make_meeting_detail(login_token, nick_name) -> rx.Component:
                 rx.hstack(
                     rx.box(
                         rx.input(
-                            on_blur=MakeMeetingNameState.set_input_location,
+                            on_blur=State.set_input_location,
                             placeholder="약속장소를 입력해주세요",
                             name="location",
                             font_size="10px",
@@ -91,7 +91,7 @@ def make_meeting_detail(login_token, nick_name) -> rx.Component:
                                 width="50px",
                                 background_color=AppColor.MAIN_COLOR,
                                 font_size="12px",
-                                on_click=MakeMeetingNameState.search_location_info,
+                                on_click=State.search_location_info,
                             )
                         ),
                         rx.drawer.overlay(z_index="5"),
@@ -111,7 +111,7 @@ def make_meeting_detail(login_token, nick_name) -> rx.Component:
                                         rx.tabs.content(
                                             rx.grid(
                                                 rx.foreach(
-                                                    MakeMeetingNameState.search_location,
+                                                    State.search_location,
                                                     location_button,
                                                 ),
                                                 columns="1",
@@ -121,7 +121,7 @@ def make_meeting_detail(login_token, nick_name) -> rx.Component:
                                         rx.tabs.content(
                                             rx.grid(
                                                 rx.foreach(
-                                                    MakeMeetingNameState.search_location_place,
+                                                    State.search_location_place,
                                                     location_button,
                                                 ),
                                                 columns="1",
@@ -151,7 +151,7 @@ def make_meeting_detail(login_token, nick_name) -> rx.Component:
             ),
             rx.center(
                 rx.cond(
-                    MakeMeetingNameState.select_location == "",
+                    State.select_location == "",
                     rx.vstack(""),
                     rx.vstack(
                         rx.box(
@@ -166,7 +166,7 @@ def make_meeting_detail(login_token, nick_name) -> rx.Component:
                                 ),
                                 rx.hstack(
                                     rx.text(
-                                        MakeMeetingNameState.select_location,
+                                        State.select_location,
                                         font_size="14px",
                                         font_family=AppFontFamily.DEFAULT_FONT,
                                         font_weight="700",
@@ -208,7 +208,7 @@ def make_meeting_detail(login_token, nick_name) -> rx.Component:
                 ),
                 width="100%",
             ),
-            on_submit=MakeMeetingNameState.handle_detail_submit,
+            on_submit=State.make_meeting_detail_handle_detail_submit,
             width="100%",
             align="center",
             height="70%",
