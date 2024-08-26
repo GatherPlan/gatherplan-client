@@ -1,7 +1,6 @@
 import reflex as rx
 
 from gatherplan_client.backend.backend_rouuter import FRONTEND_URL
-from gatherplan_client.pages.join_meeting.enter_meeting_code import EnterCodeState
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
@@ -68,7 +67,6 @@ def make_meeting_result() -> rx.Component:
                     ),
                     rx.text(
                         State.select_location,
-                        # MakeMeetingNameState.select_location_detail_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -129,7 +127,7 @@ def make_meeting_result() -> rx.Component:
                             ),
                             rx.button(
                                 rx.icon("copy"),
-                                on_click=rx.set_clipboard(EnterCodeState.meeting_code),
+                                on_click=rx.set_clipboard(State.params_meeting_code),
                                 width="12px",
                                 height="12px",
                                 padding="0",
@@ -139,7 +137,7 @@ def make_meeting_result() -> rx.Component:
                         ),
                         rx.box(
                             rx.text(
-                                EnterCodeState.meeting_code,
+                                State.params_meeting_code,
                                 font_size="14px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 color=AppColor.BLACK,
@@ -167,7 +165,7 @@ def make_meeting_result() -> rx.Component:
                     type="submit",
                     background_color=AppColor.MAIN_COLOR,
                     on_click=rx.redirect(
-                        f"/enter_meeting_code/{EnterCodeState.meeting_code}"
+                        f"/enter_meeting_code/{State.params_meeting_code}"
                     ),
                 ),
                 rx.button(
@@ -177,7 +175,7 @@ def make_meeting_result() -> rx.Component:
                     padding="20px",
                     color=AppColor.BLACK,
                     on_click=rx.set_clipboard(
-                        f"{FRONTEND_URL}/enter_meeting_code/{EnterCodeState.meeting_code}"
+                        f"{FRONTEND_URL}/enter_meeting_code/{State.params_meeting_code}"
                     ),
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     margin_top="20px",

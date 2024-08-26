@@ -11,12 +11,6 @@ import calendar
 
 from gatherplan_client.backend.backend_rouuter import BACKEND_URL, HEADER
 
-
-class EnterCodeState(rx.State):
-    @rx.var
-    def meeting_code(self) -> str:
-        return self.router.page.params.get("meeting_code", "")
-
 class State(rx.State):
     form_data: dict = {}
     email: str = ""
@@ -34,6 +28,10 @@ class State(rx.State):
     search_location_place: List[str] = ["Loading..."]
     select_location: str = ""
     select_location_detail_location: str = ""
+
+    @rx.var
+    def params_meeting_code(self) -> str:
+        return self.router.page.params.get("meeting_code", "")
 
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
@@ -64,13 +62,12 @@ class State(rx.State):
 
         self._setting_month_calendar()
 
-
     def _setting_month_calendar(self):
         self.display_data = {}
 
         weekday = (
-            datetime.date(self.setting_time.year, self.setting_time.month, 1).weekday()
-            + 1
+                datetime.date(self.setting_time.year, self.setting_time.month, 1).weekday()
+                + 1
         )
 
         for i in range(weekday):
@@ -83,8 +80,8 @@ class State(rx.State):
         ) + additional_holiday(year=self.setting_time.year)
 
         for i in range(
-            1,
-            calendar.monthrange(self.setting_time.year, self.setting_time.month)[1] + 1,
+                1,
+                calendar.monthrange(self.setting_time.year, self.setting_time.month)[1] + 1,
         ):
             self.display_data[
                 f"{self.setting_time.year}-{self.setting_time.month}-{i}"
@@ -99,8 +96,8 @@ class State(rx.State):
             ] = (
                 "sun"
                 if weekday == 6
-                or datetime.date(self.setting_time.year, self.setting_time.month, i)
-                in kr_holidays
+                   or datetime.date(self.setting_time.year, self.setting_time.month, i)
+                   in kr_holidays
                 else "sat" if weekday == 5 else "normal"
             )
 
@@ -137,7 +134,6 @@ class State(rx.State):
         response = requests.post(
             f"{BACKEND_URL}/api/v1/appointments", headers=header, json=data
         )
-
         if response.status_code == 200:
             return rx.redirect(
                 f"/make_meeting_result/{response.json()['appointmentCode']}"
@@ -264,7 +260,6 @@ class State(rx.State):
 
             data = {"page": 1, "size": 10, "keyword": keyword}
 
-
             response = requests.get(
                 f"{BACKEND_URL}/api/v1/appointments/list:search", headers=header, params=data
             )
@@ -290,7 +285,8 @@ class State(rx.State):
         header["Authorization"] = self.login_token
 
         response = requests.get(
-            f"{BACKEND_URL}/api/v1/appointments", headers=header, params={"appointmentCode":self.check_detail_meeting_code}
+            f"{BACKEND_URL}/api/v1/appointments", headers=header,
+            params={"appointmentCode": self.check_detail_meeting_code}
         )
 
         if response.status_code == 200:

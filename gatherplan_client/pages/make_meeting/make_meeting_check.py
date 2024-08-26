@@ -66,7 +66,6 @@ def make_meeting_check(login_token, nick_name) -> rx.Component:
                     ),
                     rx.text(
                         State.select_location,
-                        # MakeMeetingNameState.select_location_detail_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",

@@ -11,24 +11,7 @@ import requests
 
 from gatherplan_client.backend.backend_rouuter import BACKEND_URL, HEADER
 
-
-class JoinState(rx.State):
-    meeting_code: str = ""
-    appointment_code: str = ""
-    meeting_name: str = ""
-    meeting_location: str = ""
-    meeting_memo: str = ""
-    select_location_detail_location: str = ""
-    meeting_date: List[str] = []
-    host_name: str = ""
-    post_data: Dict = {}
-    display_select_date: List = []
-    display_: List[dict] = []
-    # display_select_date: str = ""
-
-    # time button click
-    first_click_time: str = ""
-    time_data_to_button_click: Dict[str, bool] = {
+DEFAULT_TIME_SETTING = {
         "00:00": 0,
         "01:00": 0,
         "02:00": 0,
@@ -55,6 +38,22 @@ class JoinState(rx.State):
         "23:00": 0,
         "23:59": 0,
     }
+
+class JoinState(rx.State):
+    meeting_code: str = ""
+    appointment_code: str = ""
+    meeting_name: str = ""
+    meeting_location: str = ""
+    meeting_memo: str = ""
+    select_location_detail_location: str = ""
+    meeting_date: List[str] = []
+    host_name: str = ""
+    post_data: Dict = {}
+    display_select_date: List = []
+    display_: List[dict] = []
+
+    first_click_time: str = ""
+    time_data_to_button_click: Dict[str, bool] = DEFAULT_TIME_SETTING
 
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
@@ -127,33 +126,7 @@ class JoinState(rx.State):
         #     "nickname": "이재훈"
         # }
 
-        self.time_data_to_button_click = {
-            "00:00": 0,
-            "01:00": 0,
-            "02:00": 0,
-            "03:00": 0,
-            "04:00": 0,
-            "05:00": 0,
-            "06:00": 0,
-            "07:00": 0,
-            "08:00": 0,
-            "09:00": 0,
-            "10:00": 0,
-            "11:00": 0,
-            "12:00": 0,
-            "13:00": 0,
-            "14:00": 0,
-            "15:00": 0,
-            "16:00": 0,
-            "17:00": 0,
-            "18:00": 0,
-            "19:00": 0,
-            "20:00": 0,
-            "21:00": 0,
-            "22:00": 0,
-            "23:00": 0,
-            "23:59": 0,
-        }
+        self.time_data_to_button_click = DEFAULT_TIME_SETTING
 
     def click_time_button(self, click_time: str):
         """
@@ -163,33 +136,7 @@ class JoinState(rx.State):
         """
 
         if self.time_data_to_button_click[click_time] != 0:
-            self.time_data_to_button_click = {
-                "00:00": 0,
-                "01:00": 0,
-                "02:00": 0,
-                "03:00": 0,
-                "04:00": 0,
-                "05:00": 0,
-                "06:00": 0,
-                "07:00": 0,
-                "08:00": 0,
-                "09:00": 0,
-                "10:00": 0,
-                "11:00": 0,
-                "12:00": 0,
-                "13:00": 0,
-                "14:00": 0,
-                "15:00": 0,
-                "16:00": 0,
-                "17:00": 0,
-                "18:00": 0,
-                "19:00": 0,
-                "20:00": 0,
-                "21:00": 0,
-                "22:00": 0,
-                "23:00": 0,
-                "23:59": 0,
-            }
+            self.time_data_to_button_click = DEFAULT_TIME_SETTING
             self.time_data_to_button_click[click_time] = 1
             self.first_click_time = click_time
             return

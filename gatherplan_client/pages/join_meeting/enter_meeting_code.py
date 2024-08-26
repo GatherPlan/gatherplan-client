@@ -1,7 +1,7 @@
 import reflex as rx
 
 from gatherplan_client.backend.join_state import JoinState
-from gatherplan_client.backend.state import EnterCodeState, State
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
 
@@ -45,7 +45,7 @@ def enter_meeting_code() -> rx.Component:
                     ),
                     rx.box(
                         rx.input(
-                            value=EnterCodeState.meeting_code,
+                            value=State.params_meeting_code,
                             name="enter_code",
                             font_size=AppFontFamily.DEFAULT_FONT,
                             height="35px",
