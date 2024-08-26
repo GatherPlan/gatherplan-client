@@ -2,7 +2,7 @@ from typing import List
 
 import reflex as rx
 
-from gatherplan_client.backend.join_state import JoinState
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
 
@@ -18,7 +18,7 @@ def time_button(time_data_to_button_click: List):
             width="60px",
             height="22px",
             font_size="8px",
-            on_click=JoinState.click_time_button(time_data_to_button_click[0]),
+            on_click=State.click_time_button(time_data_to_button_click[0]),
             margin="5px",
         ),
         rx.cond(
@@ -31,7 +31,7 @@ def time_button(time_data_to_button_click: List):
                 width="60px",
                 height="22px",
                 font_size="8px",
-                on_click=JoinState.click_time_button(time_data_to_button_click[0]),
+                on_click=State.click_time_button(time_data_to_button_click[0]),
                 margin="5px",
             ),
             rx.button(
@@ -42,7 +42,7 @@ def time_button(time_data_to_button_click: List):
                 width="60px",
                 height="22px",
                 font_size="8px",
-                on_click=JoinState.click_time_button(time_data_to_button_click[0]),
+                on_click=State.click_time_button(time_data_to_button_click[0]),
                 margin="5px",
             ),
         ),
@@ -77,7 +77,7 @@ def calendar_button(
                 type="button",
                 disabled=disable,
                 background_color=background_color,
-                on_click=JoinState.click_button(display_data[0]),
+                on_click=State.click_button(display_data[0]),
             )
         ),
         rx.drawer.overlay(z_index="5"),
@@ -87,7 +87,7 @@ def calendar_button(
                     rx.vstack(
                         rx.box(
                             rx.text(
-                                JoinState.click_date,
+                                State.click_date,
                                 font_size="18px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 font_weight="700",
@@ -135,7 +135,7 @@ def calendar_button(
                             ),
                             rx.grid(
                                 rx.foreach(
-                                    JoinState.time_data_to_button_click,
+                                    State.time_data_to_button_click,
                                     time_button,
                                 ),
                                 columns="5",
@@ -155,8 +155,8 @@ def calendar_button(
                                     color=AppColor.WHITE,
                                     type="submit",
                                     background_color=AppColor.MAIN_COLOR,
-                                    on_click=JoinState.add_meeting_schedule(
-                                        JoinState.click_date
+                                    on_click=State.add_meeting_schedule(
+                                        State.click_date
                                     ),
                                 )
                             ),
@@ -181,11 +181,11 @@ def calendar_button(
 
 def location_button(display_data: List):
     return rx.cond(
-        JoinState.checked_data[display_data[0]],
+        State.checked_data[display_data[0]],
         rx.cond(
-            JoinState.holiday_data[display_data[0]] == "sun",
+            State.holiday_data[display_data[0]] == "sun",
             rx.cond(
-                JoinState.holiday_data[display_data[0]] == "prev",
+                State.holiday_data[display_data[0]] == "prev",
                 calendar_button(
                     display_data=display_data,
                     text_color=AppColor.RED,
@@ -209,9 +209,9 @@ def location_button(display_data: List):
                 ),
             ),
             rx.cond(
-                JoinState.holiday_data[display_data[0]] == "sat",
+                State.holiday_data[display_data[0]] == "sat",
                 rx.cond(
-                    JoinState.holiday_data[display_data[0]] == "prev",
+                    State.holiday_data[display_data[0]] == "prev",
                     calendar_button(
                         display_data=display_data,
                         text_color=AppColor.BLUE,
@@ -235,7 +235,7 @@ def location_button(display_data: List):
                     ),
                 ),
                 rx.cond(
-                    JoinState.holiday_data[display_data[0]] == "prev",
+                    State.holiday_data[display_data[0]] == "prev",
                     calendar_button(
                         display_data=display_data,
                         background_color=AppColor.BACKGROUND_GRAY_COLOR,
@@ -259,9 +259,9 @@ def location_button(display_data: List):
             ),
         ),
         rx.cond(
-            JoinState.holiday_data[display_data[0]] == "sun",
+            State.holiday_data[display_data[0]] == "sun",
             rx.cond(
-                JoinState.holiday_data[display_data[0]] == "prev",
+                State.holiday_data[display_data[0]] == "prev",
                 calendar_button(
                     display_data=display_data,
                     text_color=AppColor.RED,
@@ -283,9 +283,9 @@ def location_button(display_data: List):
                 ),
             ),
             rx.cond(
-                JoinState.holiday_data[display_data[0]] == "sat",
+                State.holiday_data[display_data[0]] == "sat",
                 rx.cond(
-                    JoinState.holiday_data[display_data[0]] == "prev",
+                    State.holiday_data[display_data[0]] == "prev",
                     calendar_button(
                         display_data=display_data,
                         text_color=AppColor.BLUE,
@@ -307,7 +307,7 @@ def location_button(display_data: List):
                     ),
                 ),
                 rx.cond(
-                    JoinState.holiday_data[display_data[0]] == "prev",
+                    State.holiday_data[display_data[0]] == "prev",
                     calendar_button(
                         display_data=display_data,
                         background_color=AppColor.BACKGROUND_GRAY_COLOR,
@@ -331,6 +331,14 @@ def location_button(display_data: List):
     )
 
 
+@rx.page(
+    route="/join_meeting_date",
+    # title=title,
+    # description=description,
+    # meta=all_meta,
+    # script_tags=script_tags,
+    on_load=State.join_meeting_setting_month_calendar,
+)
 def join_meeting_date() -> rx.Component:
     return rx.vstack(
         header("/join_meeting"),
@@ -376,7 +384,7 @@ def join_meeting_date() -> rx.Component:
                 rx.hstack(
                     rx.button(
                         rx.icon(tag="chevron-left"),
-                        on_click=JoinState.month_decrement,
+                        on_click=State.join_meeting_month_decrement,
                         width="48px",
                         height="40px",
                         margin_left="50px",
@@ -384,7 +392,7 @@ def join_meeting_date() -> rx.Component:
                         background_color=AppColor.WHITE,
                     ),
                     rx.center(
-                        JoinState.setting_time_display,
+                        State.setting_time_display,
                         width="100px",
                         height="40px",
                         align="center",
@@ -393,7 +401,7 @@ def join_meeting_date() -> rx.Component:
                     ),
                     rx.button(
                         rx.icon(tag="chevron-right"),
-                        on_click=JoinState.month_increment,
+                        on_click=State.join_meeting_month_increment,
                         width="48px",
                         height="40px",
                         color=AppColor.BLACK,
@@ -410,7 +418,7 @@ def join_meeting_date() -> rx.Component:
                     rx.center("금", width="40px"),
                     rx.center("토", color=AppColor.BLUE, width="40px"),
                     rx.foreach(
-                        JoinState.display_data,
+                        State.display_data,
                         location_button,
                     ),
                     columns="7",
@@ -442,7 +450,7 @@ def join_meeting_date() -> rx.Component:
                 rx.scroll_area(
                     rx.flex(
                         rx.foreach(
-                            JoinState.display_select_date,
+                            State.display_select_date,
                             display_select_date,
                         ),
                         direction="column",

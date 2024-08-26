@@ -1,6 +1,5 @@
 import reflex as rx
 
-from gatherplan_client.backend.join_state import JoinState
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
@@ -75,7 +74,7 @@ def enter_meeting_code() -> rx.Component:
                 ),
                 width="100%",
             ),
-            on_submit=JoinState.handle_submit,
+            on_submit=State.join_meeting_handle_submit,
             align="center",
             height="80%",
             width="100%",

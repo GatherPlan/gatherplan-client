@@ -3,9 +3,9 @@ from typing import Dict
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.pages.login.login import need_login
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
+from gatherplan_client.pages.login.login import need_login
 
 
 def list_view(items: Dict):
@@ -64,7 +64,7 @@ def list_view(items: Dict):
         on_click=State.check_appointments_detail(items["meeting_code"]),
     )
 
-@rx.page(route="/check_meeting", on_load=State.check_get_appointments_list)
+
 @need_login
 def check_meeting(login_token, nick_name) -> rx.Component:
     return rx.vstack(

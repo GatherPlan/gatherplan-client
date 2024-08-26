@@ -1,10 +1,10 @@
 import reflex as rx
 
-from gatherplan_client.pages.join_meeting.join_meeting_date import display_select_date
-from gatherplan_client.backend.join_state import JoinState
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
+from gatherplan_client.pages.join_meeting.join_meeting_date import display_select_date
+from gatherplan_client.pages.login.login import need_login
 
 
 @need_login
@@ -46,7 +46,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        JoinState.meeting_name,
+                        State.meeting_name,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -65,7 +65,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        JoinState.meeting_location,
+                        State.meeting_location,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -90,7 +90,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                         ),
                         rx.flex(
                             rx.foreach(
-                                JoinState.display_select_date,
+                                State.display_select_date,
                                 display_select_date,
                             ),
                             direction="column",
@@ -108,7 +108,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        JoinState.meeting_memo,
+                        State.meeting_memo,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -130,7 +130,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                             ),
                             rx.button(
                                 rx.icon("copy"),
-                                on_click=rx.set_clipboard(JoinState.appointment_code),
+                                on_click=rx.set_clipboard(State.appointment_code),
                                 width="12px",
                                 height="12px",
                                 padding="0",
@@ -140,7 +140,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                         ),
                         rx.box(
                             rx.text(
-                                JoinState.appointment_code,
+                                State.appointment_code,
                                 font_size="14px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 color=AppColor.BLACK,
@@ -162,7 +162,7 @@ def join_meeting_result(login_token, nick_name) -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        JoinState.host_name,
+                        State.host_name,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",

@@ -1,16 +1,12 @@
-from typing import List
-
 import reflex as rx
 
-from gatherplan_client.backend.check_state import CheckState
 from gatherplan_client.backend.state import State
+from gatherplan_client.components.calendar import display_select_date, location_button
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.pages.login.login import need_login
-from gatherplan_client.components.calendar import display_select_date, location_button
 
 
-@rx.page(route="/check_meeting_detail")
 @need_login
 def check_meeting_detail(login_token, nick_name) -> rx.Component:
     return rx.vstack(
@@ -243,7 +239,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                             rx.hstack(
                                 rx.button(
                                     rx.icon(tag="chevron-left"),
-                                    on_click=CheckState.month_decrement,
+                                    on_click=State.month_decrement,
                                     width="48px",
                                     height="40px",
                                     margin_left="50px",
@@ -251,7 +247,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                     background_color=AppColor.WHITE,
                                 ),
                                 rx.center(
-                                    CheckState.setting_time_display,
+                                    State.setting_time_display,
                                     width="100px",
                                     height="40px",
                                     align="center",
@@ -260,7 +256,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                 ),
                                 rx.button(
                                     rx.icon(tag="chevron-right"),
-                                    on_click=CheckState.month_increment,
+                                    on_click=State.month_increment,
                                     width="48px",
                                     height="40px",
                                     color=AppColor.BLACK,
@@ -277,7 +273,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                 rx.center("금", width="40px"),
                                 rx.center("토", color=AppColor.BLUE, width="40px"),
                                 rx.foreach(
-                                    CheckState.display_data,
+                                    State.display_data,
                                     location_button,
                                 ),
                                 columns="7",
@@ -309,7 +305,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                             rx.scroll_area(
                                 rx.flex(
                                     rx.foreach(
-                                        CheckState.display_select_date,
+                                        State.display_select_date,
                                         display_select_date,
                                     ),
                                     direction="column",
@@ -377,7 +373,3 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
         spacing="0",
         height="100vh",
     )
-
-
-
-

@@ -2,7 +2,7 @@ from typing import List
 
 import reflex as rx
 
-from gatherplan_client.backend.check_state import CheckState
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 
 
@@ -23,7 +23,7 @@ def calendar_button(
                 type="button",
                 disabled=disable,
                 background_color=background_color,
-                on_click=CheckState.click_button(display_data[0]),
+                on_click=State.click_button(display_data[0]),
             )
         ),
         rx.drawer.overlay(z_index="5"),
@@ -33,7 +33,7 @@ def calendar_button(
                     rx.vstack(
                         rx.box(
                             rx.text(
-                                CheckState.click_date,
+                                State.click_date,
                                 font_size="18px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 font_weight="700",
@@ -81,7 +81,7 @@ def calendar_button(
                             ),
                             rx.grid(
                                 rx.foreach(
-                                    CheckState.time_data_to_button_click,
+                                    State.time_data_to_button_click,
                                     time_button,
                                 ),
                                 columns="5",
@@ -101,8 +101,8 @@ def calendar_button(
                                     color=AppColor.WHITE,
                                     type="submit",
                                     background_color=AppColor.MAIN_COLOR,
-                                    on_click=CheckState.add_meeting_schedule(
-                                        CheckState.click_date
+                                    on_click=State.add_meeting_schedule(
+                                        State.click_date
                                     ),
                                 )
                             ),
@@ -124,6 +124,7 @@ def calendar_button(
         direction="bottom",
     )
 
+
 def time_button(time_data_to_button_click: List):
     return rx.cond(
         time_data_to_button_click[1] == 0,
@@ -135,7 +136,7 @@ def time_button(time_data_to_button_click: List):
             width="60px",
             height="22px",
             font_size="8px",
-            on_click=CheckState.click_time_button(time_data_to_button_click[0]),
+            on_click=State.click_time_button(time_data_to_button_click[0]),
             margin="5px",
         ),
         rx.cond(
@@ -148,7 +149,7 @@ def time_button(time_data_to_button_click: List):
                 width="60px",
                 height="22px",
                 font_size="8px",
-                on_click=CheckState.click_time_button(time_data_to_button_click[0]),
+                on_click=State.click_time_button(time_data_to_button_click[0]),
                 margin="5px",
             ),
             rx.button(
@@ -159,7 +160,7 @@ def time_button(time_data_to_button_click: List):
                 width="60px",
                 height="22px",
                 font_size="8px",
-                on_click=CheckState.click_time_button(time_data_to_button_click[0]),
+                on_click=State.click_time_button(time_data_to_button_click[0]),
                 margin="5px",
             ),
         ),
@@ -176,13 +177,14 @@ def display_select_date(display_select_date: str):
         padding_left="10px",
     )
 
+
 def location_button(display_data: List):
     return rx.cond(
-        CheckState.checked_data[display_data[0]],
+        State.checked_data[display_data[0]],
         rx.cond(
-            CheckState.holiday_data[display_data[0]] == "sun",
+            State.holiday_data[display_data[0]] == "sun",
             rx.cond(
-                CheckState.holiday_data[display_data[0]] == "prev",
+                State.holiday_data[display_data[0]] == "prev",
                 calendar_button(
                     display_data=display_data,
                     text_color=AppColor.RED,
@@ -206,9 +208,9 @@ def location_button(display_data: List):
                 ),
             ),
             rx.cond(
-                CheckState.holiday_data[display_data[0]] == "sat",
+                State.holiday_data[display_data[0]] == "sat",
                 rx.cond(
-                    CheckState.holiday_data[display_data[0]] == "prev",
+                    State.holiday_data[display_data[0]] == "prev",
                     calendar_button(
                         display_data=display_data,
                         text_color=AppColor.BLUE,
@@ -232,7 +234,7 @@ def location_button(display_data: List):
                     ),
                 ),
                 rx.cond(
-                    CheckState.holiday_data[display_data[0]] == "prev",
+                    State.holiday_data[display_data[0]] == "prev",
                     calendar_button(
                         display_data=display_data,
                         background_color=AppColor.BACKGROUND_GRAY_COLOR,
@@ -256,9 +258,9 @@ def location_button(display_data: List):
             ),
         ),
         rx.cond(
-            CheckState.holiday_data[display_data[0]] == "sun",
+            State.holiday_data[display_data[0]] == "sun",
             rx.cond(
-                CheckState.holiday_data[display_data[0]] == "prev",
+                State.holiday_data[display_data[0]] == "prev",
                 calendar_button(
                     display_data=display_data,
                     text_color=AppColor.RED,
@@ -280,9 +282,9 @@ def location_button(display_data: List):
                 ),
             ),
             rx.cond(
-                CheckState.holiday_data[display_data[0]] == "sat",
+                State.holiday_data[display_data[0]] == "sat",
                 rx.cond(
-                    CheckState.holiday_data[display_data[0]] == "prev",
+                    State.holiday_data[display_data[0]] == "prev",
                     calendar_button(
                         display_data=display_data,
                         text_color=AppColor.BLUE,
@@ -304,7 +306,7 @@ def location_button(display_data: List):
                     ),
                 ),
                 rx.cond(
-                    CheckState.holiday_data[display_data[0]] == "prev",
+                    State.holiday_data[display_data[0]] == "prev",
                     calendar_button(
                         display_data=display_data,
                         background_color=AppColor.BACKGROUND_GRAY_COLOR,
