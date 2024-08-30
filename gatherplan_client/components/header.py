@@ -1,19 +1,6 @@
 import reflex as rx
 
-from gatherplan_client.components.schema import TextSize, AppColor, AppFontFamily
-
-
-def main_header(main_text: str):
-    return rx.center(
-        main_text,
-        color=AppColor.BLACK,
-        font_size=TextSize.MEDIUM,
-        font_family=AppFontFamily.DEFAULT_FONT,
-        height="45px",
-        width="100%",
-        font_weight="600",
-        background_color=AppColor.WHITE,
-    )
+from gatherplan_client.components.schema import AppColor
 
 
 def header(back_button_url: str):

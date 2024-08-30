@@ -337,7 +337,7 @@ def location_button(display_data: List):
     # description=description,
     # meta=all_meta,
     # script_tags=script_tags,
-    on_load=State.join_meeting_setting_month_calendar,
+    on_load=State._setting_month_calendar,
 )
 def join_meeting_date() -> rx.Component:
     return rx.vstack(
@@ -384,7 +384,7 @@ def join_meeting_date() -> rx.Component:
                 rx.hstack(
                     rx.button(
                         rx.icon(tag="chevron-left"),
-                        on_click=State.join_meeting_month_decrement,
+                        on_click=State.month_decrement,
                         width="48px",
                         height="40px",
                         margin_left="50px",
@@ -401,7 +401,7 @@ def join_meeting_date() -> rx.Component:
                     ),
                     rx.button(
                         rx.icon(tag="chevron-right"),
-                        on_click=State.join_meeting_month_increment,
+                        on_click=State.month_increment,
                         width="48px",
                         height="40px",
                         color=AppColor.BLACK,

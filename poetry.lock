@@ -1346,13 +1346,13 @@ ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==20.0.1)", "requests (>=2.26.0)"
 
 [[package]]
 name = "reflex"
-version = "0.5.9"
+version = "0.5.10"
 description = "Web apps in pure Python."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "reflex-0.5.9-py3-none-any.whl", hash = "sha256:8cd8cc5db7b4c99d2c857fbff9307708de8836a3c4511183e329042b25e7f9e4"},
-    {file = "reflex-0.5.9.tar.gz", hash = "sha256:10efe41a8cf8792d1fa666ff2ef149982b69c1241c8fa340036e5ac6bab1a9df"},
+    {file = "reflex-0.5.10-py3-none-any.whl", hash = "sha256:c1ef6967c45b0c1223b02227563c4e9adc1b1a97f9980c2f28882e67d8735ba7"},
+    {file = "reflex-0.5.10.tar.gz", hash = "sha256:dc636979febd0056ca097a218d2bc0bbce70312812d6ceeeaba32d12942495fc"},
 ]
 
 [package.dependencies]
@@ -1374,6 +1374,7 @@ python-engineio = "!=4.6.0"
 python-multipart = ">=0.0.5,<0.1"
 python-socketio = ">=5.7.0,<6.0"
 redis = ">=4.3.5,<6.0"
+reflex-chakra = ">=0.1.1a1,<0.6"
 reflex-hosting-cli = ">=0.1.2,<2.0"
 rich = ">=13.0.0,<14.0"
 setuptools = ">=69.1.1,<70.2"
@@ -1387,6 +1388,20 @@ watchdog = ">=2.3.1,<5.0"
 watchfiles = ">=0.19.0,<1.0"
 wheel = ">=0.42.0,<1.0"
 wrapt = {version = ">=1.14.0,<2.0", markers = "python_version >= \"3.11\""}
+
+[[package]]
+name = "reflex-chakra"
+version = "0.5.10"
+description = "reflex using chakra components"
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "reflex_chakra-0.5.10-py3-none-any.whl", hash = "sha256:ca8370b5fda32a7cd0a90a10c69e264ea9173430d3948aaabc1920e8a40dc559"},
+    {file = "reflex_chakra-0.5.10.tar.gz", hash = "sha256:35875ee7e69f1154904d6e25ce01768443ad040baa169173466e2e7782ff0c2c"},
+]
+
+[package.dependencies]
+reflex = ">=0.5.9"
 
 [[package]]
 name = "reflex-hosting-cli"

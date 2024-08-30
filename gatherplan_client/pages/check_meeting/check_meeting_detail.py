@@ -1,7 +1,7 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.components.calendar import display_select_date, location_button
+from gatherplan_client.components.calendar import display_select_date, calendar_header
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.pages.login.login import need_login
@@ -14,7 +14,6 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
         rx.center(
             rx.text(
                 "약속 현황보기",
-                # CheckState.detail_meeting_name,
                 font_size="20px",
                 padding_top="28px",
                 padding_bottom="40px",
@@ -27,7 +26,6 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                 rx.icon(
                     tag="settings",
                     size=24,
-                    # color=AppColor.MAIN_COLOR,
                     stroke_width=1,
                 ),
                 color=AppColor.BLACK,
@@ -38,7 +36,6 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                 rx.icon(
                     tag="share",
                     size=24,
-                    # color=AppColor.MAIN_COLOR,
                     stroke_width=1,
                 ),
                 color=AppColor.BLACK,
@@ -84,16 +81,30 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                     font_weight="700",
                                     color=AppColor.GRAY_TEXT,
                                 ),
-                                rx.text(
-                                    State.address,
-                                    font_size="14px",
-                                    font_family=AppFontFamily.DEFAULT_FONT,
-                                    font_weight="700",
-                                    color=AppColor.BLACK,
+                                rx.vstack(
+                                    rx.link(
+                                        State.full_address,
+                                        href=State.address_kakao_link,
+                                        font_size="14px",
+                                        font_family=AppFontFamily.DEFAULT_FONT,
+                                        font_weight="700",
+                                        color=AppColor.BLACK,
+                                        padding_bottom="5px",
+                                    ),
+                                    rx.text(
+                                        State.place_name,
+                                        font_size="12px",
+                                        font_family=AppFontFamily.DEFAULT_FONT,
+                                        font_weight="500",
+                                        color=AppColor.GRAY_TEXT,
+                                        margin="0",
+                                        padding="0",
+                                    ),
+                                    spacing="0",
                                 ),
                                 width="360px",
                                 padding_left="10px",
-                                height="50px",
+                                height="60px",
                             ),
                             rx.box(
                                 rx.vstack(
@@ -108,13 +119,12 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                         ),
                                         width="360px",
                                     ),
-                                    rx.flex(
+                                    rx.hstack(
                                         rx.foreach(
                                             State.candidate_list,
                                             display_select_date,
                                         ),
-                                        direction="column",
-                                        spacing="4",
+                                        spacing="2",
                                     ),
                                 ),
                                 width="100%",
@@ -234,61 +244,7 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                 ),
                 rx.tabs.content(
                     # tab2
-                    rx.center(
-                        rx.vstack(
-                            rx.hstack(
-                                rx.button(
-                                    rx.icon(tag="chevron-left"),
-                                    on_click=State.month_decrement,
-                                    width="48px",
-                                    height="40px",
-                                    margin_left="50px",
-                                    color=AppColor.BLACK,
-                                    background_color=AppColor.WHITE,
-                                ),
-                                rx.center(
-                                    State.setting_time_display,
-                                    width="100px",
-                                    height="40px",
-                                    align="center",
-                                    font_family=AppFontFamily.DEFAULT_FONT,
-                                    font_weight="600",
-                                ),
-                                rx.button(
-                                    rx.icon(tag="chevron-right"),
-                                    on_click=State.month_increment,
-                                    width="48px",
-                                    height="40px",
-                                    color=AppColor.BLACK,
-                                    background_color=AppColor.WHITE,
-                                ),
-                                align="center",
-                            ),
-                            rx.grid(
-                                rx.center("일", color=AppColor.RED, width="40px"),
-                                rx.center("월", width="40px"),
-                                rx.center("화", width="40px"),
-                                rx.center("수", width="40px"),
-                                rx.center("목", width="40px"),
-                                rx.center("금", width="40px"),
-                                rx.center("토", color=AppColor.BLUE, width="40px"),
-                                rx.foreach(
-                                    State.display_data,
-                                    location_button,
-                                ),
-                                columns="7",
-                                align="center",
-                                width="320px",
-                            ),
-                        ),
-                        color=AppColor.BLACK,
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        width="100%",
-                        font_weight="400",
-                        background_color=AppColor.WHITE,
-                        height="35%",
-                    ),
+                    calendar_header(),
                     rx.center(
                         rx.vstack(
                             rx.box(
@@ -313,36 +269,23 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                                 ),
                                 type="always",
                                 scrollbars="vertical",
-                                style={"height": 140, "width": 360},
+                                style={"height": 120, "width": 360},
                             ),
                         ),
                         width="100%",
                         height="30%",
                     ),
                     rx.center(
-                        rx.button(
-                            "선택완료",
-                            width="348px",
-                            height="35px",
-                            padding="20px",
-                            color=AppColor.WHITE,
-                            type="submit",
-                            background_color=AppColor.MAIN_COLOR,
-                            on_click=rx.redirect("/join_meeting_check"),
-                        ),
-                        width="100%",
-                    ),
-                    rx.center(
                         rx.vstack(
                             rx.button(
-                                "참여하기",
+                                "참여 변경하기",
                                 width="348px",
                                 height="35px",
                                 padding="20px",
                                 color=AppColor.WHITE,
                                 type="submit",
                                 background_color=AppColor.MAIN_COLOR,
-                                on_click=rx.redirect("/join_meeting_date"),
+                                on_click=rx.redirect(""),
                             ),
                         ),
                         width="100%",

@@ -178,6 +178,65 @@ def display_select_date(display_select_date: str):
     )
 
 
+def calendar_header():
+    return rx.center(
+        rx.vstack(
+            rx.hstack(
+                rx.button(
+                    rx.icon(tag="chevron-left"),
+                    on_click=State.month_decrement,
+                    width="48px",
+                    height="40px",
+                    margin_left="50px",
+                    color=AppColor.BLACK,
+                    background_color=AppColor.WHITE,
+                ),
+                rx.center(
+                    State.setting_time_display,
+                    width="100px",
+                    height="40px",
+                    align="center",
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    font_weight="600",
+                ),
+                rx.button(
+                    rx.icon(tag="chevron-right"),
+                    on_click=State.month_increment,
+                    width="48px",
+                    height="40px",
+                    color=AppColor.BLACK,
+                    background_color=AppColor.WHITE,
+                ),
+                align="center",
+            ),
+            rx.grid(
+                rx.center("일", color=AppColor.RED, width="40px"),
+                rx.center("월", width="40px"),
+                rx.center("화", width="40px"),
+                rx.center("수", width="40px"),
+                rx.center("목", width="40px"),
+                rx.center("금", width="40px"),
+                rx.center("토", color=AppColor.BLUE, width="40px"),
+                rx.foreach(
+                    State.display_data,
+                    location_button,
+                ),
+                columns="7",
+                align="center",
+                width="320px",
+            ),
+        ),
+        color=AppColor.BLACK,
+        font_size="14px",
+        font_family=AppFontFamily.DEFAULT_FONT,
+        width="100%",
+        font_weight="400",
+        background_color=AppColor.WHITE,
+        height="35%",
+        margin_bottom="10px",
+    )
+
+
 def location_button(display_data: List):
     return rx.cond(
         State.checked_data[display_data[0]],

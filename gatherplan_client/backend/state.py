@@ -1,15 +1,13 @@
 import calendar
 import datetime
 import json
+import os
 from typing import List, Dict
 
 import reflex as rx
 import requests
 from dateutil.relativedelta import relativedelta
 from pytimekr import pytimekr
-
-from gatherplan_client.backend.additional_holiday import additional_holiday
-from gatherplan_client.backend.backend_rouuter import BACKEND_URL, HEADER
 
 DEFAULT_TIME_SETTING = {
     "00:00": 0,
@@ -42,9 +40,9 @@ DEFAULT_TIME_SETTING = {
 
 class State(rx.State):
     form_data: dict = {}
-    email: str = ""
-    password: str = ""
-    login_token: str = ""
+    email: str = rx.Cookie(max_age=60 * 60 * 24 * 7)
+    password: str = rx.Cookie(max_age=60 * 60 * 24 * 7)
+    login_token: str = rx.Cookie(max_age=60 * 60 * 24 * 7)
     nick_name: str = ""
     auth_number: str = ""
     error_message: str = ""
@@ -82,7 +80,11 @@ class State(rx.State):
     host_name: str = ""
     meeting_notice: str = ""
     meeting_state: str = ""
-    address: str = ""
+
+    full_address: str = ""
+    place_name: str = ""
+    address_kakao_link: str = ""
+
     candidate_list: List = []
     appointment_state: str = ""
     is_participated: bool = False
@@ -105,20 +107,46 @@ class State(rx.State):
 
     setting_time = datetime.datetime.now()
 
+    FRONTEND_URL = os.getenv(
+        "FRONTEND_URL",
+        "https://test.gatherplan.site",
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._setting_month_calendar()
 
-        self.make_meeting_setting_month_calendar()
+    def additional_holiday(self, year: int) -> List[datetime.date]:
+        if year == 2024:
+            return [
+                datetime.date(2024, 2, 12),
+                datetime.date(2024, 4, 10),
+                datetime.date(2024, 5, 6),
+            ]
+        elif year == 2025:
+            return [
+                datetime.date(2025, 3, 3),
+                datetime.date(2025, 5, 6),
+            ]
 
-    def join_meeting_setting_month_calendar(self):
+        elif year == 2026:
+            return [
+                datetime.date(2026, 3, 2),
+                datetime.date(2026, 5, 25),
+                datetime.date(2026, 6, 8),
+                datetime.date(2026, 8, 17),
+                datetime.date(2026, 10, 5),
+            ]
+        else:
+            return []
+
+    def _setting_month_calendar(self):
         self.display_data = {}
         self.checked_data = {}
-
         weekday = (
             datetime.date(self.setting_time.year, self.setting_time.month, 1).weekday()
             + 1
         )
-
         for i in range(weekday):
             temp = " " * i
             self.display_data[temp] = False
@@ -126,7 +154,7 @@ class State(rx.State):
 
         kr_holidays = pytimekr.holidays(
             year=self.setting_time.year
-        ) + additional_holiday(year=self.setting_time.year)
+        ) + self.additional_holiday(year=self.setting_time.year)
 
         for i in range(
             1,
@@ -160,49 +188,6 @@ class State(rx.State):
                 in self.meeting_date
                 else True
             )
-        for clicked_data in self.select_data:
-            if clicked_data in self.display_data.keys():
-                self.display_data[clicked_data] = True
-
-    def make_meeting_setting_month_calendar(self):
-        self.display_data = {}
-
-        weekday = (
-            datetime.date(self.setting_time.year, self.setting_time.month, 1).weekday()
-            + 1
-        )
-
-        for i in range(weekday):
-            temp = " " * i
-            self.display_data[temp] = False
-            self.holiday_data[temp] = "prev"
-
-        kr_holidays = pytimekr.holidays(
-            year=self.setting_time.year
-        ) + additional_holiday(year=self.setting_time.year)
-
-        for i in range(
-            1,
-            calendar.monthrange(self.setting_time.year, self.setting_time.month)[1] + 1,
-        ):
-            self.display_data[
-                f"{self.setting_time.year}-{self.setting_time.month}-{i}"
-            ] = False
-
-            weekday = datetime.date(
-                self.setting_time.year, self.setting_time.month, i
-            ).weekday()
-
-            self.holiday_data[
-                f"{self.setting_time.year}-{self.setting_time.month}-{i}"
-            ] = (
-                "sun"
-                if weekday == 6
-                or datetime.date(self.setting_time.year, self.setting_time.month, i)
-                in kr_holidays
-                else "sat" if weekday == 5 else "normal"
-            )
-
         for clicked_data in self.select_data:
             if clicked_data in self.display_data.keys():
                 self.display_data[clicked_data] = True
@@ -253,25 +238,22 @@ class State(rx.State):
             self.select_data.append(click_data)
             self.display_data[click_data] = True
 
-    def month_decrement(self):
-        self.setting_time = self.setting_time - relativedelta(months=1)
+    def month_change_common(self, is_increment: bool):
+        if is_increment:
+            self.setting_time = self.setting_time + relativedelta(months=1)
+        else:
+            self.setting_time = self.setting_time - relativedelta(months=1)
+
         self.setting_time_display = self.setting_time.strftime("%Y-%m")
+        self._setting_month_calendar()
+
+    def month_decrement(self):
+        self.month_change_common(is_increment=False)
         self._setting_month_calendar()
 
     def month_increment(self):
-        self.setting_time = self.setting_time + relativedelta(months=1)
-        self.setting_time_display = self.setting_time.strftime("%Y-%m")
+        self.month_change_common(is_increment=True)
         self._setting_month_calendar()
-
-    def join_meeting_month_decrement(self):
-        self.setting_time = self.setting_time - relativedelta(months=1)
-        self.setting_time_display = self.setting_time.strftime("%Y-%m")
-        self.join_meeting_setting_month_calendar()
-
-    def join_meeting_month_increment(self):
-        self.setting_time = self.setting_time + relativedelta(months=1)
-        self.setting_time_display = self.setting_time.strftime("%Y-%m")
-        self.join_meeting_setting_month_calendar()
 
     def search_location_info(self):
 
@@ -300,7 +282,7 @@ class State(rx.State):
 
         return rx.redirect("/join_meeting")
 
-    def handle_submit(self, form_data: dict):
+    def login_handle_submit(self, form_data: dict):
         """Handle the form submit."""
         self.form_data = form_data
 
@@ -411,19 +393,22 @@ class State(rx.State):
         )
 
         if response.status_code == 200:
-            self.meeting_name = response.json()["appointmentName"]
-            self.host_name = response.json()["hostName"]
-            self.meeting_notice = response.json()["notice"]
-            self.meeting_state = response.json()["appointmentState"]
-            # self.address = response.json()["address"]
-            self.address = ""
-            self.candidate_list = response.json()["candidateDateList"]
-            self.appointment_state = response.json()["appointmentState"]
-            self.is_participated = response.json()["isParticipated"]
-            self.is_host = response.json()["isHost"]
-            self.user_participation_info_list = response.json()[
-                "userParticipationInfoList"
-            ]
+
+            data = response.json()
+            self.meeting_name = data["appointmentName"]
+            self.host_name = data["hostName"]
+            self.meeting_notice = data["notice"]
+            self.meeting_state = data["appointmentState"]
+
+            self.full_address = data["address"]["fullAddress"]
+            self.place_name = data["address"]["placeName"]
+            self.address_kakao_link = data["address"]["placeUrl"]
+
+            self.candidate_list = data["candidateDateList"]
+            self.appointment_state = data["appointmentState"]
+            self.is_participated = data["isParticipated"]
+            self.is_host = data["isHost"]
+            self.user_participation_info_list = data["userParticipationInfoList"]
             return rx.redirect("/check_meeting_detail")
 
     def _join_meeting_get_meeting_info(self, enter_code: str):
@@ -442,7 +427,7 @@ class State(rx.State):
             self.host_name = data["hostName"]
             self.appointment_code = data["appointmentCode"]
 
-            self.make_meeting_setting_month_calendar()
+            self._setting_month_calendar()
         else:
             print(response.json())
             return rx.window_alert(f"존재하지 않는 약속 코드입니다.")
@@ -553,3 +538,29 @@ class State(rx.State):
         )
 
         return response
+
+
+class EmailAuth(rx.State):
+    text: str = "temp@email"
+
+    def sign_up_send_auth_number(self):
+        data = {"email": self.text}
+        response = requests.post(
+            f"{BACKEND_URL}/api/v1/users/auth", headers=HEADER, json=data
+        )
+        if response.status_code == 200:
+            return rx.window_alert(f"{self.text}로 인증번호가 전송되었습니다.")
+
+        else:
+            print(response.json())
+            return rx.window_alert(f"error")
+
+
+HEADER = {
+    "accept": "*/*",
+    "Content-Type": "application/json",
+}
+BACKEND_URL = os.getenv(
+    "BACKEND_URL",
+    "https://test-backed.gatherplan.site",
+)

@@ -1,11 +1,10 @@
 import reflex as rx
 
-from gatherplan_client.pages.login.login import EmailAuth
-from gatherplan_client.backend.state import State
+from gatherplan_client.backend.state import State, EmailAuth
 from gatherplan_client.components.buffer_box import buffer_box
+from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
 from gatherplan_client.components.text_box import center_align_text_box
-from gatherplan_client.components.header import header
 
 
 def sign_up() -> rx.Component:

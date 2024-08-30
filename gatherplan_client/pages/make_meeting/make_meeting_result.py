@@ -1,12 +1,11 @@
 import reflex as rx
 
-from gatherplan_client.backend.backend_rouuter import FRONTEND_URL
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
     text_for_each,
 )
-from gatherplan_client.backend.state import State
 
 
 def make_meeting_result() -> rx.Component:
@@ -175,7 +174,7 @@ def make_meeting_result() -> rx.Component:
                     padding="20px",
                     color=AppColor.BLACK,
                     on_click=rx.set_clipboard(
-                        f"{FRONTEND_URL}/enter_meeting_code/{State.params_meeting_code}"
+                        f"{State.FRONTEND_URL}/enter_meeting_code/{State.params_meeting_code}"
                     ),
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     margin_top="20px",

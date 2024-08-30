@@ -1,8 +1,6 @@
-import requests
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.backend.backend_rouuter import BACKEND_URL, HEADER
 from gatherplan_client.components.buffer_box import buffer_box
 from gatherplan_client.components.buttons import (
     basic_button,
@@ -22,22 +20,6 @@ def need_login(func):
         )
 
     return inner
-
-
-class EmailAuth(rx.State):
-    text: str = "temp@email"
-
-    def sign_up_send_auth_number(self):
-        data = {"email": self.text}
-        response = requests.post(
-            f"{BACKEND_URL}/api/v1/users/auth", headers=HEADER, json=data
-        )
-        if response.status_code == 200:
-            return rx.window_alert(f"{self.text}로 인증번호가 전송되었습니다.")
-
-        else:
-            print(response.json())
-            return rx.window_alert(f"error")
 
 
 @rx.page(route="/login")
@@ -69,7 +51,7 @@ def login() -> rx.Component:
                         padding_top="10px",
                         width="100%",
                     ),
-                    on_submit=State.handle_submit,
+                    on_submit=State.login_handle_submit,
                     reset_on_submit=False,
                     align="center",
                     width="345px",
