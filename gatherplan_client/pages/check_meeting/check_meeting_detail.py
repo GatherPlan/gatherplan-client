@@ -22,15 +22,55 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                 font_weight="700",
                 width="300px",
             ),
-            rx.button(
-                rx.icon(
-                    tag="settings",
-                    size=24,
-                    stroke_width=1,
+            rx.drawer.root(
+                rx.drawer.trigger(
+                    rx.button(
+                        rx.icon(
+                            tag="settings",
+                            size=24,
+                            stroke_width=1,
+                        ),
+                        color=AppColor.BLACK,
+                        background_color=AppColor.WHITE,
+                        padding="0px",
+                    ),
                 ),
-                color=AppColor.BLACK,
-                background_color=AppColor.WHITE,
-                padding="0px",
+                rx.drawer.overlay(z_index="5"),
+                rx.drawer.portal(
+                    rx.drawer.content(
+                        rx.center(
+                            rx.vstack(
+                                rx.button(
+                                    "약속 삭제하기",
+                                    width="300px",
+                                    background_color="#DF0000",
+                                ),
+                                rx.button(
+                                    "약속 확정하기",
+                                    width="300px",
+                                    background_color="#00A41A",
+                                ),
+                                rx.button("약속 변경하기", width="300px"),
+                                spacing="3",
+                            ),
+                            width="100%",
+                        ),
+                        # rx.flex(
+                        #     rx.rx.drawer.close(rx.box(rx.button("Close"))),
+                        #     align_items="start",
+                        #     direction="column",
+                        # ),
+                        align="center",
+                        top="auto",
+                        right="auto",
+                        height="30%",
+                        width="100%",
+                        padding="2em",
+                        background_color="#FFF",
+                        border_radius="1em 1em 0 0",
+                    )
+                ),
+                direction="bottom",
             ),
             rx.button(
                 rx.icon(

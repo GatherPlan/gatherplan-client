@@ -377,6 +377,9 @@ class State(rx.State):
                             "meeting_notice": data["notice"],
                         }
                     )
+            else:
+                if response.status_code == 403:
+                    self.login_token = ""
 
     def check_get_appointments_search(self, data):
         self.check_get_appointments_list(keyword=data["keyword"])

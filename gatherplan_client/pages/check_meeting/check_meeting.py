@@ -65,6 +65,10 @@ def list_view(items: Dict):
     )
 
 
+@rx.page(
+    route="/check_meeting",
+    on_load=State.check_get_appointments_list,
+)
 @need_login
 def check_meeting(login_token, nick_name) -> rx.Component:
     return rx.vstack(
