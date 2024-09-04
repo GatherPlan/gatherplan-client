@@ -40,15 +40,40 @@ def check_meeting_detail(login_token, nick_name) -> rx.Component:
                     rx.drawer.content(
                         rx.center(
                             rx.vstack(
-                                rx.button(
-                                    "약속 삭제하기",
-                                    width="300px",
-                                    background_color="#DF0000",
+                                rx.alert_dialog.root(
+                                    rx.alert_dialog.trigger(
+                                        rx.button(
+                                            "약속 삭제하기",
+                                            width="300px",
+                                            background_color="#DF0000",
+                                        ),
+                                    ),
+                                    rx.alert_dialog.content(
+                                        rx.alert_dialog.title(
+                                            "정말로 약속을 삭제하시겠습니까?"
+                                        ),
+                                        rx.alert_dialog.description(
+                                            "약속을 삭제하면, 약속 생성자를 포함한 모든 참여자의 약속이 삭제됩니다.",
+                                        ),
+                                        rx.flex(
+                                            rx.alert_dialog.cancel(
+                                                rx.button("아니요, 삭제하지 않을게요!"),
+                                            ),
+                                            rx.alert_dialog.action(
+                                                rx.button(
+                                                    "네, 삭제할게요!",
+                                                    on_click=State.check_meeting_detail_delete_appointment,
+                                                ),
+                                            ),
+                                            spacing="3",
+                                        ),
+                                    ),
                                 ),
                                 rx.button(
                                     "약속 확정하기",
                                     width="300px",
                                     background_color="#00A41A",
+                                    on_click=rx.redirect("/check_candidate"),
                                 ),
                                 rx.button("약속 변경하기", width="300px"),
                                 spacing="3",

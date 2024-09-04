@@ -14,9 +14,13 @@ from gatherplan_client.components.text_box import center_align_text_box
 def need_login(func):
     def inner():
         return rx.cond(
-            State.login_token == "",
-            login(),
-            func(State.login_token, State.nick_name),
+            State.is_hydrated,
+            rx.cond(
+                State.login_token == "",
+                login(),
+                func(State.login_token, State.nick_name),
+            ),
+            rx.spinner("로그인 중입니다..."),
         )
 
     return inner

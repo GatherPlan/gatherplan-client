@@ -542,6 +542,45 @@ class State(rx.State):
 
         return response
 
+    def check_meeting_detail_delete_appointment(self):
+
+        header = HEADER
+        header["Authorization"] = self.login_token
+
+        response = requests.delete(
+            f"{BACKEND_URL}/api/v1/appointments",
+            headers=header,
+            params={"appointmentCode": self.check_detail_meeting_code},
+        )
+
+        if response.status_code == 200:
+            return rx.redirect("/check_meeting")
+        else:
+            print(response.json())
+            return rx.window_alert(f"error")
+
+    def get_appointments_candidates(self):
+        header = HEADER
+        header["Authorization"] = self.login_token
+
+        response = requests.get(
+            f"{BACKEND_URL}/api/v1/appointments/candidates",
+            headers=header,
+            params={
+                "appointmentCode": self.check_detail_meeting_code,
+                "page": 1,
+                "size": 10,
+            },
+        )
+
+        print(response)
+
+        if response.status_code == 200:
+            print(response.json()["data"])
+        else:
+            print(response.json())
+            return rx.window_alert(f"error")
+
 
 class EmailAuth(rx.State):
     text: str = "temp@email"

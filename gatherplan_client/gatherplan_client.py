@@ -5,6 +5,9 @@ from gatherplan_client.pages.check_meeting.check_meeting import check_meeting
 from gatherplan_client.pages.check_meeting.check_meeting_detail import (
     check_meeting_detail,
 )
+from gatherplan_client.pages.check_meeting.confirm_meeting.check_candidate import (
+    check_candidate,
+)
 from gatherplan_client.pages.index import index
 from gatherplan_client.pages.join_meeting.enter_meeting_code import enter_meeting_code
 from gatherplan_client.pages.join_meeting.join_meeting import join_meeting
@@ -36,8 +39,13 @@ app.add_page(enter_meeting_code, route="/enter_meeting_code")
 app.add_page(
     check_meeting, route="/check_meeting", on_load=State.check_get_appointments_list
 )
-app.add_page(check_meeting_detail, route="/check_meeting_detail")
+app.add_page(
+    check_candidate,
+    route="/check_candidate",
+    on_load=State.get_appointments_candidates,
+)
 
+app.add_page(check_meeting_detail, route="/check_meeting_detail")
 app.add_page(join_meeting, route="/join_meeting")
 app.add_page(not_member_login, route="/not_member_login")
 app.add_page(join_meeting_check, route="/join_meeting_check")
