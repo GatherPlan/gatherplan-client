@@ -337,7 +337,7 @@ def location_button(display_data: List):
     # description=description,
     # meta=all_meta,
     # script_tags=script_tags,
-    on_load=State._setting_month_calendar,
+    # on_load=State._setting_month_calendar,
 )
 def join_meeting_date() -> rx.Component:
     return rx.vstack(

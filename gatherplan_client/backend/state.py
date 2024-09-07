@@ -1,3 +1,4 @@
+import base64
 import calendar
 import datetime
 import json
@@ -378,8 +379,11 @@ class State(rx.State):
                         }
                     )
             else:
-                if response.status_code == 403:
+                if response.status_code == 401:
                     self.login_token = ""
+                else:
+                    print(response.json())
+                    return rx.window_alert(f"error")
 
     def check_get_appointments_search(self, data):
         self.check_get_appointments_list(keyword=data["keyword"])
@@ -396,7 +400,6 @@ class State(rx.State):
         )
 
         if response.status_code == 200:
-
             data = response.json()
             self.meeting_name = data["appointmentName"]
             self.host_name = data["hostName"]
@@ -413,6 +416,10 @@ class State(rx.State):
             self.is_host = data["isHost"]
             self.user_participation_info_list = data["userParticipationInfoList"]
             return rx.redirect("/check_meeting_detail")
+
+        else:
+            print(response.json())
+            return rx.window_alert(f"error")
 
     def _join_meeting_get_meeting_info(self, enter_code: str):
         response = requests.get(
@@ -500,10 +507,12 @@ class State(rx.State):
         self.post_data[date] = intervals
         self.display_data[date] = True
 
+        print(date)
         split_date_string = date.split("-")
         display_select_date_temp = f"{date} "
 
         for interval in intervals:
+
             select_date_temp = {
                 "selectedDate": f"{split_date_string[0]}-{int(split_date_string[1]):02}-{int(split_date_string[2]):02}",
                 "selectedStartTime": interval["start"],
@@ -530,13 +539,16 @@ class State(rx.State):
 
         header = HEADER
         header["Authorization"] = login_token
+
+        _, jwt_nickname, _ = self.decode_jwt_payload(login_token)
+
         response = requests.post(
             f"{BACKEND_URL}/api/v1/appointments/join",
             headers=header,
             json={
                 "appointmentCode": self.appointment_code,
                 "selectedDateTimeList": self.get_value(self.select_data),
-                "nickname": nick_name,
+                "nickname": jwt_nickname,
             },
         )
 
@@ -563,6 +575,8 @@ class State(rx.State):
         header = HEADER
         header["Authorization"] = self.login_token
 
+        print("appointmentCode", self.check_detail_meeting_code)
+
         response = requests.get(
             f"{BACKEND_URL}/api/v1/appointments/candidates",
             headers=header,
@@ -572,14 +586,23 @@ class State(rx.State):
                 "size": 10,
             },
         )
-
-        print(response)
+        print(response.json())
 
         if response.status_code == 200:
             print(response.json()["data"])
         else:
             print(response.json())
             return rx.window_alert(f"error")
+
+    def decode_jwt_payload(self, jwt_token: str) -> tuple[str, str, str]:
+        payload = jwt_token.split(".")[1]
+        decoded_payload = base64.urlsafe_b64decode(payload + "==").decode("utf-8")
+        data = json.loads(decoded_payload)
+
+        id = data["id"]
+        nickname = data["nickname"]
+        email = data["email"]
+        return id, nickname, email
 
 
 class EmailAuth(rx.State):

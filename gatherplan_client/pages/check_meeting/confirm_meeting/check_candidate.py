@@ -47,6 +47,7 @@ def check_candidate(login_token, nick_name) -> rx.Component:
                 align="center",
                 width="100%",
             ),
+            width="100%",
         ),
         rx.center(
             width="100%",
