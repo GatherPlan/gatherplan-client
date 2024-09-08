@@ -1,3 +1,5 @@
+from typing import Dict
+
 import reflex as rx
 
 from gatherplan_client.backend.state import State
@@ -6,19 +8,17 @@ from gatherplan_client.components.schema import AppFontFamily, AppColor
 from gatherplan_client.pages.login.login import need_login
 
 
-def location_button(button_text: str):
+def location_button(button_text: Dict):
     return rx.drawer.close(
         rx.button(
-            button_text,
+            button_text["address_name"],
             width="340px",
             height="36px",
             color="#A3A3A3",
             type="button",
-            on_click=State.make_meeting_detail_handle_location_submit(
-                {"input_location": button_text}
-            ),
+            on_click=State.make_meeting_detail_handle_location_submit(button_text),
             background_color="#FFFFFF",
-        )
+        ),
     )
 
 
@@ -151,8 +151,7 @@ def make_meeting_detail() -> rx.Component:
             ),
             rx.center(
                 rx.cond(
-                    State.select_location == "",
-                    rx.vstack(""),
+                    State.select_location_detail_location != "",
                     rx.vstack(
                         rx.box(
                             rx.vstack(
@@ -164,25 +163,60 @@ def make_meeting_detail() -> rx.Component:
                                     color=AppColor.SUB_TEXT,
                                     padding_left="10px",
                                 ),
-                                rx.hstack(
-                                    rx.text(
-                                        State.select_location,
-                                        font_size="14px",
-                                        font_family=AppFontFamily.DEFAULT_FONT,
-                                        font_weight="700",
-                                        color=AppColor.BLACK,
-                                        padding_left="10px",
-                                        width="280px",
+                                rx.cond(
+                                    State.location_type == "DISTRICT",
+                                    rx.hstack(
+                                        rx.text(
+                                            State.select_location_detail_location,
+                                            font_size="14px",
+                                            font_family=AppFontFamily.DEFAULT_FONT,
+                                            font_weight="700",
+                                            color=AppColor.BLACK,
+                                            padding_left="10px",
+                                            width="280px",
+                                        ),
+                                        rx.text(
+                                            "행정구역",
+                                            font_size="12px",
+                                            font_family=AppFontFamily.DEFAULT_FONT,
+                                            font_weight="700",
+                                            color="#6D6D6D",
+                                            padding_left="10px",
+                                            padding_top="2px",
+                                            width="80",
+                                        ),
                                     ),
-                                    rx.text(
-                                        "행정구역",
-                                        font_size="12px",
-                                        font_family=AppFontFamily.DEFAULT_FONT,
-                                        font_weight="700",
-                                        color="#6D6D6D",
-                                        padding_left="10px",
-                                        padding_top="2px",
-                                        width="80",
+                                    rx.hstack(
+                                        rx.vstack(
+                                            rx.text(
+                                                State.select_location,
+                                                font_size="14px",
+                                                font_family=AppFontFamily.DEFAULT_FONT,
+                                                font_weight="700",
+                                                color=AppColor.BLACK,
+                                                padding_left="10px",
+                                                width="280px",
+                                            ),
+                                            rx.text(
+                                                State.select_location_detail_location,
+                                                font_size="10px",
+                                                font_family=AppFontFamily.DEFAULT_FONT,
+                                                font_weight="700",
+                                                color=AppColor.BLACK,
+                                                padding_left="10px",
+                                                width="280px",
+                                            ),
+                                        ),
+                                        rx.text(
+                                            "상세주소",
+                                            font_size="12px",
+                                            font_family=AppFontFamily.DEFAULT_FONT,
+                                            font_weight="700",
+                                            color="#6D6D6D",
+                                            padding_left="10px",
+                                            padding_top="2px",
+                                            width="80",
+                                        ),
                                     ),
                                 ),
                             ),
@@ -192,6 +226,7 @@ def make_meeting_detail() -> rx.Component:
                         align="center",
                         padding_top="20px",
                     ),
+                    rx.box(),
                 ),
                 width="100%",
             ),

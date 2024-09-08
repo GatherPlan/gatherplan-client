@@ -68,9 +68,10 @@ class State(rx.State):
     form_data: dict = {}
     email: str = rx.Cookie()
     password: str = rx.Cookie()
+    nick_name: str = rx.Cookie()
+
     login_token: str = ""
-    not_member_login_nick_name: bool = False
-    nick_name: str = ""
+    not_member_login: bool = False
     auth_number: str = ""
     error_message: str = ""
 
@@ -78,14 +79,21 @@ class State(rx.State):
     not_member_nick_name: str = ""
     not_member_password: str = ""
 
+    login_not_member: bool = False
+
     # make_meeting
     meeting_name: str = ""
     meeting_memo: str = ""
     input_location: str = ""
-    search_location: List[str] = ["Loading..."]
-    search_location_place: List[str] = ["Loading..."]
-    select_location: str = ""
-    select_location_detail_location: str = ""
+    search_location: List[Dict[str, str]] = [{"address_name": "", "location_type": ""}]
+    search_location_place: List[Dict[str, str]] = [
+        {"address_name": "", "location_type": "", "place_name": "", "place_url": ""}
+    ]
+
+    select_location: str = ""  # place_name
+    select_location_detail_location: str = ""  # full_address
+    location_type: str = ""
+    place_url: str = ""
 
     @rx.var
     def params_meeting_code(self) -> str:
@@ -141,7 +149,10 @@ class State(rx.State):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _setting_month_calendar(self):
+    def change_login_not_member(self):
+        self.login_not_member = not self.login_not_member
+
+    def setting_month_calendar(self):
         self.display_data = {}
         self.checked_data = {}
         weekday = (
@@ -194,8 +205,8 @@ class State(rx.State):
                 self.display_data[clicked_data] = True
 
     def make_meeting_handle_submit(self, form_data: dict):
-        self.meeting_name = form_data.get("meeting_name")
-        self.meeting_memo = form_data.get("meeting_memo")
+        self.meeting_name = form_data["meeting_name"]
+        self.meeting_memo = form_data["meeting_memo"]
         return rx.redirect("/make_meeting_detail")
 
     def make_meeting_check_handle_submit(self):
@@ -246,37 +257,67 @@ class State(rx.State):
             self.setting_time = self.setting_time - relativedelta(months=1)
 
         self.setting_time_display = self.setting_time.strftime("%Y-%m")
-        self._setting_month_calendar()
+        self.setting_month_calendar()
 
     def month_decrement(self):
         self.month_change_common(is_increment=False)
-        self._setting_month_calendar()
+        self.setting_month_calendar()
 
     def month_increment(self):
         self.month_change_common(is_increment=True)
-        self._setting_month_calendar()
+        self.setting_month_calendar()
 
     def search_location_info(self):
-
         params = {"keyword": self.input_location, "page": 1, "size": 10}
-
         response = requests.get(
             f"{BACKEND_URL}/api/v1/region/district", headers=HEADER, params=params
         )
-        self.search_location = [i["address"] for i in response.json()["data"]]
+        # self.search_location = [i["addressName"] for i in response.json()["data"]]
+        self.search_location = []
+
+        for i in response.json()["data"]:
+            data = {
+                "address_name": i["addressName"],
+                "location_type": i["locationType"],
+            }
+            self.search_location.append(data)
+
+        if len(self.search_location) == 0:
+            yield rx.toast.info("행정구역 검색 결과가 없습니다.", position="top-right")
 
         response = requests.get(
             f"{BACKEND_URL}/api/v1/region/place", headers=HEADER, params=params
         )
+        self.search_location_place = []
+        for i in response.json()["data"]:
+            data = {
+                "place_name": i["placeName"],
+                "place_url": i["placeUrl"],
+                "address_name": i["addressName"],
+                "location_type": i["locationType"],
+            }
+            self.search_location_place.append(data)
 
-        self.search_location_place = [i["placeName"] for i in response.json()["data"]]
+        if len(self.search_location_place) == 0:
+            yield rx.toast.info("상세주소 검색 결과가 없습니다.", position="top-right")
 
     def make_meeting_detail_handle_detail_submit(self, form_data: dict):
         return rx.redirect("/make_meeting_date")
 
     def make_meeting_detail_handle_location_submit(self, form_data: dict):
         """Handle the form submit."""
-        self.select_location = form_data.get("input_location")
+        if form_data["location_type"] == "DISTRICT":
+            self.select_location = ""
+            self.select_location_detail_location = form_data["address_name"]
+            self.place_url = ""
+            self.location_type = form_data["location_type"]
+        else:
+            self.location_type = form_data["location_type"]
+            self.select_location = form_data["place_name"]
+            self.place_url = form_data["place_url"]
+            self.select_location_detail_location = form_data["address_name"]
+
+        return
 
     def join_meeting_handle_submit(self, form_data: dict):
         self._join_meeting_get_meeting_info(form_data["enter_code"])
@@ -285,14 +326,32 @@ class State(rx.State):
 
     def login_handle_submit(self, form_data: dict):
         """Handle the form submit."""
-        self.form_data = form_data
+        data = {
+            "email": form_data["email"],
+            "password": form_data["password"],
+        }
 
-        if self.login():
-            self.error_message = ""
+        if data["email"] == "" or data["password"] == "":
+            return rx.toast.error(
+                "이메일과 비밀번호를 입력해주세요.", position="top-right"
+            )
+
+        response = requests.post(
+            f"{BACKEND_URL}/api/v1/users/login", headers=HEADER, json=data
+        )
+
+        if response.status_code == 200:
+            token = response.headers["Authorization"]
+            decoded_str = json.loads(response.content.decode("utf-8"))
+            self.nick_name = decoded_str["name"]
+            self.login_token = token
             return rx.redirect(f"{self.router.page.path}")
+        elif response.status_code == 401:
+            # TODO: error message
+            return rx.toast.error("로그인 실패", position="top-right")
         else:
-            self.error_message = "로그인 실패"
-            return rx.window_alert(f"로그인 실패")
+            print(response.json())
+            return rx.toast.error(response.json()["message"], position="top-right")
 
     def handle_submit_join_meeting(self, form_data: dict):
         """Handle the form submit."""
@@ -363,9 +422,10 @@ class State(rx.State):
 
     def start_not_member_login(self, form_data: dict):
         """Handle the form submit."""
-        self.form_data = form_data
-
-        return rx.redirect("/join_meeting_date")
+        self.nick_name = form_data["nick_name"]
+        self.password = form_data["password"]
+        self.not_member_login = True
+        return rx.redirect(f"{self.router.page.path}")
 
     def check_get_appointments_list(self, keyword: str = None):
 
@@ -452,7 +512,7 @@ class State(rx.State):
             self.host_name = data["hostName"]
             self.appointment_code = data["appointmentCode"]
 
-            self._setting_month_calendar()
+            self.setting_month_calendar()
         else:
             print(response.json())
             return rx.window_alert(f"존재하지 않는 약속 코드입니다.")
