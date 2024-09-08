@@ -70,7 +70,7 @@ def list_view(items: Dict):
     on_load=State.check_get_appointments_list,
 )
 @need_login
-def check_meeting(login_token, nick_name) -> rx.Component:
+def check_meeting() -> rx.Component:
     return rx.vstack(
         header("/"),
         rx.center(

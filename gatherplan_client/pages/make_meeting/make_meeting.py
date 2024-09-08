@@ -1,13 +1,13 @@
 import reflex as rx
 
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
-from gatherplan_client.backend.state import State
+from gatherplan_client.pages.login.login import need_login
 
 
 @need_login
-def make_meeting(login_token, nick_name) -> rx.Component:
+def make_meeting() -> rx.Component:
     return rx.vstack(
         header("/"),  # 5%
         rx.center(

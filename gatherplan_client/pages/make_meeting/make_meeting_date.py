@@ -1,10 +1,11 @@
 from typing import List
 
 import reflex as rx
-from gatherplan_client.pages.login.login import need_login
+
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import TextSize, AppColor, AppFontFamily
-from gatherplan_client.backend.state import State
+from gatherplan_client.pages.login.login import need_login
 
 
 def location_button(display_data: List):
@@ -131,7 +132,7 @@ def location_button(display_data: List):
 
 
 @need_login
-def make_meeting_date(login_token, nick_name) -> rx.Component:
+def make_meeting_date() -> rx.Component:
     return rx.vstack(
         header("/make_meeting_detail"),
         rx.center(

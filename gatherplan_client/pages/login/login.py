@@ -17,8 +17,8 @@ def need_login(func):
             State.is_hydrated,
             rx.cond(
                 State.login_token == "",
-                login(),
-                func(State.login_token, State.nick_name),
+                rx.cond(State.not_member_login_nick_name, func(), login()),
+                func(),
             ),
             rx.spinner("로그인 중입니다..."),
         )
@@ -26,7 +26,6 @@ def need_login(func):
     return inner
 
 
-@rx.page(route="/login")
 def login() -> rx.Component:
     return rx.vstack(
         buffer_box("8%"),

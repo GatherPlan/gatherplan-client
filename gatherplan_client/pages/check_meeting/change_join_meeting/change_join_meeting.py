@@ -6,7 +6,7 @@ from gatherplan_client.pages.login.login import need_login
 
 
 @need_login
-def change_join_meeting(login_token, nick_name) -> rx.Component:
+def change_join_meeting() -> rx.Component:
     return rx.vstack(
         header("/check_meeting_detail"),
         rx.center(

@@ -5,6 +5,7 @@ import reflex as rx
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
+from gatherplan_client.pages.login.login import need_login
 
 
 def time_button(time_data_to_button_click: List):
@@ -331,14 +332,7 @@ def location_button(display_data: List):
     )
 
 
-@rx.page(
-    route="/join_meeting_date",
-    # title=title,
-    # description=description,
-    # meta=all_meta,
-    # script_tags=script_tags,
-    # on_load=State._setting_month_calendar,
-)
+@need_login
 def join_meeting_date() -> rx.Component:
     return rx.vstack(
         header("/join_meeting"),

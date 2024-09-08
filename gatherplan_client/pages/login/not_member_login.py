@@ -5,9 +5,8 @@ from gatherplan_client.components.buffer_box import buffer_box
 from gatherplan_client.components.buttons import (
     basic_button,
 )
-from gatherplan_client.components.header import header
-
 from gatherplan_client.components.form_box import form_box
+from gatherplan_client.components.header import header
 from gatherplan_client.components.text_box import center_align_text_box
 
 
@@ -24,7 +23,7 @@ def not_member_login() -> rx.Component:
                 rx.form(
                     form_box(
                         explain_text="닉네임",
-                        placeholder_text="인증번호를 입력해주세요",
+                        placeholder_text="닉네임을 입력해주세요",
                         form_value="nick_name",
                         type="text",
                     ),

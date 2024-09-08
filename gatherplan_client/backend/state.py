@@ -39,11 +39,37 @@ DEFAULT_TIME_SETTING = {
 }
 
 
+def additional_holiday(year: int) -> List[datetime.date]:
+    if year == 2024:
+        return [
+            datetime.date(2024, 2, 12),
+            datetime.date(2024, 4, 10),
+            datetime.date(2024, 5, 6),
+        ]
+    elif year == 2025:
+        return [
+            datetime.date(2025, 3, 3),
+            datetime.date(2025, 5, 6),
+        ]
+
+    elif year == 2026:
+        return [
+            datetime.date(2026, 3, 2),
+            datetime.date(2026, 5, 25),
+            datetime.date(2026, 6, 8),
+            datetime.date(2026, 8, 17),
+            datetime.date(2026, 10, 5),
+        ]
+    else:
+        return []
+
+
 class State(rx.State):
     form_data: dict = {}
-    email: str = rx.Cookie(max_age=60 * 60 * 24 * 7)
-    password: str = rx.Cookie(max_age=60 * 60 * 24 * 7)
-    login_token: str = rx.Cookie(max_age=60 * 60 * 24 * 7)
+    email: str = rx.Cookie()
+    password: str = rx.Cookie()
+    login_token: str = ""
+    not_member_login_nick_name: bool = False
     nick_name: str = ""
     auth_number: str = ""
     error_message: str = ""
@@ -65,6 +91,8 @@ class State(rx.State):
     def params_meeting_code(self) -> str:
         return self.router.page.params.get("meeting_code", "")
 
+    meeting_code: str = ""
+
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
     holiday_data: Dict[str, str] = {}
@@ -74,9 +102,6 @@ class State(rx.State):
 
     setting_time = datetime.datetime.now()
     setting_time_display = setting_time.strftime("%Y-%m")
-
-    # MeetingCode Data
-    meeting_code: str = "오버라이딩테스트"
 
     host_name: str = ""
     meeting_notice: str = ""
@@ -115,31 +140,6 @@ class State(rx.State):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._setting_month_calendar()
-
-    def additional_holiday(self, year: int) -> List[datetime.date]:
-        if year == 2024:
-            return [
-                datetime.date(2024, 2, 12),
-                datetime.date(2024, 4, 10),
-                datetime.date(2024, 5, 6),
-            ]
-        elif year == 2025:
-            return [
-                datetime.date(2025, 3, 3),
-                datetime.date(2025, 5, 6),
-            ]
-
-        elif year == 2026:
-            return [
-                datetime.date(2026, 3, 2),
-                datetime.date(2026, 5, 25),
-                datetime.date(2026, 6, 8),
-                datetime.date(2026, 8, 17),
-                datetime.date(2026, 10, 5),
-            ]
-        else:
-            return []
 
     def _setting_month_calendar(self):
         self.display_data = {}
@@ -155,7 +155,7 @@ class State(rx.State):
 
         kr_holidays = pytimekr.holidays(
             year=self.setting_time.year
-        ) + self.additional_holiday(year=self.setting_time.year)
+        ) + additional_holiday(year=self.setting_time.year)
 
         for i in range(
             1,
@@ -198,13 +198,13 @@ class State(rx.State):
         self.meeting_memo = form_data.get("meeting_memo")
         return rx.redirect("/make_meeting_detail")
 
-    def make_meeting_check_handle_submit(self, login_token):
+    def make_meeting_check_handle_submit(self):
         meeting_dates_dt = [
             datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y-%m-%d")
             for date in list(self.select_data)
         ]
         header = HEADER
-        header["Authorization"] = login_token
+        header["Authorization"] = self.login_token
 
         # TODO: address 수정 필요
         data = {
@@ -289,20 +289,24 @@ class State(rx.State):
 
         if self.login():
             self.error_message = ""
-
             return rx.redirect(f"{self.router.page.path}")
         else:
             self.error_message = "로그인 실패"
-            return None
+            return rx.window_alert(f"로그인 실패")
 
     def handle_submit_join_meeting(self, form_data: dict):
         """Handle the form submit."""
         self.form_data = form_data
 
-        if self.login():
+        t = self.login()
+        print(t)
+        yield
+
+        if t:
             self.error_message = ""
             return rx.redirect("/join_meeting")
         else:
+
             self.error_message = "로그인 실패"
             return None
 
@@ -311,6 +315,13 @@ class State(rx.State):
             "email": self.form_data["email"],
             "password": self.form_data["password"],
         }
+
+        if data["email"] == "" or data["password"] == "":
+            yield rx.toast.error(
+                "이메일과 비밀번호를 입력해주세요.", position="top-right"
+            )
+            return False
+
         response = requests.post(
             f"{BACKEND_URL}/api/v1/users/login", headers=HEADER, json=data
         )
@@ -320,9 +331,10 @@ class State(rx.State):
             decoded_str = json.loads(response.content.decode("utf-8"))
             self.nick_name = decoded_str["name"]
             self.login_token = token
-
             return True
         else:
+            print(response.json())
+            rx.toast.error(response.json()["message"], position="top-right")
             return False
 
     def sign_up(self, form_data: dict):
@@ -340,11 +352,14 @@ class State(rx.State):
         )
 
         if response.status_code == 200:
-            return rx.redirect("/login")
+            return [
+                rx.redirect("/login"),
+                rx.toast.info("회원가입이 완료되었습니다.", position="top-right"),
+            ]
 
         else:
             print(response.json())
-            self.error_message = "error"
+            return rx.toast.error(response.json()["message"], position="top-right")
 
     def start_not_member_login(self, form_data: dict):
         """Handle the form submit."""
@@ -525,9 +540,9 @@ class State(rx.State):
 
         self.time_data_to_button_click = DEFAULT_TIME_SETTING
 
-    def join_meeting_check_handle_result_submit(self, login_token, nick_name):
+    def join_meeting_check_handle_result_submit(self):
         """Handle the form submit."""
-        response = self._post_join_meeting(login_token, nick_name)
+        response = self._post_join_meeting()
 
         if response.status_code == 200:
             return rx.redirect(f"/join_meeting_result")
@@ -535,12 +550,12 @@ class State(rx.State):
             print(response.json())
             return rx.window_alert(f"error")
 
-    def _post_join_meeting(self, login_token, nick_name):
+    def _post_join_meeting(self):
 
         header = HEADER
-        header["Authorization"] = login_token
+        header["Authorization"] = self.login_token
 
-        _, jwt_nickname, _ = self.decode_jwt_payload(login_token)
+        _, jwt_nickname, _ = self.decode_jwt_payload(self.login_token)
 
         response = requests.post(
             f"{BACKEND_URL}/api/v1/appointments/join",
@@ -606,19 +621,22 @@ class State(rx.State):
 
 
 class EmailAuth(rx.State):
-    text: str = "temp@email"
+    text: str = ""
 
     def sign_up_send_auth_number(self):
-        data = {"email": self.text}
         response = requests.post(
-            f"{BACKEND_URL}/api/v1/users/auth", headers=HEADER, json=data
+            f"{BACKEND_URL}/api/v1/users/auth",
+            headers=HEADER,
+            json={"email": self.text},
         )
         if response.status_code == 200:
-            return rx.window_alert(f"{self.text}로 인증번호가 전송되었습니다.")
+            return rx.toast.info(
+                f"{self.text}로 인증번호가 전송되었습니다.", position="top-right"
+            )
 
         else:
             print(response.json())
-            return rx.window_alert(f"error")
+            return rx.toast.error(response.json()["message"], position="top-right")
 
 
 HEADER = {

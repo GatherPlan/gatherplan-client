@@ -8,7 +8,7 @@ from gatherplan_client.pages.login.login import need_login
 
 
 @need_login
-def check_meeting_detail(login_token, nick_name) -> rx.Component:
+def check_meeting_detail() -> rx.Component:
     return rx.vstack(
         header("/check_meeting"),
         rx.center(

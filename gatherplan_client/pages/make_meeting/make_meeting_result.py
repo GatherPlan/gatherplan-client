@@ -6,8 +6,10 @@ from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
     text_for_each,
 )
+from gatherplan_client.pages.login.login import need_login
 
 
+@need_login
 def make_meeting_result() -> rx.Component:
     return rx.vstack(
         header("/make_meeting_check"),

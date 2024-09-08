@@ -8,7 +8,7 @@ from gatherplan_client.pages.login.login import need_login
 
 
 @need_login
-def join_meeting_check(login_token, nick_name) -> rx.Component:
+def join_meeting_check() -> rx.Component:
     return rx.vstack(
         header("/join_meeting_date"),
         rx.center(
@@ -185,9 +185,7 @@ def join_meeting_check(login_token, nick_name) -> rx.Component:
                 color=AppColor.WHITE,
                 type="submit",
                 background_color=AppColor.MAIN_COLOR,
-                on_click=State.join_meeting_check_handle_result_submit(
-                    login_token, nick_name
-                ),
+                on_click=State.join_meeting_check_handle_result_submit,
             ),
             width="100%",
         ),

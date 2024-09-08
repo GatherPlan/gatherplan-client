@@ -1,13 +1,14 @@
 import reflex as rx
 
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import text_for_each
-from gatherplan_client.backend.state import State
+from gatherplan_client.pages.login.login import need_login
+
 
 @need_login
-def make_meeting_check(login_token, nick_name) -> rx.Component:
+def make_meeting_check() -> rx.Component:
 
     return rx.vstack(
         header("/make_meeting_date"),
@@ -126,7 +127,7 @@ def make_meeting_check(login_token, nick_name) -> rx.Component:
                 color=AppColor.WHITE,
                 type="submit",
                 background_color=AppColor.MAIN_COLOR,
-                on_click=State.make_meeting_check_handle_submit(login_token),
+                on_click=State.make_meeting_check_handle_submit,
             ),
             width="100%",
         ),
