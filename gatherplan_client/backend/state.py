@@ -214,33 +214,57 @@ class State(rx.State):
             datetime.datetime.strptime(date, "%Y-%m-%d").strftime("%Y-%m-%d")
             for date in list(self.select_data)
         ]
-        header = HEADER
-        header["Authorization"] = self.login_token
 
-        # TODO: address 수정 필요
+        header = HEADER
         data = {
             "appointmentName": self.meeting_name,
             "notice": self.meeting_memo,
             "address": {
-                "locationType": "DETAIL_ADDRESS",
-                "fullAddress": self.select_location,
-                "placeName": "성수역 2호선 2번출구",
-                "placeUrl": "http://place.map.kakao.com/7942972",
+                "locationType": self.location_type,
+                "fullAddress": self.select_location_detail_location,
+                "placeName": self.select_location,
+                "placeUrl": self.place_url,
             },
             "candidateDateList": meeting_dates_dt,
         }
 
-        response = requests.post(
-            f"{BACKEND_URL}/api/v1/appointments", headers=header, json=data
-        )
-        if response.status_code == 200:
-            return rx.redirect(
-                f"/make_meeting_result/{response.json()['appointmentCode']}"
+        if self.not_member_login:
+            data["tempUserInfo"] = {
+                "nickname": self.nick_name,
+                "password": self.password,
+            }
+
+            print(data)
+
+            response = requests.post(
+                f"{BACKEND_URL}/api/v1/temporary/appointments",
+                headers=header,
+                json=data,
             )
+            if response.status_code == 200:
+                return rx.redirect(
+                    f"/make_meeting_result/{response.json()['appointmentCode']}"
+                )
+
+            else:
+                print(response.json())
+                return rx.window_alert(f"error")
 
         else:
-            print(response.json())
-            return rx.window_alert(f"error")
+
+            header["Authorization"] = self.login_token
+
+            response = requests.post(
+                f"{BACKEND_URL}/api/v1/appointments", headers=header, json=data
+            )
+            if response.status_code == 200:
+                return rx.redirect(
+                    f"/make_meeting_result/{response.json()['appointmentCode']}"
+                )
+
+            else:
+                print(response.json())
+                return rx.window_alert(f"error")
 
     def make_meeting_date_click_button(self, click_data: List):
         if self.display_data[click_data]:
@@ -269,6 +293,10 @@ class State(rx.State):
 
     def search_location_info(self):
         params = {"keyword": self.input_location, "page": 1, "size": 10}
+
+        if self.input_location == "":
+            return rx.toast.info("검색어를 입력해주세요.", position="top-right")
+
         response = requests.get(
             f"{BACKEND_URL}/api/v1/region/district", headers=HEADER, params=params
         )
