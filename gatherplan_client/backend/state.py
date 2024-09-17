@@ -90,8 +90,8 @@ class State(rx.State):
         {"address_name": "", "location_type": "", "place_name": "", "place_url": ""}
     ]
 
-    select_location: str = ""  # place_name
-    select_location_detail_location: str = ""  # full_address
+    select_location_detail_location: str = ""
+    select_location: str = ""
     location_type: str = ""
     place_url: str = ""
 
@@ -205,8 +205,15 @@ class State(rx.State):
                 self.display_data[clicked_data] = True
 
     def make_meeting_handle_submit(self, form_data: dict):
+
+        if len(form_data["meeting_name"]) < 2 or len(form_data["meeting_name"]) > 20:
+            return rx.toast.error(
+                "약속 이름은 2자 이상 20자 이하로 입력해주세요.", position="top-right"
+            )
+
         self.meeting_name = form_data["meeting_name"]
         self.meeting_memo = form_data["meeting_memo"]
+
         return rx.redirect("/make_meeting_detail")
 
     def make_meeting_check_handle_submit(self):
@@ -228,43 +235,32 @@ class State(rx.State):
             "candidateDateList": meeting_dates_dt,
         }
 
+        if self.select_location_detail_location == "":
+            data.pop("address")
+
         if self.not_member_login:
             data["tempUserInfo"] = {
                 "nickname": self.nick_name,
                 "password": self.password,
             }
-
-            print(data)
-
             response = requests.post(
                 f"{BACKEND_URL}/api/v1/temporary/appointments",
                 headers=header,
                 json=data,
             )
-            if response.status_code == 200:
-                return rx.redirect(
-                    f"/make_meeting_result/{response.json()['appointmentCode']}"
-                )
-
-            else:
-                print(response.json())
-                return rx.window_alert(f"error")
-
         else:
-
             header["Authorization"] = self.login_token
-
             response = requests.post(
                 f"{BACKEND_URL}/api/v1/appointments", headers=header, json=data
             )
-            if response.status_code == 200:
-                return rx.redirect(
-                    f"/make_meeting_result/{response.json()['appointmentCode']}"
-                )
 
-            else:
-                print(response.json())
-                return rx.window_alert(f"error")
+        if response.status_code == 200:
+            return rx.redirect(
+                f"/make_meeting_result/{response.json()['appointmentCode']}"
+            )
+        else:
+            print(response.json())
+            return rx.toast.error(response.json()["message"], position="top-right")
 
     def make_meeting_date_click_button(self, click_data: List):
         if self.display_data[click_data]:
@@ -348,9 +344,30 @@ class State(rx.State):
         return
 
     def join_meeting_handle_submit(self, form_data: dict):
-        self._join_meeting_get_meeting_info(form_data["enter_code"])
 
-        return rx.redirect("/join_meeting")
+        enter_code = form_data["enter_code"]
+        response = requests.get(
+            f"{BACKEND_URL}/api/v1/appointments/preview",
+            headers={"accept": "*/*"},
+            params={"appointmentCode": enter_code},
+        )
+        if response.status_code == 200:
+            data = response.json()
+            print(data)
+            self.meeting_name = data["appointmentName"]
+            self.meeting_location = (
+                data["address"]["fullAddress"] if data["address"] else ""
+            )
+            self.meeting_memo = data["notice"]
+            self.meeting_date = data["candidateDateList"]
+            self.host_name = data["hostName"]
+            self.appointment_code = data["appointmentCode"]
+            self.setting_month_calendar()
+            return rx.redirect("/join_meeting")
+
+        else:
+            print(response.json())
+            return rx.toast.error(response.json()["message"], position="top-right")
 
     def login_handle_submit(self, form_data: dict):
         """Handle the form submit."""
@@ -450,6 +467,17 @@ class State(rx.State):
 
     def start_not_member_login(self, form_data: dict):
         """Handle the form submit."""
+
+        if len(form_data["nick_name"]) < 2 or len(form_data["nick_name"]) > 6:
+            return rx.toast.error(
+                "닉네임은 2자 이상 6자 이하로 입력해주세요.", position="top-right"
+            )
+
+        if len(form_data["password"]) < 4 or len(form_data["password"]) > 12:
+            return rx.toast.error(
+                "비밀번호는 4자 이상 12자 이하로 입력해주세요.", position="top-right"
+            )
+
         self.nick_name = form_data["nick_name"]
         self.password = form_data["password"]
         self.not_member_login = True
@@ -523,27 +551,6 @@ class State(rx.State):
         else:
             print(response.json())
             return rx.window_alert(f"error")
-
-    def _join_meeting_get_meeting_info(self, enter_code: str):
-        response = requests.get(
-            f"{BACKEND_URL}/api/v1/appointments/preview",
-            headers={"accept": "*/*"},
-            params={"appointmentCode": enter_code},
-        )
-
-        if response.status_code == 200:
-            data = response.json()
-            self.meeting_name = data["appointmentName"]
-            self.meeting_location = data["address"]["fullAddress"]
-            self.meeting_memo = data["notice"]
-            self.meeting_date = data["candidateDateList"]
-            self.host_name = data["hostName"]
-            self.appointment_code = data["appointmentCode"]
-
-            self.setting_month_calendar()
-        else:
-            print(response.json())
-            return rx.window_alert(f"존재하지 않는 약속 코드입니다.")
 
     def click_time_button(self, click_time: str):
         """
