@@ -344,7 +344,6 @@ class State(rx.State):
         return
 
     def join_meeting_handle_submit(self, form_data: dict):
-
         enter_code = form_data["enter_code"]
         response = requests.get(
             f"{BACKEND_URL}/api/v1/appointments/preview",
@@ -353,7 +352,6 @@ class State(rx.State):
         )
         if response.status_code == 200:
             data = response.json()
-            print(data)
             self.meeting_name = data["appointmentName"]
             self.meeting_location = (
                 data["address"]["fullAddress"] if data["address"] else ""
@@ -371,11 +369,11 @@ class State(rx.State):
 
     def login_handle_submit(self, form_data: dict):
         """Handle the form submit."""
+
         data = {
             "email": form_data["email"],
             "password": form_data["password"],
         }
-
         if data["email"] == "" or data["password"] == "":
             return rx.toast.error(
                 "이메일과 비밀번호를 입력해주세요.", position="top-right"
@@ -384,7 +382,6 @@ class State(rx.State):
         response = requests.post(
             f"{BACKEND_URL}/api/v1/users/login", headers=HEADER, json=data
         )
-
         if response.status_code == 200:
             token = response.headers["Authorization"]
             decoded_str = json.loads(response.content.decode("utf-8"))
@@ -392,27 +389,10 @@ class State(rx.State):
             self.login_token = token
             return rx.redirect(f"{self.router.page.path}")
         elif response.status_code == 401:
-            # TODO: error message
             return rx.toast.error("로그인 실패", position="top-right")
         else:
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
-
-    def handle_submit_join_meeting(self, form_data: dict):
-        """Handle the form submit."""
-        self.form_data = form_data
-
-        t = self.login()
-        print(t)
-        yield
-
-        if t:
-            self.error_message = ""
-            return rx.redirect("/join_meeting")
-        else:
-
-            self.error_message = "로그인 실패"
-            return None
 
     def login(self):
         data = {

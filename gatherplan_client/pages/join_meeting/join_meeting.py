@@ -161,48 +161,20 @@ def join_meeting() -> rx.Component:
             width="100%",
             height="60%",
         ),
-        rx.cond(
-            State.login_token == "",
-            rx.center(
-                rx.vstack(
-                    rx.button(
-                        "로그인",
-                        width="348px",
-                        height="35px",
-                        padding="20px",
-                        color=AppColor.WHITE,
-                        type="submit",
-                        background_color=AppColor.MAIN_COLOR,
-                        on_click=rx.redirect("/login_join_meeting"),
-                    ),
-                    rx.button(
-                        "비회원으로 시작하기",
-                        width="348px",
-                        height="35px",
-                        padding="20px",
-                        color=AppColor.BLACK,
-                        type="submit",
-                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
-                        on_click=rx.redirect("/not_member_login"),
-                    ),
+        rx.center(
+            rx.vstack(
+                rx.button(
+                    "참여하기",
+                    width="348px",
+                    height="35px",
+                    padding="20px",
+                    color=AppColor.WHITE,
+                    type="submit",
+                    background_color=AppColor.MAIN_COLOR,
+                    on_click=rx.redirect("/join_meeting_date"),
                 ),
-                width="100%",
             ),
-            rx.center(
-                rx.vstack(
-                    rx.button(
-                        "참여하기",
-                        width="348px",
-                        height="35px",
-                        padding="20px",
-                        color=AppColor.WHITE,
-                        type="submit",
-                        background_color=AppColor.MAIN_COLOR,
-                        on_click=rx.redirect("/join_meeting_date"),
-                    ),
-                ),
-                width="100%",
-            ),
+            width="100%",
         ),
         spacing="0",
         height="100vh",
