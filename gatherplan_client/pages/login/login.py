@@ -33,7 +33,7 @@ def login() -> rx.Component:
             main_text="Gather Plan", sub_text="게더플랜에서 모임의 약속을 잡아보세요"
         ),
         rx.cond(
-            State.not_member_login,
+            State.not_member_login_button,
             rx.center(
                 rx.vstack(
                     rx.form(
@@ -149,7 +149,7 @@ def login() -> rx.Component:
         rx.center(
             rx.button(
                 rx.cond(
-                    State.not_member_login,
+                    State.not_member_login_button,
                     rx.text(
                         "비회원으로 시작하기",
                     ),

@@ -68,6 +68,7 @@ def additional_holiday(year: int) -> List[datetime.date]:
 class State(rx.State):
     login_token: str = ""
     not_member_login: bool = False
+    not_member_login_button: bool = False
 
     password: str = ""
     nick_name: str = ""
@@ -141,7 +142,7 @@ class State(rx.State):
         super().__init__(*args, **kwargs)
 
     def change_login_not_member(self):
-        self.not_member_login = not self.not_member_login
+        self.not_member_login_button = not self.not_member_login_button
 
     def setting_month_calendar(self):
         self.display_data = {}
@@ -167,6 +168,8 @@ class State(rx.State):
         ):
             if 1 <= self.setting_time.month <= 9:
                 temp_month = f"0{self.setting_time.month}"
+            else:
+                temp_month = self.setting_time.month
 
             self.display_data[
                 f"{self.setting_time.year}-{self.setting_time.month}-{i}"
@@ -462,7 +465,6 @@ class State(rx.State):
         return rx.redirect(f"{self.router.page.path}")
 
     def check_get_appointments_list(self, keyword: str = None):
-
         if self.login_token != "":
             header = HEADER
             header["Authorization"] = self.login_token
