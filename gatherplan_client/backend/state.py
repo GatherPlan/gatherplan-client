@@ -68,7 +68,7 @@ def additional_holiday(year: int) -> List[datetime.date]:
 class State(rx.State):
     login_token: str = ""
     not_member_login: bool = False
-    not_member_login_button: bool = False
+    not_member_login_button: bool = True
 
     password: str = ""
     nick_name: str = ""
@@ -512,6 +512,7 @@ class State(rx.State):
 
         if response.status_code == 200:
             data = response.json()
+            print(data)
             self.meeting_name = data["appointmentName"]
             self.host_name = data["hostName"]
             self.meeting_notice = data["notice"]
@@ -530,7 +531,7 @@ class State(rx.State):
 
         else:
             print(response.json())
-            return rx.window_alert(f"error")
+            return rx.toast.error(response.json()["message"], position="top-right")
 
     def click_time_button(self, click_time: str):
         """

@@ -80,11 +80,6 @@ def check_meeting_detail() -> rx.Component:
                             ),
                             width="100%",
                         ),
-                        # rx.flex(
-                        #     rx.rx.drawer.close(rx.box(rx.button("Close"))),
-                        #     align_items="start",
-                        #     direction="column",
-                        # ),
                         align="center",
                         top="auto",
                         right="auto",
@@ -284,7 +279,9 @@ def check_meeting_detail() -> rx.Component:
                                 color=AppColor.WHITE,
                                 type="submit",
                                 background_color=AppColor.MAIN_COLOR,
-                                on_click=rx.redirect("/join_meeting_date"),
+                                on_click=rx.redirect(
+                                    f"/enter_meeting_code/{State.check_detail_meeting_code}"
+                                ),
                             ),
                         ),
                         width="100%",
