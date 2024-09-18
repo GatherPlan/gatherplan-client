@@ -44,34 +44,6 @@ def calendar_button(
                         ),
                         rx.box(
                             rx.text(
-                                "나의 일정",
-                                font_size="12px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="700",
-                                color=AppColor.GRAY_TEXT,
-                                padding_left="10px",
-                            ),
-                            rx.text(
-                                "TBD: xD1",
-                                font_size="14px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="700",
-                                color=AppColor.BLACK,
-                                padding_left="12px",
-                            ),
-                            rx.text(
-                                "TBD: xD2",
-                                font_size="14px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="700",
-                                color=AppColor.BLACK,
-                                padding_left="12px",
-                            ),
-                            width="360px",
-                            height="100px",
-                        ),
-                        rx.box(
-                            rx.text(
                                 "시간 선택",
                                 font_size="12px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
@@ -119,9 +91,10 @@ def calendar_button(
                 padding="2em",
                 background_color="#FFF",
                 border_radius="1em 1em 0 0",
-            )
+            ),
         ),
         direction="bottom",
+        on_open_change=State.init_calendar_click_button(),
     )
 
 

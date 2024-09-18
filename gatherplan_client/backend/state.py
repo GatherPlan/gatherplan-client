@@ -1,5 +1,6 @@
 import base64
 import calendar
+import copy
 import datetime
 import json
 import os
@@ -137,7 +138,7 @@ class State(rx.State):
     display_: List[dict] = []
 
     first_click_time: str = ""
-    time_data_to_button_click: Dict[str, bool] = DEFAULT_TIME_SETTING
+    time_data_to_button_click: Dict[str, bool] = copy.copy(DEFAULT_TIME_SETTING)
 
     setting_time = datetime.datetime.now()
 
@@ -343,6 +344,11 @@ class State(rx.State):
 
         return
 
+    def init_calendar_click_button(self):
+        self.first_click_time = ""
+        self.time_data_to_button_click = copy.copy(DEFAULT_TIME_SETTING)
+        yield
+
     def join_meeting_handle_submit(self, form_data: dict):
         enter_code = form_data["enter_code"]
         response = requests.get(
@@ -540,7 +546,7 @@ class State(rx.State):
         """
 
         if self.time_data_to_button_click[click_time] != 0:
-            self.time_data_to_button_click = DEFAULT_TIME_SETTING
+            self.time_data_to_button_click = copy.copy(DEFAULT_TIME_SETTING)
             self.time_data_to_button_click[click_time] = 1
             self.first_click_time = click_time
             return
@@ -570,8 +576,6 @@ class State(rx.State):
                     self.time_data_to_button_click[time_key] = 2
                 start += datetime.timedelta(hours=1)
 
-            self.first_click_time = ""
-
     def click_button(self, click_data: List):
         self.click_date = click_data
 
@@ -597,7 +601,6 @@ class State(rx.State):
         self.post_data[date] = intervals
         self.display_data[date] = True
 
-        print(date)
         split_date_string = date.split("-")
         display_select_date_temp = f"{date} "
 
@@ -612,8 +615,6 @@ class State(rx.State):
             self.select_data.append(select_date_temp)
 
             self.display_select_date.append(display_select_date_temp[:-1])
-
-        self.time_data_to_button_click = DEFAULT_TIME_SETTING
 
     def join_meeting_check_handle_result_submit(self):
         """Handle the form submit."""

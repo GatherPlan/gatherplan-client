@@ -12,7 +12,6 @@ from gatherplan_client.pages.index import index
 from gatherplan_client.pages.join_meeting.enter_meeting_code import enter_meeting_code
 from gatherplan_client.pages.join_meeting.join_meeting import join_meeting
 from gatherplan_client.pages.join_meeting.join_meeting_check import join_meeting_check
-from gatherplan_client.pages.join_meeting.join_meeting_date import join_meeting_date
 from gatherplan_client.pages.join_meeting.join_meeting_result import join_meeting_result
 from gatherplan_client.pages.login.login import login
 from gatherplan_client.pages.login.sign_up import sign_up
@@ -53,7 +52,6 @@ app.add_page(
 app.add_page(join_meeting, route="/join_meeting")
 app.add_page(join_meeting_check, route="/join_meeting_check")
 app.add_page(join_meeting_result, route="/join_meeting_result")
-app.add_page(join_meeting_date, route="/join_meeting_date")
 
 
 app.add_page(check_meeting_detail, route="/check_meeting_detail")
