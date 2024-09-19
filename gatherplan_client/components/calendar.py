@@ -151,7 +151,7 @@ def display_select_date(display_select_date: str):
     )
 
 
-def calendar_header():
+def calendar_header(purpose: str = "join", height: str = "35%"):
     return rx.center(
         rx.vstack(
             rx.hstack(
@@ -190,9 +190,23 @@ def calendar_header():
                 rx.center("목", width="40px"),
                 rx.center("금", width="40px"),
                 rx.center("토", color=AppColor.BLUE, width="40px"),
-                rx.foreach(
-                    State.display_data,
-                    location_button,
+                rx.cond(
+                    purpose == "join",
+                    rx.foreach(
+                        State.display_data,
+                        location_button_join,
+                    ),
+                    rx.cond(
+                        purpose == "make",
+                        rx.foreach(
+                            State.display_data,
+                            location_button_make,
+                        ),
+                        rx.foreach(
+                            State.display_data,
+                            location_button_check,
+                        ),
+                    ),
                 ),
                 columns="7",
                 align="center",
@@ -200,17 +214,17 @@ def calendar_header():
             ),
         ),
         color=AppColor.BLACK,
-        font_size="14px",
+        font_size="20px",
         font_family=AppFontFamily.DEFAULT_FONT,
         width="100%",
-        font_weight="400",
+        font_weight="600",
         background_color=AppColor.WHITE,
-        height="35%",
+        height=height,
         margin_bottom="10px",
     )
 
 
-def location_button(display_data: List):
+def location_button_join(display_data: List):
     return rx.cond(
         State.checked_data[display_data[0]],
         rx.cond(
@@ -355,6 +369,252 @@ def location_button(display_data: List):
                             display_data=display_data,
                             background_color=AppColor.WHITE,
                         ),
+                    ),
+                ),
+            ),
+        ),
+    )
+
+
+def location_button_make(display_data: List):
+    return rx.cond(
+        State.holiday_data[display_data[0]] == "sun",
+        rx.cond(
+            State.holiday_data[display_data[0]] == "prev",
+            rx.button(
+                display_data[0].to_string(json=False).split("-")[2],
+                width="50px",
+                height="36px",
+                color=AppColor.RED,
+                font_size="16px",
+                type="button",
+                background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                disabled=True,
+                on_click=State.make_meeting_date_click_button(display_data[0]),
+            ),
+            rx.cond(
+                display_data[1],
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.RED,
+                    font_size="16px",
+                    type="button",
+                    border="3px solid #4E5CDC",
+                    background_color=AppColor.WHITE,
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                ),
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.RED,
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.WHITE,
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                ),
+            ),
+        ),
+        rx.cond(
+            State.holiday_data[display_data[0]] == "sat",
+            rx.cond(
+                State.holiday_data[display_data[0]] == "prev",
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.BLUE,
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disabled=True,
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                ),
+                rx.cond(
+                    display_data[1],
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color=AppColor.BLUE,
+                        font_size="16px",
+                        type="button",
+                        border="3px solid #4E5CDC",
+                        background_color=AppColor.WHITE,
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                    ),
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color=AppColor.BLUE,
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.WHITE,
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                    ),
+                ),
+            ),
+            rx.cond(
+                State.holiday_data[display_data[0]] == "prev",
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color="#000000",
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disabled=True,
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                ),
+                rx.cond(
+                    display_data[1],
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color="#000000",
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.WHITE,
+                        border="3px solid #4E5CDC",
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                    ),
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color="#000000",
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.WHITE,
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                    ),
+                ),
+            ),
+        ),
+    )
+
+
+def location_button_check(display_data: List):
+    return rx.cond(
+        State.holiday_data[display_data[0]] == "sun",
+        rx.cond(
+            State.holiday_data[display_data[0]] == "prev",
+            rx.button(
+                display_data[0].to_string(json=False).split("-")[2],
+                width="50px",
+                height="36px",
+                color=AppColor.RED,
+                font_size="16px",
+                type="button",
+                background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                disabled=True,
+                on_click=State.make_meeting_date_click_button(display_data[0]),
+            ),
+            rx.cond(
+                display_data[1],
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.RED,
+                    font_size="16px",
+                    type="button",
+                    border="3px solid #4E5CDC",
+                    background_color=AppColor.WHITE,
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                ),
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.RED,
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.WHITE,
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                ),
+            ),
+        ),
+        rx.cond(
+            State.holiday_data[display_data[0]] == "sat",
+            rx.cond(
+                State.holiday_data[display_data[0]] == "prev",
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color=AppColor.BLUE,
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disabled=True,
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                ),
+                rx.cond(
+                    display_data[1],
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color=AppColor.BLUE,
+                        font_size="16px",
+                        type="button",
+                        border="3px solid #4E5CDC",
+                        background_color=AppColor.WHITE,
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                    ),
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color=AppColor.BLUE,
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.WHITE,
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                    ),
+                ),
+            ),
+            rx.cond(
+                State.holiday_data[display_data[0]] == "prev",
+                rx.button(
+                    display_data[0].to_string(json=False).split("-")[2],
+                    width="50px",
+                    height="36px",
+                    color="#000000",
+                    font_size="16px",
+                    type="button",
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disabled=True,
+                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                ),
+                rx.cond(
+                    display_data[1],
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color="#000000",
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.WHITE,
+                        border="3px solid #4E5CDC",
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                    ),
+                    rx.button(
+                        display_data[0].to_string(json=False).split("-")[2],
+                        width="50px",
+                        height="36px",
+                        color="#000000",
+                        font_size="16px",
+                        type="button",
+                        background_color=AppColor.WHITE,
+                        on_click=State.make_meeting_date_click_button(display_data[0]),
                     ),
                 ),
             ),
