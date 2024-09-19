@@ -2,10 +2,10 @@ import reflex as rx
 
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.pages.login.login import need_login_check_meeting
 
 
-@need_login
+@need_login_check_meeting
 def change_join_meeting() -> rx.Component:
     return rx.vstack(
         header("/check_meeting_detail"),

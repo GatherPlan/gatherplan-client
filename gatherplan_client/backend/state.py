@@ -388,39 +388,26 @@ class State(rx.State):
             decoded_str = json.loads(response.content.decode("utf-8"))
             self.nick_name = decoded_str["name"]
             self.login_token = token
-            return rx.redirect(f"{self.router.page.path}")
+            return (
+                rx.redirect(f"{self.router.page.path}")
+                if self.router.page.path != "/login"
+                else rx.redirect("/")
+            )
         elif response.status_code == 401:
             return rx.toast.error("로그인 실패", position="top-right")
         else:
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
 
-    # def login(self):
-    #     data = {
-    #         "email": self.form_data["email"],
-    #         "password": self.form_data["password"],
-    #     }
-    #
-    #     if data["email"] == "" or data["password"] == "":
-    #         yield rx.toast.error(
-    #             "이메일과 비밀번호를 입력해주세요.", position="top-right"
-    #         )
-    #         return False
-    #
-    #     response = requests.post(
-    #         f"{BACKEND_URL}/api/v1/users/login", headers=HEADER, json=data
-    #     )
-    #
-    #     if response.status_code == 200:
-    #         token = response.headers["Authorization"]
-    #         decoded_str = json.loads(response.content.decode("utf-8"))
-    #         self.nick_name = decoded_str["name"]
-    #         self.login_token = token
-    #         return True
-    #     else:
-    #         print(response.json())
-    #         rx.toast.error(response.json()["message"], position="top-right")
-    #         return False
+    def logout(self):
+        self.login_token = ""
+        self.nick_name = ""
+        self.password = ""
+        self.not_member_login = False
+        return [
+            rx.redirect("/"),
+            rx.toast.info("로그아웃 되었습니다.", position="top-right"),
+        ]
 
     def sign_up(self, form_data: dict):
         """Handle the form submit."""
@@ -462,7 +449,65 @@ class State(rx.State):
         self.nick_name = form_data["nick_name"]
         self.password = form_data["password"]
         self.not_member_login = True
-        return rx.redirect(f"{self.router.page.path}")
+        return (
+            rx.redirect(f"{self.router.page.path}")
+            if self.router.page.path != "/login"
+            else rx.redirect("/")
+        )
+
+    def start_not_member_login_check_meeting(self, form_data: dict):
+        """Handle the form submit."""
+
+        if len(form_data["nick_name"]) < 2 or len(form_data["nick_name"]) > 6:
+            return rx.toast.error(
+                "닉네임은 2자 이상 6자 이하로 입력해주세요.", position="top-right"
+            )
+
+        if len(form_data["password"]) < 4 or len(form_data["password"]) > 12:
+            return rx.toast.error(
+                "비밀번호는 4자 이상 12자 이하로 입력해주세요.", position="top-right"
+            )
+
+        params = {
+            "tempUserInfo.nickname": form_data["nick_name"],
+            "tempUserInfo.password": form_data["password"],
+            "appointmentCode": form_data["meeting_code"],
+        }
+
+        response = requests.get(
+            f"{BACKEND_URL}/api/v1/temporary/appointments",
+            headers=HEADER,
+            params=params,
+        )
+
+        if response.status_code == 200:
+            self.check_detail_meeting_code = form_data["meeting_code"]
+            self.nick_name = form_data["nick_name"]
+            self.password = form_data["password"]
+            self.not_member_login = True
+            data = response.json()
+            self.meeting_name = data["appointmentName"]
+            self.host_name = data["hostName"]
+            self.meeting_notice = data["notice"]
+            self.meeting_state = data["appointmentState"]
+
+            self.full_address = (
+                data["address"]["fullAddress"] if data["address"] else ""
+            )
+            self.place_name = data["address"]["placeName"] if data["address"] else ""
+            self.address_kakao_link = (
+                data["address"]["placeUrl"] if data["address"] else ""
+            )
+
+            self.candidate_list = data["candidateDateList"]
+            self.appointment_state = data["appointmentState"]
+            self.is_participated = data["isParticipated"]
+            self.is_host = data["isHost"]
+            self.user_participation_info_list = data["userParticipationInfoList"]
+            return rx.redirect("/check_meeting_detail")
+        else:
+            print(response.json())
+            return rx.toast.error(response.json()["message"], position="top-right")
 
     def check_get_appointments_list(self, keyword: str = None):
         if self.login_token != "":
@@ -518,9 +563,13 @@ class State(rx.State):
             self.meeting_notice = data["notice"]
             self.meeting_state = data["appointmentState"]
 
-            self.full_address = data["address"]["fullAddress"]
-            self.place_name = data["address"]["placeName"]
-            self.address_kakao_link = data["address"]["placeUrl"]
+            self.full_address = (
+                data["address"]["fullAddress"] if data["address"] else ""
+            )
+            self.place_name = data["address"]["placeName"] if data["address"] else ""
+            self.address_kakao_link = (
+                data["address"]["placeUrl"] if data["address"] else ""
+            )
 
             self.candidate_list = data["candidateDateList"]
             self.appointment_state = data["appointmentState"]

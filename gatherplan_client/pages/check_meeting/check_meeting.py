@@ -5,7 +5,7 @@ import reflex as rx
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.pages.login.login import need_login_check_meeting
 
 
 def list_view(items: Dict):
@@ -65,7 +65,7 @@ def list_view(items: Dict):
     )
 
 
-@need_login
+@need_login_check_meeting
 def check_meeting() -> rx.Component:
     return rx.vstack(
         header("/"),

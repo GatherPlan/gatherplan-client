@@ -4,10 +4,10 @@ from gatherplan_client.backend.state import State
 from gatherplan_client.components.calendar import display_select_date, calendar_header
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.pages.login.login import need_login_check_meeting
 
 
-@need_login
+@need_login_check_meeting
 def check_meeting_detail() -> rx.Component:
     return rx.vstack(
         header("/check_meeting"),

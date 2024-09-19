@@ -1,9 +1,11 @@
 import reflex as rx
 
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.schema import AppColor
 
 
 def header(back_button_url: str):
+
     return rx.vstack(
         rx.box(
             rx.hstack(
@@ -25,6 +27,8 @@ def header(back_button_url: str):
                     height="30px",
                     padding_top="2px",
                 ),
+                rx.box(width="40px"),
+                rx.button("로그아웃", on_click=State.logout),
                 spacing="0",
             ),
             width="360px",

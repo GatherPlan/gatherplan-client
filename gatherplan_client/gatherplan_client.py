@@ -13,7 +13,7 @@ from gatherplan_client.pages.join_meeting.enter_meeting_code import enter_meetin
 from gatherplan_client.pages.join_meeting.join_meeting import join_meeting
 from gatherplan_client.pages.join_meeting.join_meeting_check import join_meeting_check
 from gatherplan_client.pages.join_meeting.join_meeting_result import join_meeting_result
-from gatherplan_client.pages.login.login import login
+from gatherplan_client.pages.login.login import login, login_check_meeting
 from gatherplan_client.pages.login.sign_up import sign_up
 from gatherplan_client.pages.make_meeting.make_meeting import make_meeting
 from gatherplan_client.pages.make_meeting.make_meeting_check import make_meeting_check
@@ -31,6 +31,7 @@ def health_check() -> rx.Component:
 app.add_page(health_check, route="/ping")
 app.add_page(index, route="/")
 app.add_page(login, route="/login")
+app.add_page(login_check_meeting, route="/login_check_meeting")
 app.add_page(sign_up, route="/sign_up")
 
 app.add_page(make_meeting, route="/make_meeting")
