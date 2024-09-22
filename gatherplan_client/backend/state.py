@@ -138,11 +138,99 @@ class State(rx.State):
         "https://test.gatherplan.site",
     )
 
+    check_meeting_participants_data: List[Dict] = []
+    check_meeting_participants_data_per_date: Dict = {}
+    check_meeting_detail_display_clicked_date: str = ""
+    check_meeting_detail_display_clicked_date_data: List[str] = []
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     def change_login_not_member(self):
         self.not_member_login_button = not self.not_member_login_button
+
+    def check_meeting_date_click_button(self, click_data: List):
+        self.check_meeting_detail_display_clicked_date_data = []
+        click_data_split = click_data.split("-")
+        click_data_adjust = f"{click_data_split[0]}-{int(click_data_split[1]):02}-{int(click_data_split[2]):02}"
+
+        self.check_meeting_detail_display_clicked_date = click_data_adjust
+        if click_data_adjust in self.check_meeting_participants_data_per_date.keys():
+            temp_data = self.check_meeting_participants_data_per_date[click_data_adjust]
+            for data in temp_data:
+                for key, value in data.items():
+                    start_time, end_time = value.split("~")
+                    start_time = start_time[:5]
+                    end_time = end_time[:5]
+                    result = f"{key}: {start_time}~{end_time}"
+                    self.check_meeting_detail_display_clicked_date_data.append(result)
+        else:
+            self.check_meeting_detail_display_clicked_date_data = ["참여자가 없습니다."]
+
+    def setting_month_calendar_and_get_check_meeting(self):
+        self.check_meeting_participants_data = []
+        self.check_meeting_participants_data_per_date = {}
+        self.check_meeting_detail_display_clicked_date = ""
+        self.check_meeting_detail_display_clicked_date_data = []
+        self.setting_month_calendar()
+
+        for date in self.candidate_list:
+            temp_y, temp_m, temp_d = date.split("-")
+
+            full_date = f"{temp_y}-{int(temp_m)}-{int(temp_d)}"
+            self.display_data[full_date] = True
+
+        if self.not_member_login:
+            data = {
+                "appointmentCode": self.check_detail_meeting_code,
+                "tempUserInfo.nickname": self.nick_name,
+                "tempUserInfo.password": self.password,
+            }
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/temporary/appointments/participants",
+                headers=HEADER,
+                params=data,
+            )
+        else:
+            data = {"appointmentCode": self.check_detail_meeting_code}
+            header = HEADER
+            header["Authorization"] = self.login_token
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/appointments/participants",
+                headers=header,
+                params=data,
+            )
+
+        if response.status_code == 200:
+            self.check_meeting_participants_data = response.json()["data"]
+
+            for participants in self.check_meeting_participants_data:
+
+                for selected_date in participants["participationInfo"][
+                    "selectedDateTimeList"
+                ]:
+                    if (
+                        selected_date["selectedDate"]
+                        in self.check_meeting_participants_data_per_date.keys()
+                    ):
+                        temp = {
+                            participants["participationInfo"][
+                                "nickname"
+                            ]: f"{selected_date['selectedStartTime']}~{selected_date['selectedEndTime']}"
+                        }
+                        self.check_meeting_participants_data_per_date[
+                            selected_date["selectedDate"]
+                        ].append(temp)
+                    else:
+                        self.check_meeting_participants_data_per_date[
+                            selected_date["selectedDate"]
+                        ] = [
+                            {
+                                participants["participationInfo"][
+                                    "nickname"
+                                ]: f"{selected_date['selectedStartTime']}~{selected_date['selectedEndTime']}"
+                            }
+                        ]
 
     def setting_month_calendar(self):
         self.display_data = {}
@@ -557,7 +645,6 @@ class State(rx.State):
 
         if response.status_code == 200:
             data = response.json()
-            print(data)
             self.meeting_name = data["appointmentName"]
             self.host_name = data["hostName"]
             self.meeting_notice = data["notice"]

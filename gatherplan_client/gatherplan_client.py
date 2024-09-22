@@ -58,7 +58,7 @@ app.add_page(join_meeting_result, route="/join_meeting_result")
 app.add_page(
     check_meeting_detail,
     route="/check_meeting_detail",
-    on_load=State.setting_month_calendar(),
+    on_load=State.setting_month_calendar_and_get_check_meeting(),
 )
 app.add_page(
     check_candidate,

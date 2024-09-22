@@ -141,13 +141,15 @@ def time_button(time_data_to_button_click: List):
 
 
 def display_select_date(display_select_date: str):
-    return rx.text(
-        display_select_date,
-        font_size="14px",
-        font_family=AppFontFamily.DEFAULT_FONT,
-        font_weight="700",
-        color=AppColor.BLACK,
-        padding_left="10px",
+    return rx.box(
+        rx.text(
+            display_select_date,
+            font_size="14px",
+            font_family=AppFontFamily.DEFAULT_FONT,
+            font_weight="700",
+            color=AppColor.BLACK,
+            padding_left="10px",
+        )
     )
 
 
@@ -210,7 +212,7 @@ def calendar_header(purpose: str = "join", height: str = "35%"):
                 ),
                 columns="7",
                 align="center",
-                width="320px",
+                width="350px",
             ),
         ),
         color=AppColor.BLACK,
@@ -513,7 +515,7 @@ def location_button_check(display_data: List):
                 type="button",
                 background_color=AppColor.BACKGROUND_GRAY_COLOR,
                 disabled=True,
-                on_click=State.make_meeting_date_click_button(display_data[0]),
+                on_click=State.check_meeting_date_click_button(display_data[0]),
             ),
             rx.cond(
                 display_data[1],
@@ -526,7 +528,7 @@ def location_button_check(display_data: List):
                     type="button",
                     border="3px solid #4E5CDC",
                     background_color=AppColor.WHITE,
-                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                    on_click=State.check_meeting_date_click_button(display_data[0]),
                 ),
                 rx.button(
                     display_data[0].to_string(json=False).split("-")[2],
@@ -535,8 +537,9 @@ def location_button_check(display_data: List):
                     color=AppColor.RED,
                     font_size="16px",
                     type="button",
-                    background_color=AppColor.WHITE,
-                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    disabled=True,
+                    on_click=State.check_meeting_date_click_button(display_data[0]),
                 ),
             ),
         ),
@@ -553,7 +556,7 @@ def location_button_check(display_data: List):
                     type="button",
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     disabled=True,
-                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                    on_click=State.check_meeting_date_click_button(display_data[0]),
                 ),
                 rx.cond(
                     display_data[1],
@@ -566,7 +569,7 @@ def location_button_check(display_data: List):
                         type="button",
                         border="3px solid #4E5CDC",
                         background_color=AppColor.WHITE,
-                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                        on_click=State.check_meeting_date_click_button(display_data[0]),
                     ),
                     rx.button(
                         display_data[0].to_string(json=False).split("-")[2],
@@ -575,8 +578,9 @@ def location_button_check(display_data: List):
                         color=AppColor.BLUE,
                         font_size="16px",
                         type="button",
-                        background_color=AppColor.WHITE,
-                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                        disabled=True,
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        on_click=State.check_meeting_date_click_button(display_data[0]),
                     ),
                 ),
             ),
@@ -591,7 +595,7 @@ def location_button_check(display_data: List):
                     type="button",
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     disabled=True,
-                    on_click=State.make_meeting_date_click_button(display_data[0]),
+                    on_click=State.check_meeting_date_click_button(display_data[0]),
                 ),
                 rx.cond(
                     display_data[1],
@@ -604,7 +608,7 @@ def location_button_check(display_data: List):
                         type="button",
                         background_color=AppColor.WHITE,
                         border="3px solid #4E5CDC",
-                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                        on_click=State.check_meeting_date_click_button(display_data[0]),
                     ),
                     rx.button(
                         display_data[0].to_string(json=False).split("-")[2],
@@ -613,8 +617,9 @@ def location_button_check(display_data: List):
                         color="#000000",
                         font_size="16px",
                         type="button",
-                        background_color=AppColor.WHITE,
-                        on_click=State.make_meeting_date_click_button(display_data[0]),
+                        disabled=True,
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                        on_click=State.check_meeting_date_click_button(display_data[0]),
                     ),
                 ),
             ),

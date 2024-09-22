@@ -1,7 +1,10 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.components.calendar import display_select_date, calendar_header
+from gatherplan_client.components.calendar import (
+    display_select_date,
+    calendar_header,
+)
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.pages.login.login import need_login_check_meeting
@@ -306,7 +309,7 @@ def check_meeting_detail() -> rx.Component:
                 ),
                 rx.tabs.content(
                     # tab2
-                    calendar_header(),
+                    calendar_header(purpose="check"),
                     rx.center(
                         rx.vstack(
                             rx.box(
@@ -320,10 +323,21 @@ def check_meeting_detail() -> rx.Component:
                                 ),
                                 width="360px",
                             ),
+                            rx.box(
+                                rx.text(
+                                    State.check_meeting_detail_display_clicked_date,
+                                    font_size="14px",
+                                    font_family=AppFontFamily.DEFAULT_FONT,
+                                    font_weight="700",
+                                    color=AppColor.BLACK,
+                                    padding_left="10px",
+                                ),
+                                width="360px",
+                            ),
                             rx.scroll_area(
                                 rx.flex(
                                     rx.foreach(
-                                        State.display_select_date,
+                                        State.check_meeting_detail_display_clicked_date_data,
                                         display_select_date,
                                     ),
                                     direction="column",
