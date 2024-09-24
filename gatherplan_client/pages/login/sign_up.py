@@ -7,9 +7,10 @@ from gatherplan_client.components.schema import AppFontFamily, AppColor
 from gatherplan_client.components.text_box import center_align_text_box
 
 
+@rx.page("/sign_up")
 def sign_up() -> rx.Component:
     return rx.vstack(
-        header("/login"),
+        header("/"),
         buffer_box("8%"),
         center_align_text_box(
             main_text="회원가입", sub_text="게더플랜에서 모임의 약속을 잡아보세요"
@@ -95,13 +96,13 @@ def sign_up() -> rx.Component:
                         padding_bottom="20px",
                         width="345px",
                     ),
-                    rx.center(
-                        State.error_message,
-                        font_size="12px",
-                        color="#FF0000",
-                        width="100%",
-                        padding_bottom="30px",
-                    ),
+                    # rx.center(
+                    #     State.error_message,
+                    #     font_size="12px",
+                    #     color="#FF0000",
+                    #     width="100%",
+                    #     padding_bottom="30px",
+                    # ),
                     rx.button(
                         "가입하기",
                         width="348px",

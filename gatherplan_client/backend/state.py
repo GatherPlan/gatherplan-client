@@ -9,7 +9,6 @@ from typing import List, Dict
 import reflex as rx
 import requests
 from dateutil.relativedelta import relativedelta
-from pytimekr import pytimekr
 
 DEFAULT_TIME_SETTING = {
     "00:00": 0,
@@ -38,6 +37,11 @@ DEFAULT_TIME_SETTING = {
     "23:00": 0,
     "23:59": 0,
 }
+
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "https://test.gatherplan.site",
+)
 
 
 def additional_holiday(year: int) -> List[datetime.date]:
@@ -72,29 +76,28 @@ class State(rx.State):
 
     password: str = ""
     nick_name: str = ""
-
     auth_number: str = ""
-    error_message: str = ""
 
-    # make_meeting
     meeting_name: str = ""
-    meeting_memo: str = ""
+    meeting_notice: str = ""
+    meeting_code: str = ""
     input_location: str = ""
-    search_location: List[Dict[str, str]] = [{"address_name": "", "location_type": ""}]
+
+    search_location: List[Dict[str, str]] = [
+        {"address_name": "", "location_type": ""}
+    ]  # 백엔드로부터 받아온 데이터 ( 행정구역 )
     search_location_place: List[Dict[str, str]] = [
         {"address_name": "", "location_type": "", "place_name": "", "place_url": ""}
-    ]
+    ]  # 백엔드로부터 받아온 데이터 ( 상세주소 )
 
-    select_location_detail_location: str = ""
-    select_location: str = ""
+    meeting_location: str = ""
+    meeting_location_detail: str = ""
     location_type: str = ""
     place_url: str = ""
 
     @rx.var
-    def params_meeting_code(self) -> str:
-        return self.router.page.params.get("meeting_code", "")
-
-    meeting_code: str = ""
+    def meeting_code_param(self) -> str:
+        return self.router.page.params.get("meeting_code_param", "")
 
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
@@ -103,16 +106,11 @@ class State(rx.State):
     checked_data: Dict[str, bool] = {}
     click_date: str = ""
 
-    setting_time = datetime.datetime.now()
-    setting_time_display = setting_time.strftime("%Y-%m")
+    setting_time = ""
+    setting_time_display = ""
 
     host_name: str = ""
-    meeting_notice: str = ""
     meeting_state: str = ""
-
-    full_address: str = ""
-    place_name: str = ""
-    address_kakao_link: str = ""
 
     candidate_list: List = []
     appointment_state: str = ""
@@ -123,20 +121,12 @@ class State(rx.State):
     check_meeting_list: List[Dict[str, str]] = []
     check_detail_meeting_code: str = ""
 
-    # Join Meeting Data
-    appointment_code: str = ""
-    meeting_location: str = ""
     meeting_date: List[str] = []
     post_data: Dict = {}
     display_select_date: List = []
 
     first_click_time: str = ""
     time_data_to_button_click: Dict[str, bool] = copy.copy(DEFAULT_TIME_SETTING)
-
-    FRONTEND_URL = os.getenv(
-        "FRONTEND_URL",
-        "https://test.gatherplan.site",
-    )
 
     check_meeting_participants_data: List[Dict] = []
     check_meeting_participants_data_per_date: Dict = {}
@@ -233,6 +223,11 @@ class State(rx.State):
                         ]
 
     def setting_month_calendar(self):
+        from pytimekr import pytimekr
+
+        self.setting_time = datetime.datetime.now()
+        self.setting_time_display = self.setting_time.strftime("%Y-%m")
+
         self.display_data = {}
         self.checked_data = {}
         self.select_data = []
@@ -296,7 +291,7 @@ class State(rx.State):
             )
 
         self.meeting_name = form_data["meeting_name"]
-        self.meeting_memo = form_data["meeting_memo"]
+        self.meeting_notice = form_data["meeting_memo"]
 
         return rx.redirect("/make_meeting_detail")
 
@@ -309,17 +304,17 @@ class State(rx.State):
         header = HEADER
         data = {
             "appointmentName": self.meeting_name,
-            "notice": self.meeting_memo,
+            "notice": self.meeting_notice,
             "address": {
                 "locationType": self.location_type,
-                "fullAddress": self.select_location_detail_location,
-                "placeName": self.select_location,
+                "fullAddress": self.meeting_location_detail,
+                "placeName": self.meeting_location,
                 "placeUrl": self.place_url,
             },
             "candidateDateList": meeting_dates_dt,
         }
 
-        if self.select_location_detail_location == "":
+        if self.meeting_location_detail == "":
             data.pop("address")
 
         if self.not_member_login:
@@ -339,9 +334,12 @@ class State(rx.State):
             )
 
         if response.status_code == 200:
-            return rx.redirect(
-                f"/make_meeting_result/{response.json()['appointmentCode']}"
-            )
+            self.meeting_code = response.json()["appointmentCode"]
+
+            print(response.json())
+            print(self.meeting_code)
+
+            return rx.redirect(f"/make_meeting_result")
         else:
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
@@ -415,15 +413,15 @@ class State(rx.State):
     def make_meeting_detail_handle_location_submit(self, form_data: dict):
         """Handle the form submit."""
         if form_data["location_type"] == "DISTRICT":
-            self.select_location = ""
-            self.select_location_detail_location = form_data["address_name"]
+            self.meeting_location = ""
+            self.meeting_location_detail = form_data["address_name"]
             self.place_url = ""
             self.location_type = form_data["location_type"]
         else:
             self.location_type = form_data["location_type"]
-            self.select_location = form_data["place_name"]
+            self.meeting_location = form_data["place_name"]
             self.place_url = form_data["place_url"]
-            self.select_location_detail_location = form_data["address_name"]
+            self.meeting_location_detail = form_data["address_name"]
 
         return
 
@@ -445,10 +443,10 @@ class State(rx.State):
             self.meeting_location = (
                 data["address"]["fullAddress"] if data["address"] else ""
             )
-            self.meeting_memo = data["notice"]
+            self.meeting_notice = data["notice"]
             self.meeting_date = data["candidateDateList"]
             self.host_name = data["hostName"]
-            self.appointment_code = data["appointmentCode"]
+            self.meeting_code = data["appointmentCode"]
             self.setting_month_calendar()
             return rx.redirect("/join_meeting")
 
@@ -579,13 +577,13 @@ class State(rx.State):
             self.meeting_notice = data["notice"]
             self.meeting_state = data["appointmentState"]
 
-            self.full_address = (
+            self.meeting_location_detail = (
                 data["address"]["fullAddress"] if data["address"] else ""
             )
-            self.place_name = data["address"]["placeName"] if data["address"] else ""
-            self.address_kakao_link = (
-                data["address"]["placeUrl"] if data["address"] else ""
+            self.meeting_location = (
+                data["address"]["placeName"] if data["address"] else ""
             )
+            self.place_url = data["address"]["placeUrl"] if data["address"] else ""
 
             self.candidate_list = data["candidateDateList"]
             self.appointment_state = data["appointmentState"]
@@ -650,13 +648,13 @@ class State(rx.State):
             self.meeting_notice = data["notice"]
             self.meeting_state = data["appointmentState"]
 
-            self.full_address = (
+            self.meeting_location_detail = (
                 data["address"]["fullAddress"] if data["address"] else ""
             )
-            self.place_name = data["address"]["placeName"] if data["address"] else ""
-            self.address_kakao_link = (
-                data["address"]["placeUrl"] if data["address"] else ""
+            self.meeting_location = (
+                data["address"]["placeName"] if data["address"] else ""
             )
+            self.place_url = data["address"]["placeUrl"] if data["address"] else ""
 
             self.candidate_list = data["candidateDateList"]
             self.appointment_state = data["appointmentState"]
@@ -751,7 +749,7 @@ class State(rx.State):
         header = HEADER
 
         data = {
-            "appointmentCode": self.appointment_code,
+            "appointmentCode": self.meeting_code,
             "selectedDateTimeList": self.get_value(self.select_data),
         }
 
@@ -832,6 +830,34 @@ class State(rx.State):
         nickname = data["nickname"]
         email = data["email"]
         return id, nickname, email
+
+    def change_join_meeting(self):
+        header = HEADER
+        data = {"appointmentCode": self.check_detail_meeting_code}
+
+        if self.not_member_login:
+            data["tempUserInfo.nickname "] = self.nick_name
+            data["tempUserInfo.password "] = self.password
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/temporary/appointments/participants/my",
+                headers=header,
+                params=data,
+            )
+        else:
+            header["Authorization"] = self.login_token
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/appointments/participants/my",
+                headers=header,
+                params=data,
+            )
+
+        if response.status_code == 200:
+            # TODO: default value add
+            self.setting_month_calendar()
+            return rx.redirect("/join_meeting")
+        else:
+            print(response.json())
+            return rx.toast.error(response.json()["message"], position="top-right")
 
 
 class EmailAuth(rx.State):

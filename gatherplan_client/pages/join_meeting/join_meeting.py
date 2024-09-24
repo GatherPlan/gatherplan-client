@@ -8,6 +8,7 @@ from gatherplan_client.components.text_box import (
 )
 
 
+@rx.page("/join_meeting")
 def join_meeting() -> rx.Component:
     return rx.vstack(
         header("/enter_meeting_code"),
@@ -54,16 +55,30 @@ def join_meeting() -> rx.Component:
                         font_weight="700",
                         color=AppColor.GRAY_TEXT,
                     ),
-                    rx.text(
-                        State.meeting_location,
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
+                    rx.vstack(
+                        rx.link(
+                            State.meeting_location,
+                            href=State.place_url,
+                            font_size="14px",
+                            font_family=AppFontFamily.DEFAULT_FONT,
+                            font_weight="700",
+                            color=AppColor.BLACK,
+                            padding_bottom="5px",
+                        ),
+                        rx.text(
+                            State.meeting_location_detail,
+                            font_size="12px",
+                            font_family=AppFontFamily.DEFAULT_FONT,
+                            font_weight="500",
+                            color=AppColor.GRAY_TEXT,
+                            margin="0",
+                            padding="0",
+                        ),
+                        spacing="0",
                     ),
                     width="360px",
                     padding_left="10px",
-                    height="50px",
+                    height="60px",
                 ),
                 rx.box(
                     rx.text(
@@ -93,7 +108,7 @@ def join_meeting() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        State.meeting_memo,
+                        State.meeting_notice,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -115,7 +130,7 @@ def join_meeting() -> rx.Component:
                             ),
                             rx.button(
                                 rx.icon("copy"),
-                                on_click=rx.set_clipboard(State.appointment_code),
+                                on_click=rx.set_clipboard(State.meeting_code),
                                 width="12px",
                                 height="12px",
                                 padding="0",
@@ -125,7 +140,7 @@ def join_meeting() -> rx.Component:
                         ),
                         rx.box(
                             rx.text(
-                                State.appointment_code,
+                                State.meeting_code,
                                 font_size="14px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 color=AppColor.BLACK,

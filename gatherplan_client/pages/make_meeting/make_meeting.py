@@ -3,9 +3,12 @@ import reflex as rx
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.pages import need_login
 
 
+@rx.page(
+    route="/make_meeting",
+)
 @need_login
 def make_meeting() -> rx.Component:
     return rx.vstack(

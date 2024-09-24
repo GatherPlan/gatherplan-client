@@ -41,6 +41,7 @@ def need_login_check_meeting(func):
     return inner
 
 
+@rx.page("/login")
 def login() -> rx.Component:
     return rx.vstack(
         buffer_box("8%"),
@@ -188,6 +189,7 @@ def login() -> rx.Component:
     )
 
 
+@rx.page("/login_check_meeting")
 def login_check_meeting() -> rx.Component:
     return rx.vstack(
         buffer_box("8%"),

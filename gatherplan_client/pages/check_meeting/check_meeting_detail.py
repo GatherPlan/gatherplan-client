@@ -10,6 +10,10 @@ from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.pages.login.login import need_login_check_meeting
 
 
+@rx.page(
+    "/check_meeting_detail",
+    on_load=State.setting_month_calendar_and_get_check_meeting(),
+)
 @need_login_check_meeting
 def check_meeting_detail() -> rx.Component:
     return rx.vstack(
@@ -78,7 +82,11 @@ def check_meeting_detail() -> rx.Component:
                                     background_color="#00A41A",
                                     on_click=rx.redirect("/check_candidate"),
                                 ),
-                                rx.button("약속 변경하기", width="300px"),
+                                rx.button(
+                                    "약속 변경하기",
+                                    width="300px",
+                                    on_click=State.change_join_meeting,
+                                ),
                                 spacing="3",
                             ),
                             width="100%",
@@ -146,8 +154,8 @@ def check_meeting_detail() -> rx.Component:
                                 ),
                                 rx.vstack(
                                     rx.link(
-                                        State.full_address,
-                                        href=State.address_kakao_link,
+                                        State.meeting_location,
+                                        href=State.place_url,
                                         font_size="14px",
                                         font_family=AppFontFamily.DEFAULT_FONT,
                                         font_weight="700",
@@ -155,7 +163,7 @@ def check_meeting_detail() -> rx.Component:
                                         padding_bottom="5px",
                                     ),
                                     rx.text(
-                                        State.place_name,
+                                        State.meeting_location_detail,
                                         font_size="12px",
                                         font_family=AppFontFamily.DEFAULT_FONT,
                                         font_weight="500",

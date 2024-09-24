@@ -1,11 +1,16 @@
 import reflex as rx
 
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.calendar import calendar_header
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.pages.login.login import need_login
 
 
+@rx.page(
+    "/make_meeting_date",
+    on_load=State.setting_month_calendar,
+)
 @need_login
 def make_meeting_date() -> rx.Component:
     return rx.vstack(

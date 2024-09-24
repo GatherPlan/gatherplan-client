@@ -1,10 +1,12 @@
 import reflex as rx
 
+from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
 from gatherplan_client.pages.login.login import need_login
 
 
+@rx.page("check_candidate", on_load=State.get_appointments_candidates)
 @need_login
 def check_candidate() -> rx.Component:
     return rx.vstack(

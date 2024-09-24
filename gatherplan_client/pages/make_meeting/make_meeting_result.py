@@ -1,6 +1,6 @@
 import reflex as rx
 
-from gatherplan_client.backend.state import State
+from gatherplan_client.backend.state import State, FRONTEND_URL
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
@@ -9,6 +9,7 @@ from gatherplan_client.components.text_box import (
 from gatherplan_client.pages.login.login import need_login
 
 
+@rx.page("/make_meeting_result")
 @need_login
 def make_meeting_result() -> rx.Component:
     return rx.vstack(
@@ -66,16 +67,30 @@ def make_meeting_result() -> rx.Component:
                         font_weight="700",
                         color=AppColor.GRAY_TEXT,
                     ),
-                    rx.text(
-                        State.select_location,
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
+                    rx.vstack(
+                        rx.link(
+                            State.meeting_location,
+                            href=State.place_url,
+                            font_size="14px",
+                            font_family=AppFontFamily.DEFAULT_FONT,
+                            font_weight="700",
+                            color=AppColor.BLACK,
+                            padding_bottom="5px",
+                        ),
+                        rx.text(
+                            State.meeting_location_detail,
+                            font_size="12px",
+                            font_family=AppFontFamily.DEFAULT_FONT,
+                            font_weight="500",
+                            color=AppColor.GRAY_TEXT,
+                            margin="0",
+                            padding="0",
+                        ),
+                        spacing="0",
                     ),
                     width="360px",
                     padding_left="10px",
-                    height="50px",
+                    height="60px",
                 ),
                 rx.box(
                     rx.text(
@@ -105,8 +120,7 @@ def make_meeting_result() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        State.meeting_memo,
-                        # MakeMeetingNameState.select_location_detail_location,
+                        State.meeting_notice,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",
@@ -128,7 +142,7 @@ def make_meeting_result() -> rx.Component:
                             ),
                             rx.button(
                                 rx.icon("copy"),
-                                on_click=rx.set_clipboard(State.params_meeting_code),
+                                on_click=rx.set_clipboard(State.meeting_code),
                                 width="12px",
                                 height="12px",
                                 padding="0",
@@ -138,7 +152,7 @@ def make_meeting_result() -> rx.Component:
                         ),
                         rx.box(
                             rx.text(
-                                State.params_meeting_code,
+                                State.meeting_code,
                                 font_size="14px",
                                 font_family=AppFontFamily.DEFAULT_FONT,
                                 color=AppColor.BLACK,
@@ -165,9 +179,7 @@ def make_meeting_result() -> rx.Component:
                     color=AppColor.WHITE,
                     type="submit",
                     background_color=AppColor.MAIN_COLOR,
-                    on_click=rx.redirect(
-                        f"/enter_meeting_code/{State.params_meeting_code}"
-                    ),
+                    on_click=rx.redirect(f"/enter_meeting_code/{State.meeting_code}"),
                 ),
                 rx.button(
                     "공유하기",
@@ -176,7 +188,7 @@ def make_meeting_result() -> rx.Component:
                     padding="20px",
                     color=AppColor.BLACK,
                     on_click=rx.set_clipboard(
-                        f"{State.FRONTEND_URL}/enter_meeting_code/{State.params_meeting_code}"
+                        f"{FRONTEND_URL}/enter_meeting_code/{State.meeting_code}"
                     ),
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     margin_top="20px",

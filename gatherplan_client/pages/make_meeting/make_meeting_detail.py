@@ -22,6 +22,7 @@ def location_button(button_text: Dict):
     )
 
 
+@rx.page("/make_meeting_detail")
 @need_login
 def make_meeting_detail() -> rx.Component:
     return rx.vstack(
@@ -151,7 +152,7 @@ def make_meeting_detail() -> rx.Component:
             ),
             rx.center(
                 rx.cond(
-                    State.select_location_detail_location != "",
+                    State.meeting_location_detail != "",
                     rx.vstack(
                         rx.box(
                             rx.vstack(
@@ -167,7 +168,7 @@ def make_meeting_detail() -> rx.Component:
                                     State.location_type == "DISTRICT",
                                     rx.hstack(
                                         rx.text(
-                                            State.select_location_detail_location,
+                                            State.meeting_location_detail,
                                             font_size="14px",
                                             font_family=AppFontFamily.DEFAULT_FONT,
                                             font_weight="700",
@@ -189,7 +190,7 @@ def make_meeting_detail() -> rx.Component:
                                     rx.hstack(
                                         rx.vstack(
                                             rx.text(
-                                                State.select_location,
+                                                State.meeting_location,
                                                 font_size="14px",
                                                 font_family=AppFontFamily.DEFAULT_FONT,
                                                 font_weight="700",
@@ -198,7 +199,7 @@ def make_meeting_detail() -> rx.Component:
                                                 width="280px",
                                             ),
                                             rx.text(
-                                                State.select_location_detail_location,
+                                                State.meeting_location_detail,
                                                 font_size="10px",
                                                 font_family=AppFontFamily.DEFAULT_FONT,
                                                 font_weight="700",

@@ -65,6 +65,7 @@ def list_view(items: Dict):
     )
 
 
+@rx.page("/check_meeting", on_load=State.check_get_appointments_list)
 @need_login_check_meeting
 def check_meeting() -> rx.Component:
     return rx.vstack(

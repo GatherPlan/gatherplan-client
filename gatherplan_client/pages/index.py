@@ -4,10 +4,9 @@ from gatherplan_client.components.buttons import index_button
 from gatherplan_client.components.schema import AppColor, TextSize, AppFontFamily
 
 
-class State(rx.State):
-    """The app state."""
-
-
+@rx.page(
+    route="/",
+)
 def index() -> rx.Component:
     return rx.vstack(
         rx.vstack(

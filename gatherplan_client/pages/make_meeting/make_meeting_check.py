@@ -7,6 +7,7 @@ from gatherplan_client.components.text_box import text_for_each
 from gatherplan_client.pages.login.login import need_login
 
 
+@rx.page("/make_meeting_check")
 @need_login
 def make_meeting_check() -> rx.Component:
 
@@ -65,16 +66,30 @@ def make_meeting_check() -> rx.Component:
                         font_weight="700",
                         color=AppColor.GRAY_TEXT,
                     ),
-                    rx.text(
-                        State.select_location_detail_location,
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
+                    rx.vstack(
+                        rx.link(
+                            State.meeting_location,
+                            href=State.place_url,
+                            font_size="14px",
+                            font_family=AppFontFamily.DEFAULT_FONT,
+                            font_weight="700",
+                            color=AppColor.BLACK,
+                            padding_bottom="5px",
+                        ),
+                        rx.text(
+                            State.meeting_location_detail,
+                            font_size="12px",
+                            font_family=AppFontFamily.DEFAULT_FONT,
+                            font_weight="500",
+                            color=AppColor.GRAY_TEXT,
+                            margin="0",
+                            padding="0",
+                        ),
+                        spacing="0",
                     ),
                     width="360px",
                     padding_left="10px",
-                    height="50px",
+                    height="60px",
                 ),
                 rx.box(
                     rx.text(
@@ -104,7 +119,7 @@ def make_meeting_check() -> rx.Component:
                         color=AppColor.GRAY_TEXT,
                     ),
                     rx.text(
-                        State.meeting_memo,
+                        State.meeting_notice,
                         font_size="14px",
                         font_family=AppFontFamily.DEFAULT_FONT,
                         font_weight="700",

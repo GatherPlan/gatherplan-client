@@ -5,6 +5,7 @@ from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
 
 
+@rx.page("/enter_meeting_code")
 def enter_meeting_code() -> rx.Component:
     return rx.vstack(
         header("/"),
@@ -44,7 +45,7 @@ def enter_meeting_code() -> rx.Component:
                     ),
                     rx.box(
                         rx.input(
-                            value=State.params_meeting_code,
+                            value=State.meeting_code_param,
                             name="enter_code",
                             font_size=AppFontFamily.DEFAULT_FONT,
                             height="35px",
