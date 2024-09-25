@@ -45,7 +45,7 @@ def enter_meeting_code() -> rx.Component:
                     ),
                     rx.box(
                         rx.input(
-                            value=State.meeting_code_param,
+                            value=State.params_meeting_code,
                             name="enter_code",
                             font_size=AppFontFamily.DEFAULT_FONT,
                             height="35px",

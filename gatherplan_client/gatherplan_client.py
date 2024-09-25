@@ -8,4 +8,4 @@ def health_check() -> rx.Component:
 
 
 app.add_page(health_check, route="/ping")
-app.add_page(enter_meeting_code, route="/enter_meeting_code/[meeting_code_param]")
+app.add_page(enter_meeting_code, route="/enter_meeting_code/[meeting_code_params]")

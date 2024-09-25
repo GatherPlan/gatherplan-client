@@ -10,33 +10,8 @@ import reflex as rx
 import requests
 from dateutil.relativedelta import relativedelta
 
-DEFAULT_TIME_SETTING = {
-    "00:00": 0,
-    "01:00": 0,
-    "02:00": 0,
-    "03:00": 0,
-    "04:00": 0,
-    "05:00": 0,
-    "06:00": 0,
-    "07:00": 0,
-    "08:00": 0,
-    "09:00": 0,
-    "10:00": 0,
-    "11:00": 0,
-    "12:00": 0,
-    "13:00": 0,
-    "14:00": 0,
-    "15:00": 0,
-    "16:00": 0,
-    "17:00": 0,
-    "18:00": 0,
-    "19:00": 0,
-    "20:00": 0,
-    "21:00": 0,
-    "22:00": 0,
-    "23:00": 0,
-    "23:59": 0,
-}
+DEFAULT_TIME_SETTING = {f"{hour:02}:00": 0 for hour in range(24)}
+DEFAULT_TIME_SETTING["23:59"] = 0
 
 FRONTEND_URL = os.getenv(
     "FRONTEND_URL",
@@ -44,29 +19,28 @@ FRONTEND_URL = os.getenv(
 )
 
 
-def additional_holiday(year: int) -> List[datetime.date]:
-    if year == 2024:
-        return [
-            datetime.date(2024, 2, 12),
-            datetime.date(2024, 4, 10),
-            datetime.date(2024, 5, 6),
-        ]
-    elif year == 2025:
-        return [
-            datetime.date(2025, 3, 3),
-            datetime.date(2025, 5, 6),
-        ]
+ADDITIONAL_HOLIDAYS = {
+    2024: [
+        datetime.date(2024, 2, 12),
+        datetime.date(2024, 4, 10),
+        datetime.date(2024, 5, 6),
+    ],
+    2025: [
+        datetime.date(2025, 3, 3),
+        datetime.date(2025, 5, 6),
+    ],
+    2026: [
+        datetime.date(2026, 3, 2),
+        datetime.date(2026, 5, 25),
+        datetime.date(2026, 6, 8),
+        datetime.date(2026, 8, 17),
+        datetime.date(2026, 10, 5),
+    ],
+}
 
-    elif year == 2026:
-        return [
-            datetime.date(2026, 3, 2),
-            datetime.date(2026, 5, 25),
-            datetime.date(2026, 6, 8),
-            datetime.date(2026, 8, 17),
-            datetime.date(2026, 10, 5),
-        ]
-    else:
-        return []
+
+def additional_holiday(year: int) -> List[datetime.date]:
+    return ADDITIONAL_HOLIDAYS.get(year, [])
 
 
 class State(rx.State):
@@ -96,8 +70,8 @@ class State(rx.State):
     place_url: str = ""
 
     @rx.var
-    def meeting_code_param(self) -> str:
-        return self.router.page.params.get("meeting_code_param", "")
+    def params_meeting_code(self) -> str:
+        return self.router.page.params.get("meeting_code_params", "")
 
     # CalendarSelect Data
     display_data: Dict[str, bool] = {}
@@ -132,9 +106,6 @@ class State(rx.State):
     check_meeting_participants_data_per_date: Dict = {}
     check_meeting_detail_display_clicked_date: str = ""
     check_meeting_detail_display_clicked_date_data: List[str] = []
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     def change_login_not_member(self):
         self.not_member_login_button = not self.not_member_login_button
@@ -335,10 +306,6 @@ class State(rx.State):
 
         if response.status_code == 200:
             self.meeting_code = response.json()["appointmentCode"]
-
-            print(response.json())
-            print(self.meeting_code)
-
             return rx.redirect(f"/make_meeting_result")
         else:
             print(response.json())

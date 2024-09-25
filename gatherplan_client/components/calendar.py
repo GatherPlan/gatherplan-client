@@ -15,7 +15,7 @@ def calendar_button(
     return rx.drawer.root(
         rx.drawer.trigger(
             rx.button(
-                display_data[0].to_string(json=False).split("-")[2],
+                display_data[0].to_string().split("-")[2],
                 width="40px",
                 height="32px",
                 color=text_color,
@@ -384,7 +384,7 @@ def location_button_make(display_data: List):
         rx.cond(
             State.holiday_data[display_data[0]] == "prev",
             rx.button(
-                display_data[0].to_string(json=False).split("-")[2],
+                display_data[0].to_string().split("-")[2],
                 width="50px",
                 height="36px",
                 color=AppColor.RED,
@@ -397,7 +397,7 @@ def location_button_make(display_data: List):
             rx.cond(
                 display_data[1],
                 rx.button(
-                    display_data[0].to_string(json=False).split("-")[2],
+                    display_data[0].to_string().split("-")[2],
                     width="50px",
                     height="36px",
                     color=AppColor.RED,
@@ -408,7 +408,7 @@ def location_button_make(display_data: List):
                     on_click=State.make_meeting_date_click_button(display_data[0]),
                 ),
                 rx.button(
-                    display_data[0].to_string(json=False).split("-")[2],
+                    display_data[0].to_string().split("-")[2],
                     width="50px",
                     height="36px",
                     color=AppColor.RED,
@@ -424,7 +424,7 @@ def location_button_make(display_data: List):
             rx.cond(
                 State.holiday_data[display_data[0]] == "prev",
                 rx.button(
-                    display_data[0].to_string(json=False).split("-")[2],
+                    display_data[0].to_string().split("-")[2],
                     width="50px",
                     height="36px",
                     color=AppColor.BLUE,
@@ -437,7 +437,7 @@ def location_button_make(display_data: List):
                 rx.cond(
                     display_data[1],
                     rx.button(
-                        display_data[0].to_string(json=False).split("-")[2],
+                        display_data[0].to_string().split("-")[2],
                         width="50px",
                         height="36px",
                         color=AppColor.BLUE,
@@ -448,7 +448,7 @@ def location_button_make(display_data: List):
                         on_click=State.make_meeting_date_click_button(display_data[0]),
                     ),
                     rx.button(
-                        display_data[0].to_string(json=False).split("-")[2],
+                        display_data[0].to_string().split("-")[2],
                         width="50px",
                         height="36px",
                         color=AppColor.BLUE,
@@ -462,7 +462,7 @@ def location_button_make(display_data: List):
             rx.cond(
                 State.holiday_data[display_data[0]] == "prev",
                 rx.button(
-                    display_data[0].to_string(json=False).split("-")[2],
+                    display_data[0].to_string().split("-")[2],
                     width="50px",
                     height="36px",
                     color="#000000",
@@ -475,7 +475,7 @@ def location_button_make(display_data: List):
                 rx.cond(
                     display_data[1],
                     rx.button(
-                        display_data[0].to_string(json=False).split("-")[2],
+                        display_data[0].to_string().split("-")[2],
                         width="50px",
                         height="36px",
                         color="#000000",
@@ -486,7 +486,7 @@ def location_button_make(display_data: List):
                         on_click=State.make_meeting_date_click_button(display_data[0]),
                     ),
                     rx.button(
-                        display_data[0].to_string(json=False).split("-")[2],
+                        display_data[0].to_string().split("-")[2],
                         width="50px",
                         height="36px",
                         color="#000000",
@@ -507,7 +507,7 @@ def location_button_check(display_data: List):
         rx.cond(
             State.holiday_data[display_data[0]] == "prev",
             rx.button(
-                display_data[0].to_string(json=False).split("-")[2],
+                display_data[0].to_string().split("-")[2],
                 width="50px",
                 height="36px",
                 color=AppColor.RED,
@@ -520,7 +520,7 @@ def location_button_check(display_data: List):
             rx.cond(
                 display_data[1],
                 rx.button(
-                    display_data[0].to_string(json=False).split("-")[2],
+                    display_data[0].to_string().split("-")[2],
                     width="50px",
                     height="36px",
                     color=AppColor.RED,
@@ -531,7 +531,7 @@ def location_button_check(display_data: List):
                     on_click=State.check_meeting_date_click_button(display_data[0]),
                 ),
                 rx.button(
-                    display_data[0].to_string(json=False).split("-")[2],
+                    display_data[0].to_string().split("-")[2],
                     width="50px",
                     height="36px",
                     color=AppColor.RED,
@@ -548,7 +548,7 @@ def location_button_check(display_data: List):
             rx.cond(
                 State.holiday_data[display_data[0]] == "prev",
                 rx.button(
-                    display_data[0].to_string(json=False).split("-")[2],
+                    display_data[0].to_string().split("-")[2],
                     width="50px",
                     height="36px",
                     color=AppColor.BLUE,
@@ -561,7 +561,7 @@ def location_button_check(display_data: List):
                 rx.cond(
                     display_data[1],
                     rx.button(
-                        display_data[0].to_string(json=False).split("-")[2],
+                        display_data[0].to_string().split("-")[2],
                         width="50px",
                         height="36px",
                         color=AppColor.BLUE,
@@ -572,7 +572,7 @@ def location_button_check(display_data: List):
                         on_click=State.check_meeting_date_click_button(display_data[0]),
                     ),
                     rx.button(
-                        display_data[0].to_string(json=False).split("-")[2],
+                        display_data[0].to_string().split("-")[2],
                         width="50px",
                         height="36px",
                         color=AppColor.BLUE,
@@ -587,7 +587,7 @@ def location_button_check(display_data: List):
             rx.cond(
                 State.holiday_data[display_data[0]] == "prev",
                 rx.button(
-                    display_data[0].to_string(json=False).split("-")[2],
+                    display_data[0].to_string().split("-")[2],
                     width="50px",
                     height="36px",
                     color="#000000",
@@ -600,7 +600,7 @@ def location_button_check(display_data: List):
                 rx.cond(
                     display_data[1],
                     rx.button(
-                        display_data[0].to_string(json=False).split("-")[2],
+                        display_data[0].to_string().split("-")[2],
                         width="50px",
                         height="36px",
                         color="#000000",
@@ -611,7 +611,7 @@ def location_button_check(display_data: List):
                         on_click=State.check_meeting_date_click_button(display_data[0]),
                     ),
                     rx.button(
-                        display_data[0].to_string(json=False).split("-")[2],
+                        display_data[0].to_string().split("-")[2],
                         width="50px",
                         height="36px",
                         color="#000000",
