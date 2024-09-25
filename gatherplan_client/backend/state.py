@@ -4,7 +4,7 @@ import copy
 import datetime
 import json
 import os
-from typing import List, Dict
+from typing import List, Dict, Any
 
 import reflex as rx
 import requests
@@ -106,6 +106,37 @@ class State(rx.State):
     check_meeting_participants_data_per_date: Dict = {}
     check_meeting_detail_display_clicked_date: str = ""
     check_meeting_detail_display_clicked_date_data: List[str] = []
+
+    meeting_confirm_display_data: List[Dict[str, Any]] = [
+        {
+            "index": 0,
+            "date": "2024-09-11",
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "user_count": 4,
+            "user_list": ["user1", "user2", "user3", "user4"],
+            "weather": "sun",
+        },
+        {
+            "index": 1,
+            "date": "2024-09-11",
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "user_count": 4,
+            "user_list": ["user1", "user2", "user3", "user4"],
+            "weather": "sun",
+        },
+        {
+            "index": 2,
+            "date": "2024-09-11",
+            "start_time": "10:00",
+            "end_time": "11:00",
+            "user_count": 4,
+            "user_list": ["user1", "user2", "user3", "user4"],
+            "weather": "sun",
+        },
+    ]
+    meeting_confirm_display_data_user: str = ""
 
     def change_login_not_member(self):
         self.not_member_login_button = not self.not_member_login_button
@@ -293,16 +324,37 @@ class State(rx.State):
                 "nickname": self.nick_name,
                 "password": self.password,
             }
-            response = requests.post(
-                f"{BACKEND_URL}/api/v1/temporary/appointments",
-                headers=header,
-                json=data,
-            )
+
+            if self.meeting_code != "":
+                data["appointmentCode"] = self.meeting_code
+                response = requests.put(
+                    f"{BACKEND_URL}/api/v1/temporary/appointments",
+                    headers=header,
+                    json=data,
+                )
+                return rx.redirect(f"/check_meeting_detail")
+
+            else:
+                response = requests.post(
+                    f"{BACKEND_URL}/api/v1/temporary/appointments",
+                    headers=header,
+                    json=data,
+                )
         else:
             header["Authorization"] = self.login_token
-            response = requests.post(
-                f"{BACKEND_URL}/api/v1/appointments", headers=header, json=data
-            )
+
+            if self.meeting_code != "":
+                data["appointmentCode"] = self.meeting_code
+                response = requests.put(
+                    f"{BACKEND_URL}/api/v1/appointments",
+                    headers=header,
+                    json=data,
+                )
+                return rx.redirect(f"/check_meeting_detail")
+            else:
+                response = requests.post(
+                    f"{BACKEND_URL}/api/v1/appointments", headers=header, json=data
+                )
 
         if response.status_code == 200:
             self.meeting_code = response.json()["appointmentCode"]
@@ -415,6 +467,7 @@ class State(rx.State):
             self.host_name = data["hostName"]
             self.meeting_code = data["appointmentCode"]
             self.setting_month_calendar()
+            self.display_select_date = []
             return rx.redirect("/join_meeting")
 
         else:
@@ -449,7 +502,6 @@ class State(rx.State):
         elif response.status_code == 401:
             return rx.toast.error("로그인 실패", position="top-right")
         else:
-            print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
 
     def logout(self):
@@ -564,6 +616,9 @@ class State(rx.State):
 
     def check_get_appointments_list(self, keyword: str = None):
         if self.login_token != "":
+
+            print("check: ", keyword)
+
             header = HEADER
             header["Authorization"] = self.login_token
 
@@ -614,7 +669,6 @@ class State(rx.State):
             self.host_name = data["hostName"]
             self.meeting_notice = data["notice"]
             self.meeting_state = data["appointmentState"]
-
             self.meeting_location_detail = (
                 data["address"]["fullAddress"] if data["address"] else ""
             )
@@ -622,12 +676,12 @@ class State(rx.State):
                 data["address"]["placeName"] if data["address"] else ""
             )
             self.place_url = data["address"]["placeUrl"] if data["address"] else ""
-
             self.candidate_list = data["candidateDateList"]
             self.appointment_state = data["appointmentState"]
             self.is_participated = data["isParticipated"]
             self.is_host = data["isHost"]
             self.user_participation_info_list = data["userParticipationInfoList"]
+
             return rx.redirect("/check_meeting_detail")
 
         else:
@@ -731,6 +785,12 @@ class State(rx.State):
                 json=data,
             )
 
+            if "code" in response.json().keys() and response.json()["code"] == 4001:
+                response = requests.put(
+                    f"{BACKEND_URL}/api/v1/temporary/appointments/join",
+                    headers=header,
+                    json=data,
+                )
         else:
             header["Authorization"] = self.login_token
             _, jwt_nickname, _ = self.decode_jwt_payload(self.login_token)
@@ -740,6 +800,12 @@ class State(rx.State):
                 headers=header,
                 json=data,
             )
+            if "code" in response.json().keys() and response.json()["code"] == 4001:
+                response = requests.put(
+                    f"{BACKEND_URL}/api/v1/temporary/appointments/join",
+                    headers=header,
+                    json=data,
+                )
 
         if response.status_code == 200:
             self.not_member_login = False
@@ -766,27 +832,104 @@ class State(rx.State):
             return rx.window_alert(f"error")
 
     def get_appointments_candidates(self):
-        header = HEADER
-        header["Authorization"] = self.login_token
+        # header = HEADER
+        # data = {
+        #     "appointmentCode": self.check_detail_meeting_code,
+        #     "page": 1,
+        #     "size": 10,
+        # }
+        # if self.not_member_login:
+        #     data["tempUserInfo.nickname"] = self.nick_name
+        #     data["tempUserInfo.password"] = self.password
+        #
+        #     print(data)
+        #
+        #     response = requests.get(
+        #         f"{BACKEND_URL}/api/v1/temporary/appointments/candidates",
+        #         headers=header,
+        #         params=data,
+        #     )
+        # else:
+        #     header["Authorization"] = self.login_token
+        #     response = requests.get(
+        #         f"{BACKEND_URL}/api/v1/appointments/candidates",
+        #         headers=header,
+        #         params=data,
+        #     )
+        #
+        # if response.status_code == 200:
+        #     print(response.json()["data"])
+        # else:
+        #     print(response.json())
+        #     return rx.toast.error(response.json()["message"], position="top-right")
 
-        print("appointmentCode", self.check_detail_meeting_code)
-
-        response = requests.get(
-            f"{BACKEND_URL}/api/v1/appointments/candidates",
-            headers=header,
-            params={
-                "appointmentCode": self.check_detail_meeting_code,
-                "page": 1,
-                "size": 10,
+        temp_data = [
+            {
+                "candidateDate": "2024-09-11",
+                "startTime": "01:00:00",
+                "endTime": "17:00:00",
+                "userParticipationInfoList": [
+                    {
+                        "nickname": "test",
+                        "isAvailable": False,
+                        "userAuthType": "TEMPORARY",
+                        "userRole": "HOST",
+                    },
+                    {
+                        "nickname": "test2",
+                        "isAvailable": True,
+                        "userAuthType": "TEMPORARY",
+                        "userRole": "GUEST",
+                    },
+                    {
+                        "nickname": "test34",
+                        "isAvailable": True,
+                        "userAuthType": "TEMPORARY",
+                        "userRole": "GUEST",
+                    },
+                ],
             },
-        )
-        print(response.json())
+            {
+                "candidateDate": "2024-09-11",
+                "startTime": "17:00:00",
+                "endTime": "23:00:00",
+                "userParticipationInfoList": [
+                    {
+                        "nickname": "test",
+                        "isAvailable": True,
+                        "userAuthType": "TEMPORARY",
+                        "userRole": "HOST",
+                    },
+                    {
+                        "nickname": "test2",
+                        "isAvailable": True,
+                        "userAuthType": "TEMPORARY",
+                        "userRole": "GUEST",
+                    },
+                    {
+                        "nickname": "test34",
+                        "isAvailable": False,
+                        "userAuthType": "TEMPORARY",
+                        "userRole": "GUEST",
+                    },
+                ],
+            },
+        ]
 
-        if response.status_code == 200:
-            print(response.json()["data"])
-        else:
-            print(response.json())
-            return rx.window_alert(f"error")
+    def get_appointments_candidates_click_get_user(self, index: int):
+        desired_value = next(
+            (
+                item
+                for item in self.meeting_confirm_display_data
+                if item["index"] == index
+            ),
+            None,
+        )
+
+        if desired_value is not None:
+            self.meeting_confirm_display_data_user = ", ".join(
+                desired_value["user_list"]
+            )
 
     def decode_jwt_payload(self, jwt_token: str) -> tuple[str, str, str]:
         payload = jwt_token.split(".")[1]
@@ -803,17 +946,17 @@ class State(rx.State):
         data = {"appointmentCode": self.check_detail_meeting_code}
 
         if self.not_member_login:
-            data["tempUserInfo.nickname "] = self.nick_name
-            data["tempUserInfo.password "] = self.password
+            data["tempUserInfo.nickname"] = self.nick_name
+            data["tempUserInfo.password"] = self.password
             response = requests.get(
-                f"{BACKEND_URL}/api/v1/temporary/appointments/participants/my",
+                f"{BACKEND_URL}/api/v1/temporary/appointments/participants",
                 headers=header,
                 params=data,
             )
         else:
             header["Authorization"] = self.login_token
             response = requests.get(
-                f"{BACKEND_URL}/api/v1/appointments/participants/my",
+                f"{BACKEND_URL}/api/v1/appointments/participants",
                 headers=header,
                 params=data,
             )
@@ -821,7 +964,40 @@ class State(rx.State):
         if response.status_code == 200:
             # TODO: default value add
             self.setting_month_calendar()
-            return rx.redirect("/join_meeting")
+            self.meeting_code = self.check_detail_meeting_code
+            return rx.redirect("/make_meeting")
+        else:
+            print(response.json())
+            return rx.toast.error(response.json()["message"], position="top-right")
+
+    def change_meeting_delete_join(self):
+        header = HEADER
+        data = {"appointmentCode": self.check_detail_meeting_code}
+
+        if self.not_member_login:
+            data["tempUserInfo.nickname"] = self.nick_name
+            data["tempUserInfo.password"] = self.password
+
+            print(data)
+
+            response = requests.delete(
+                f"{BACKEND_URL}/api/v1/temporary/appointments/join",
+                headers=header,
+                params=data,
+            )
+        else:
+            header["Authorization"] = self.login_token
+            response = requests.delete(
+                f"{BACKEND_URL}/api/v1/appointments/join",
+                headers=header,
+                params=data,
+            )
+
+        if response.status_code == 200:
+            return [
+                rx.redirect("/"),
+                rx.toast.info("약속 참여가 취소되었습니다."),
+            ]
         else:
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")

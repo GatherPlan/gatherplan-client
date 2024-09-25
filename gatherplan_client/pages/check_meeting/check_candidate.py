@@ -1,13 +1,78 @@
+from typing import Dict
+
 import reflex as rx
 
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
-from gatherplan_client.pages.login.login import need_login
 
 
-@rx.page("check_candidate", on_load=State.get_appointments_candidates)
-@need_login
+def list_view_candidate(items: Dict):
+    return rx.button(
+        rx.hstack(
+            rx.text(
+                items["date"],
+                font_size="14px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.BLACK,
+                padding_left="10px",
+            ),
+            rx.text(
+                items["start_time"],
+                font_size="12px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.GRAY_TEXT,
+                padding_left="10px",
+            ),
+            rx.text(
+                "~",
+                font_size="12px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.GRAY_TEXT,
+                padding_left="10px",
+            ),
+            rx.text(
+                items["end_time"],
+                font_size="12px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.GRAY_TEXT,
+                padding_left="10px",
+            ),
+            rx.text(
+                items["user_count"],
+                font_size="12px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.GRAY_TEXT,
+                padding_left="30px",
+            ),
+            rx.text(
+                items["weather"],
+                font_size="12px",
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.GRAY_TEXT,
+                padding_left="10px",
+            ),
+            width="360px",
+            height="40px",
+        ),
+        background_color=AppColor.WHITE,
+        border="1px solid #D9D9D9",
+        border_radius="10px",
+        height="50px",
+        width="360px",
+        padding="0px",
+        on_click=State.get_appointments_candidates_click_get_user(items["index"]),
+    )
+
+
+@rx.page("/check_candidate", on_load=State.get_appointments_candidates)
+# @need_login
 def check_candidate() -> rx.Component:
     return rx.vstack(
         header("/check_meeting_detail"),
@@ -51,8 +116,81 @@ def check_candidate() -> rx.Component:
             ),
             width="100%",
         ),
+        rx.scroll_area(
+            rx.flex(
+                rx.box(
+                    rx.vstack(
+                        rx.box(
+                            rx.vstack(
+                                rx.text(
+                                    "검색결과",
+                                    font_size="12px",
+                                    font_family=AppFontFamily.DEFAULT_FONT,
+                                    font_weight="700",
+                                    color=AppColor.SUB_TEXT,
+                                    padding_left="10px",
+                                ),
+                                rx.foreach(
+                                    State.meeting_confirm_display_data,
+                                    list_view_candidate,
+                                ),
+                            ),
+                            width="360px",
+                        ),
+                        width="100%",
+                        align="center",
+                        padding_top="20px",
+                    ),
+                    width="100%",
+                ),
+                direction="column",
+                spacing="4",
+            ),
+            type="scroll",
+            scrollbars="vertical",
+            style={"height": "40%"},
+        ),
         rx.center(
+            rx.vstack(
+                rx.text(
+                    "사용자 참여 목록",
+                    font_size="14px",
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    font_weight="700",
+                    padding_left="10px",
+                    color=AppColor.BLACK,
+                    width="360px",
+                ),
+                rx.text(
+                    State.meeting_confirm_display_data_user,
+                    font_size="12px",
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    color=AppColor.GRAY_TEXT,
+                    font_weight="700",
+                    padding_left="10px",
+                    padding_bottom="5px",
+                    width="360px",
+                ),
+                align="center",
+                width="100%",
+            ),
             width="100%",
+        ),
+        rx.center(
+            rx.vstack(
+                rx.button(
+                    "다음",
+                    width="348px",
+                    height="35px",
+                    padding="20px",
+                    color=AppColor.BLACK,
+                    type="submit",
+                    background_color=AppColor.SUB_TEXT,
+                    on_click=State.change_meeting_delete_join,
+                ),
+            ),
+            width="100%",
+            padding_top="10px",
         ),
         spacing="0",
         height="100vh",

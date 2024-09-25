@@ -28,6 +28,7 @@ def header(back_button_url: str):
                     padding_top="2px",
                 ),
                 rx.box(width="40px"),
+                rx.text(State.nick_name),
                 rx.button("로그아웃", on_click=State.logout),
                 spacing="0",
             ),
