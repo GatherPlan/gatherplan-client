@@ -6,15 +6,15 @@ from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.pages.login.login import need_login
 
 
-@rx.page("/check_candidate_check")
+@rx.page("/check_candidate_result")
 @need_login
-def check_candidate_check() -> rx.Component:
+def check_candidate_result() -> rx.Component:
     return rx.vstack(
         header("/check_candidate"),
         rx.center(
             rx.vstack(
                 rx.text(
-                    "선택한 약속 시간을 확인해주세요",
+                    "정상적으로 약속이 확정되었습니다.",
                     font_size="18px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     font_weight="700",
@@ -23,7 +23,7 @@ def check_candidate_check() -> rx.Component:
                     width="360px",
                 ),
                 rx.text(
-                    "확정하기 이후에는 약속 변경이 불가능합니다.",
+                    "정해진 약속 일정을 참여자들과 공유해보세요",
                     font_size="12px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     color=AppColor.GRAY_TEXT,
@@ -33,7 +33,7 @@ def check_candidate_check() -> rx.Component:
                 ),
             ),
             width="100%",
-            height="20%",
+            height="15%",
         ),
         rx.center(
             rx.vstack(
@@ -185,18 +185,30 @@ def check_candidate_check() -> rx.Component:
                 ),
             ),
             width="100%",
-            height="60%",
+            height="55%",
         ),
         rx.center(
-            rx.button(
-                "확정하기",
-                width="348px",
-                height="35px",
-                padding="20px",
-                color=AppColor.WHITE,
-                type="submit",
-                background_color=AppColor.MAIN_COLOR,
-                on_click=State.check_candidate_check_handle_submit,
+            rx.vstack(
+                rx.button(
+                    "현황보기",
+                    width="348px",
+                    height="25px",
+                    padding="20px",
+                    color=AppColor.WHITE,
+                    type="button",
+                    background_color=AppColor.MAIN_COLOR,
+                    on_click=State.check_candidate_result_click_check_button,
+                ),
+                rx.button(
+                    "공유하기",
+                    width="348px",
+                    height="25px",
+                    padding="20px",
+                    type="button",
+                    color=AppColor.BLACK,
+                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
+                    margin_top="5px",
+                ),
             ),
             width="100%",
         ),
