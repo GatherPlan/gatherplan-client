@@ -88,8 +88,8 @@ def index() -> rx.Component:
             ),
             rx.image(
                 src="http://tong.visitkorea.or.kr/cms/resource/95/3373595_image2_1.jpg",
-                width="340px",
-                height="200px",
+                width="320px",
+                height="180px",
                 border_radius="15px 50px",
                 border="5px solid #555",
             ),
