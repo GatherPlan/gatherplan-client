@@ -72,6 +72,13 @@ def index() -> rx.Component:
             width="100%",
         ),
         rx.vstack(
+            rx.image(
+                src="http://tong.visitkorea.or.kr/cms/resource/95/3373595_image2_1.jpg",
+                width="320px",
+                height="180px",
+                border_radius="15px 50px",
+                border="5px solid #555",
+            ),
             rx.text(
                 "도시라이프스타일 플리마켓 축제",
                 font_size=TextSize.TINY,
@@ -85,13 +92,6 @@ def index() -> rx.Component:
                 font_family=AppFontFamily.DEFAULT_FONT,
                 color=AppColor.GRAY_TEXT,
                 font_weight="700",
-            ),
-            rx.image(
-                src="http://tong.visitkorea.or.kr/cms/resource/95/3373595_image2_1.jpg",
-                width="320px",
-                height="180px",
-                border_radius="15px 50px",
-                border="5px solid #555",
             ),
             width="100%",
             height="35%",
