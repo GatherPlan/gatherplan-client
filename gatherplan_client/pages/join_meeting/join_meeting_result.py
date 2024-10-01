@@ -87,13 +87,18 @@ def join_meeting_result() -> rx.Component:
                             ),
                             width="360px",
                         ),
-                        rx.flex(
-                            rx.foreach(
-                                State.display_select_date,
-                                display_select_date,
+                        rx.scroll_area(
+                            rx.grid(
+                                rx.foreach(
+                                    State.display_select_date,
+                                    display_select_date,
+                                ),
+                                columns="1",
+                                width="360px",
                             ),
-                            direction="column",
-                            spacing="4",
+                            type="always",
+                            scrollbars="vertical",
+                            style={"height": 70, "width": 360},
                         ),
                     ),
                     width="100%",

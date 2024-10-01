@@ -196,12 +196,18 @@ def check_meeting_detail() -> rx.Component:
                                         ),
                                         width="360px",
                                     ),
-                                    rx.hstack(
-                                        rx.foreach(
-                                            State.candidate_list,
-                                            display_select_date,
+                                    rx.scroll_area(
+                                        rx.grid(
+                                            rx.foreach(
+                                                State.candidate_list,
+                                                display_select_date,
+                                            ),
+                                            columns="3",
+                                            width="360px",
                                         ),
-                                        spacing="2",
+                                        type="always",
+                                        scrollbars="vertical",
+                                        style={"height": 70, "width": 360},
                                     ),
                                 ),
                                 width="100%",

@@ -88,16 +88,17 @@ def join_meeting() -> rx.Component:
                         font_weight="700",
                         color=AppColor.GRAY_TEXT,
                     ),
-                    rx.box(
-                        # TODO: string formating 수정 필요
-                        rx.hstack(
+                    rx.scroll_area(
+                        rx.grid(
                             rx.foreach(State.meeting_date, text_for_each),
+                            columns="3",
                             width="360px",
-                        )
+                        ),
+                        type="always",
+                        scrollbars="vertical",
+                        style={"height": 70, "width": 360},
                     ),
-                    width="360px",
                     padding_left="10px",
-                    height="50px",
                 ),
                 rx.box(
                     rx.text(

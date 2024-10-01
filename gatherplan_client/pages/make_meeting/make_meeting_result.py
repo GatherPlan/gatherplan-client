@@ -100,16 +100,17 @@ def make_meeting_result() -> rx.Component:
                         font_weight="700",
                         color=AppColor.GRAY_TEXT,
                     ),
-                    rx.box(
-                        # TODO: string formating 수정 필요
-                        rx.hstack(
+                    rx.scroll_area(
+                        rx.grid(
                             rx.foreach(State.select_data, text_for_each),
+                            columns="3",
                             width="360px",
-                        )
+                        ),
+                        type="always",
+                        scrollbars="vertical",
+                        style={"height": 70, "width": 360},
                     ),
-                    width="360px",
                     padding_left="10px",
-                    height="50px",
                 ),
                 rx.box(
                     rx.text(
@@ -167,7 +168,7 @@ def make_meeting_result() -> rx.Component:
                 ),
             ),
             width="100%",
-            height="50%",
+            height="60%",
         ),
         rx.center(
             rx.vstack(
@@ -191,7 +192,6 @@ def make_meeting_result() -> rx.Component:
                         f"{FRONTEND_URL}/enter_meeting_code/{State.meeting_code}"
                     ),
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
-                    margin_top="20px",
                 ),
             ),
             width="100%",

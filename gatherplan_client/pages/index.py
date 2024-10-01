@@ -62,16 +62,19 @@ def index() -> rx.Component:
             height="50%",
             align="center",
         ),
-        rx.text(
-            "이런 모임은 어떠세요?",
-            font_size=TextSize.TINY_SMALL,
-            font_family=AppFontFamily.DEFAULT_FONT,
-            font_weight="700",
-            color=AppColor.BLACK,
-            padding_left="10px",
-            width="100%",
-        ),
         rx.vstack(
+            rx.box(
+                rx.text(
+                    "이런 모임은 어떠세요?",
+                    font_size=TextSize.TINY_SMALL,
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    font_weight="700",
+                    color=AppColor.BLACK,
+                    padding_left="10px",
+                    padding_bottom="5px",
+                ),
+                width="360px",
+            ),
             rx.image(
                 src="http://tong.visitkorea.or.kr/cms/resource/95/3373595_image2_1.jpg",
                 width="320px",
