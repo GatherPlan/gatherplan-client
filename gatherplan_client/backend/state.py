@@ -200,11 +200,12 @@ class State(rx.State):
                             }
                         ]
 
-    def setting_month_calendar(self):
+    def setting_month_calendar(self, init_setting_time: bool = True):
         from pytimekr import pytimekr
 
-        self.setting_time = datetime.datetime.now()
-        self.setting_time_display = self.setting_time.strftime("%Y-%m")
+        if init_setting_time:
+            self.setting_time = datetime.datetime.now()
+            self.setting_time_display = self.setting_time.strftime("%Y-%m")
 
         self.display_data = {}
         self.checked_data = {}
@@ -354,15 +355,13 @@ class State(rx.State):
             self.setting_time = self.setting_time - relativedelta(months=1)
 
         self.setting_time_display = self.setting_time.strftime("%Y-%m")
-        self.setting_month_calendar()
+        self.setting_month_calendar(init_setting_time=False)
 
     def month_decrement(self):
         self.month_change_common(is_increment=False)
-        self.setting_month_calendar()
 
     def month_increment(self):
         self.month_change_common(is_increment=True)
-        self.setting_month_calendar()
 
     def search_location_info(self):
         params = {"keyword": self.input_location, "page": 1, "size": 10}
