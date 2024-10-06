@@ -7,14 +7,16 @@ from gatherplan_client.components.calendar import (
 )
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
-from gatherplan_client.pages.login.login import need_login_check_meeting
+from gatherplan_client.templates.template import template
 
 
-@rx.page(
-    "/check_meeting_detail",
+@template(
+    route="/check_meeting_detail",
+    header_url="/",
+    page_text="약속 현황보기",
+    need_login_type="check_meeting_login",
     on_load=State.setting_month_calendar_and_get_check_meeting(),
 )
-@need_login_check_meeting
 def check_meeting_detail() -> rx.Component:
     return rx.vstack(
         header("/check_meeting"),
@@ -402,6 +404,6 @@ def check_meeting_detail() -> rx.Component:
             ),
             width="100%",
         ),
-        spacing="0",
-        height="100vh",
+        width="100%",
+        height="100%",
     )

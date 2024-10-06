@@ -2,11 +2,10 @@ import reflex as rx
 
 from gatherplan_client.components.buttons import index_button
 from gatherplan_client.components.schema import AppColor, TextSize, AppFontFamily
+from gatherplan_client.templates.template import template
 
 
-@rx.page(
-    route="/",
-)
+@template(route="/", header_url="", page_text="", need_login_type="no_login")
 def index() -> rx.Component:
     return rx.vstack(
         rx.vstack(

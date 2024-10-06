@@ -1,31 +1,21 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
     text_for_each,
 )
+from gatherplan_client.templates.template import template
 
 
-@rx.page("/join_meeting")
+@template(
+    route="/join_meeting",
+    header_url="/enter_meeting_code",
+    page_text="약속 정보",
+    need_login_type="no_login",
+)
 def join_meeting() -> rx.Component:
     return rx.vstack(
-        header("/enter_meeting_code"),
-        rx.center(
-            rx.text(
-                "약속 정보",
-                font_size="20px",
-                padding_top="28px",
-                padding_bottom="40px",
-                padding_left="10px",
-                font_family=AppFontFamily.DEFAULT_FONT,
-                font_weight="700",
-                width="360px",
-            ),
-            width="100%",
-            height="15%",
-        ),
         rx.center(
             rx.vstack(
                 rx.box(
@@ -192,6 +182,6 @@ def join_meeting() -> rx.Component:
             ),
             width="100%",
         ),
-        spacing="0",
-        height="100vh",
+        width="100%",
+        height="100%",
     )

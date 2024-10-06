@@ -5,7 +5,7 @@ import reflex as rx
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
-from gatherplan_client.pages.login import need_login
+from gatherplan_client.templates.template import template
 
 
 def list_view_candidate(items: Dict):
@@ -152,8 +152,12 @@ def list_view_candidate(items: Dict):
     )
 
 
-@rx.page("/check_candidate", on_load=State.get_appointments_candidates)
-@need_login
+@template(
+    route="/check_candidate",
+    header_url="/check_meeting_detail",
+    page_text="약속 확정하기",
+    on_load=State.get_appointments_candidates,
+)
 def check_candidate() -> rx.Component:
     return rx.vstack(
         header("/check_meeting_detail"),
@@ -274,6 +278,6 @@ def check_candidate() -> rx.Component:
             width="100%",
             padding_top="10px",
         ),
-        spacing="0",
-        height="100vh",
+        width="100%",
+        height="100%",
     )

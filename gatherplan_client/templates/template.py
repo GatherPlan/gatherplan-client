@@ -8,7 +8,7 @@ import reflex as rx
 
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily
-from gatherplan_client.pages import need_login
+from gatherplan_client.pages.login import need_login_check_meeting, need_login
 
 default_meta = [
     {
@@ -27,13 +27,19 @@ def template(
     on_load: rx.event.EventHandler | list[rx.event.EventHandler] | None = None,
     header_url: str | None = "/",
     page_text: str | None = None,
+    need_login_type: str | None = "default",
 ) -> Callable[[Callable[[], rx.Component]], rx.Component]:
+
     def decorator(page_content: Callable[[], rx.Component]) -> rx.Component:
         all_meta = [*default_meta, *(meta or [])]
 
         def templated_page():
             return rx.vstack(
-                header(header_url),
+                rx.cond(
+                    header_url == "",
+                    rx.box(),
+                    header(header_url),
+                ),
                 rx.cond(
                     page_text == "",
                     rx.box(),
@@ -57,17 +63,46 @@ def template(
                 height="100vh",
             )
 
-        @rx.page(
-            route=route,
-            title=title,
-            description=description,
-            meta=all_meta,
-            script_tags=script_tags,
-            on_load=on_load,
-        )
-        @need_login
-        def theme_wrap():
-            return templated_page()
+        if need_login_type == "default":
+
+            @rx.page(
+                route=route,
+                title=title,
+                description=description,
+                meta=all_meta,
+                script_tags=script_tags,
+                on_load=on_load,
+            )
+            @need_login
+            def theme_wrap():
+                return templated_page()
+
+        elif need_login_type == "check_meeting_login":
+
+            @rx.page(
+                route=route,
+                title=title,
+                description=description,
+                meta=all_meta,
+                script_tags=script_tags,
+                on_load=on_load,
+            )
+            @need_login_check_meeting
+            def theme_wrap():
+                return templated_page()
+
+        else:
+
+            @rx.page(
+                route=route,
+                title=title,
+                description=description,
+                meta=all_meta,
+                script_tags=script_tags,
+                on_load=on_load,
+            )
+            def theme_wrap():
+                return templated_page()
 
         return theme_wrap
 

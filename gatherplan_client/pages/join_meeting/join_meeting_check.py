@@ -1,17 +1,18 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.pages.join_meeting.join_meeting_date import display_select_date
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.templates.template import template
 
 
-@rx.page("/join_meeting_check")
-@need_login
+@template(
+    route="/join_meeting_check",
+    header_url="/join_meeting_date",
+    page_text="",
+)
 def join_meeting_check() -> rx.Component:
     return rx.vstack(
-        header("/join_meeting_date"),
         rx.center(
             rx.vstack(
                 rx.text(
@@ -209,6 +210,6 @@ def join_meeting_check() -> rx.Component:
             ),
             width="100%",
         ),
-        spacing="0",
-        height="100vh",
+        width="100%",
+        height="100%",
     )

@@ -2,33 +2,17 @@ import reflex as rx
 
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.calendar import display_select_date, calendar_header
-from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.templates.template import template
 
 
-@rx.page(
+@template(
     route="/join_meeting_date",
-    on_load=State.setting_month_calendar,
+    header_url="/join_meeting",
+    page_text="약속 참여하기",
 )
-@need_login
 def join_meeting_date() -> rx.Component:
     return rx.vstack(
-        header("/join_meeting"),
-        rx.center(
-            rx.text(
-                "약속 참여하기",
-                font_size="20px",
-                padding_top="28px",
-                padding_bottom="40px",
-                padding_left="10px",
-                font_family=AppFontFamily.DEFAULT_FONT,
-                font_weight="700",
-                width="360px",
-            ),
-            width="100%",
-            height="10%",
-        ),
         rx.center(
             rx.vstack(
                 rx.text(
@@ -96,6 +80,6 @@ def join_meeting_date() -> rx.Component:
             ),
             width="100%",
         ),
-        spacing="0",
-        height="100vh",
+        width="100%",
+        height="100%",
     )

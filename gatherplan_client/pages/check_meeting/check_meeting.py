@@ -3,9 +3,8 @@ from typing import Dict
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
-from gatherplan_client.pages.login.login import need_login_check_meeting
+from gatherplan_client.templates.template import template
 
 
 def list_view(items: Dict):
@@ -65,25 +64,15 @@ def list_view(items: Dict):
     )
 
 
-@rx.page("/check_meeting", on_load=State.check_get_appointments_list)
-@need_login_check_meeting
+@template(
+    route="/check_meeting",
+    header_url="/",
+    page_text="약속 정보",
+    need_login_type="check_meeting_login",
+    on_load=State.check_get_appointments_list,
+)
 def check_meeting() -> rx.Component:
     return rx.vstack(
-        header("/"),
-        rx.center(
-            rx.text(
-                "약속 현황보기",
-                font_size="20px",
-                padding_top="28px",
-                padding_bottom="40px",
-                padding_left="10px",
-                font_family=AppFontFamily.DEFAULT_FONT,
-                font_weight="700",
-                width="360px",
-            ),
-            width="100%",
-            height="15%",
-        ),
         rx.form(
             rx.center(
                 rx.vstack(
@@ -172,6 +161,6 @@ def check_meeting() -> rx.Component:
             align="center",
             height="70%",
         ),
-        spacing="0",
-        height="100vh",
+        width="100%",
+        height="100%",
     )

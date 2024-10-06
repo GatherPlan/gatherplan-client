@@ -1,16 +1,17 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
-from gatherplan_client.pages.login.login import need_login
+from gatherplan_client.templates.template import template
 
 
-@rx.page("/check_candidate_result")
-@need_login
+@template(
+    route="/check_candidate_result",
+    header_url="/check_candidate",
+    page_text="",
+)
 def check_candidate_result() -> rx.Component:
     return rx.vstack(
-        header("/check_candidate"),
         rx.center(
             rx.vstack(
                 rx.text(
@@ -212,6 +213,6 @@ def check_candidate_result() -> rx.Component:
             ),
             width="100%",
         ),
-        spacing="0",
-        height="100vh",
+        width="100%",
+        height="100%",
     )
