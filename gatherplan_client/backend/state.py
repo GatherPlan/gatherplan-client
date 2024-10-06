@@ -372,7 +372,6 @@ class State(rx.State):
         response = requests.get(
             f"{BACKEND_URL}/api/v1/region/district", headers=HEADER, params=params
         )
-        # self.search_location = [i["addressName"] for i in response.json()["data"]]
         self.search_location = []
 
         for i in response.json()["data"]:

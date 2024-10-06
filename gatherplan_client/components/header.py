@@ -5,7 +5,6 @@ from gatherplan_client.components.schema import AppColor
 
 
 def header(back_button_url: str):
-
     return rx.vstack(
         rx.box(
             rx.hstack(
