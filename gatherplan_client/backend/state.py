@@ -15,7 +15,7 @@ DEFAULT_TIME_SETTING["23:59"] = 0
 
 FRONTEND_URL = os.getenv(
     "FRONTEND_URL",
-    "https://test.gatherplan.site",
+    "https://www.gatherplan.site",
 )
 
 
