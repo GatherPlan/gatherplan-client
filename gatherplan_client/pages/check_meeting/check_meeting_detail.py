@@ -381,7 +381,7 @@ def check_meeting_detail() -> rx.Component:
                         rx.center(
                             rx.vstack(
                                 rx.button(
-                                    "참여 참여하기",
+                                    "참여하기",
                                     width="348px",
                                     height="35px",
                                     padding="20px",

@@ -400,9 +400,6 @@ class State(rx.State):
         if len(self.search_location_place) == 0:
             yield rx.toast.info("상세주소 검색 결과가 없습니다.", position="top-right")
 
-    def make_meeting_detail_handle_detail_submit(self, form_data: dict):
-        return rx.redirect("/make_meeting_date")
-
     def make_meeting_detail_handle_location_submit(self, form_data: dict):
         """Handle the form submit."""
         if form_data["location_type"] == "DISTRICT":

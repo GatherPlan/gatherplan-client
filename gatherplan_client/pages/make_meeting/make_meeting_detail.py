@@ -228,7 +228,7 @@ def make_meeting_detail() -> rx.Component:
             ),
             width="100%",
         ),
-        on_submit=State.make_meeting_detail_handle_detail_submit,
+        on_submit=rx.redirect("/make_meeting_date"),
         width="100%",
         align="center",
         height="70%",
