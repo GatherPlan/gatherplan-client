@@ -2,6 +2,7 @@ import reflex as rx
 
 from gatherplan_client.components.buttons import index_button
 from gatherplan_client.components.schema import AppColor, TextSize, AppFontFamily
+from gatherplan_client.components.text_box import main_sub_text_box
 from gatherplan_client.templates.template import template
 
 
@@ -21,26 +22,9 @@ def index() -> rx.Component:
             align="center",
         ),
         rx.vstack(
-            rx.box(
-                rx.vstack(
-                    rx.text(
-                        "새로운 모임을 계획해보세요",
-                        font_size=TextSize.TINY_SMALL,
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
-                        padding_left="10px",
-                    ),
-                    rx.text(
-                        "서로 가능한 날짜를 선택하여 모임 날짜를 조정해보세요",
-                        font_size=TextSize.TINY,
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        color=AppColor.GRAY_TEXT,
-                        font_weight="700",
-                        padding_left="10px",
-                    ),
-                ),
-                width="360px",
+            main_sub_text_box(
+                "새로운 모임을 계획해보세요",
+                "서로 가능한 날짜를 선택하여 모임 날짜를 조정해보세요",
             ),
             index_button(
                 main_text="만들기",
@@ -100,7 +84,6 @@ def index() -> rx.Component:
             align="center",
             spacing="0",
         ),
-        spacing="0",
-        height="100vh",
-        background_color=AppColor.WHITE,
+        width="100%",
+        height="100%",
     )

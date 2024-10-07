@@ -1,126 +1,99 @@
 import reflex as rx
 
-from gatherplan_client.backend.state import State, EmailAuth
-from gatherplan_client.components.buffer_box import buffer_box
+from gatherplan_client.backend.state import EmailAuth, State
 from gatherplan_client.components.header import header
-from gatherplan_client.components.schema import AppFontFamily, AppColor
-from gatherplan_client.components.text_box import center_align_text_box
+from gatherplan_client.components.schema import AppFontFamily, AppColor, TextSize
+from gatherplan_client.components.text_box import main_sub_text_center_box, input_box
 
 
 @rx.page("/sign_up")
 def sign_up() -> rx.Component:
     return rx.vstack(
         header("/"),
-        buffer_box("8%"),
-        center_align_text_box(
-            main_text="회원가입", sub_text="게더플랜에서 모임의 약속을 잡아보세요"
+        main_sub_text_center_box(
+            "회원가입",
+            "게더플랜에서 모임의 약속을 잡아보세요",
         ),
-        rx.center(
-            rx.vstack(
-                rx.form(
-                    rx.box(
-                        rx.text(
-                            "이메일",
-                            font_size="10px",
-                            font_family=AppFontFamily.DEFAULT_FONT,
-                        ),
-                        rx.hstack(
-                            rx.input(
-                                placeholder="2~8자리",
-                                on_blur=EmailAuth.set_text,
-                                font_size="16px",
-                                height="48px",
-                                border_radius="35px",
-                                width="290px",
-                                name="email",
-                            ),
-                            rx.button(
-                                "인증요청",
-                                width="50px",
-                                height="48px",
-                                type="button",
-                                on_click=EmailAuth.sign_up_send_auth_number,
-                            ),
-                            padding_bottom="20px",
-                            width="345px",
-                        ),
+        rx.form(
+            rx.center(
+                rx.vstack(
+                    rx.text(
+                        "이메일",
+                        font_size=TextSize.VERY_TINY,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        width="340px",
                     ),
-                    rx.box(
-                        rx.text(
-                            "인증번호",
-                            font_size="10px",
-                            font_family=AppFontFamily.DEFAULT_FONT,
-                        ),
+                    rx.hstack(
                         rx.input(
-                            placeholder="인증번호를 입력해주세요",
-                            name="auth_number",
-                            font_size="16px",
-                            height="48px",
-                            border_radius="35px",
-                            type="text",
+                            placeholder="2~8자리",
+                            font_family=AppFontFamily.DEFAULT_FONT,
+                            height="35px",
+                            font_size="12px",
+                            width="290px",
+                            name="email",
+                        ),
+                        rx.button(
+                            "인증요청",
+                            width="50px",
+                            height="35px",
+                            font_size="12px",
+                            type="button",
+                            on_click=EmailAuth.sign_up_send_auth_number,
                         ),
                         padding_bottom="20px",
                         width="345px",
                     ),
-                    rx.box(
-                        rx.text(
-                            "비밀번호",
-                            font_size="10px",
-                            font_family=AppFontFamily.DEFAULT_FONT,
-                        ),
-                        rx.input(
-                            placeholder="비밀번호를 입력해주세요",
-                            name="password",
-                            font_size="16px",
-                            height="48px",
-                            border_radius="35px",
-                            type="password",
-                        ),
-                        padding_bottom="20px",
-                        width="345px",
+                    rx.text(
+                        "인증번호",
+                        font_size=TextSize.VERY_TINY,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        width="340px",
+                    ),
+                    input_box(
+                        placeholder="인증번호를 입력해주세요",
+                        name="auth_number",
                     ),
                     rx.box(
-                        rx.text(
-                            "닉네임",
-                            font_size="10px",
-                            font_family=AppFontFamily.DEFAULT_FONT,
-                        ),
-                        rx.input(
-                            placeholder="닉네임을 입력해주세요",
-                            name="nick_name",
-                            font_size="16px",
-                            height="48px",
-                            border_radius="35px",
-                            type="text",
-                        ),
-                        padding_bottom="20px",
-                        width="345px",
+                        "비밀번호",
+                        font_size=TextSize.VERY_TINY,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        width="340px",
                     ),
-                    # rx.center(
-                    #     State.error_message,
-                    #     font_size="12px",
-                    #     color="#FF0000",
-                    #     width="100%",
-                    #     padding_bottom="30px",
-                    # ),
+                    input_box(
+                        placeholder="2~8자리",
+                        name="password",
+                        type="password",
+                    ),
+                    rx.text(
+                        "닉네임",
+                        font_size=TextSize.VERY_TINY,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        width="340px",
+                    ),
+                    input_box(
+                        placeholder="닉네임을 입력해주세요",
+                        name="nick_name",
+                    ),
                     rx.button(
                         "가입하기",
-                        width="348px",
+                        width="340px",
                         height="48px",
                         padding="20px",
                         color=AppColor.WHITE,
                         type="submit",
                         background_color=AppColor.MAIN_COLOR,
                     ),
-                    on_submit=State.sign_up,
-                    reset_on_submit=False,
-                    align="center",
-                    width="345px",
+                    width="360px",
                 ),
+                width="100%",
             ),
+            on_submit=State.sign_up,
+            reset_on_submit=False,
+            align="center",
             width="100%",
-            height="80%",
         ),
         spacing="0",
+        width="100%",
         height="100vh",
+        align="center",
     )

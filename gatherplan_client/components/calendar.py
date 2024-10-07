@@ -31,15 +31,13 @@ def calendar_button(
             rx.drawer.content(
                 rx.center(
                     rx.vstack(
-                        rx.box(
-                            rx.text(
-                                State.click_date,
-                                font_size="18px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="700",
-                                color=AppColor.BLACK,
-                                padding_left="10px",
-                            ),
+                        rx.text(
+                            State.click_date,
+                            font_size="18px",
+                            font_family=AppFontFamily.DEFAULT_FONT,
+                            font_weight="700",
+                            color=AppColor.BLACK,
+                            padding_left="10px",
                             width="360px",
                         ),
                         rx.box(
@@ -141,15 +139,13 @@ def time_button(time_data_to_button_click: List):
 
 
 def display_select_date(display_select_date: str):
-    return rx.box(
-        rx.text(
-            display_select_date,
-            font_size="14px",
-            font_family=AppFontFamily.DEFAULT_FONT,
-            font_weight="700",
-            color=AppColor.BLACK,
-            padding_left="10px",
-        )
+    return rx.text(
+        display_select_date,
+        font_size="14px",
+        font_family=AppFontFamily.DEFAULT_FONT,
+        font_weight="700",
+        color=AppColor.BLACK,
+        padding_left="10px",
     )
 
 
@@ -157,32 +153,28 @@ def calendar_header(purpose: str = "join", height: str = "35%"):
     return rx.center(
         rx.vstack(
             rx.center(
-                rx.hstack(
-                    rx.button(
-                        rx.icon(tag="chevron-left"),
-                        on_click=State.month_decrement,
-                        width="48px",
-                        height="40px",
-                        color=AppColor.BLACK,
-                        background_color=AppColor.WHITE,
-                    ),
-                    rx.text(
-                        State.setting_time_display,
-                        width="100px",
-                        height="40px",
-                        align="center",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="600",
-                    ),
-                    rx.button(
-                        rx.icon(tag="chevron-right"),
-                        on_click=State.month_increment,
-                        width="48px",
-                        height="40px",
-                        color=AppColor.BLACK,
-                        background_color=AppColor.WHITE,
-                    ),
-                    align="center",
+                rx.button(
+                    rx.icon(tag="chevron-left"),
+                    on_click=State.month_decrement,
+                    width="48px",
+                    height="40px",
+                    color=AppColor.BLACK,
+                    background_color=AppColor.WHITE,
+                ),
+                rx.center(
+                    State.setting_time_display,
+                    width="100px",
+                    height="40px",
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    font_weight="600",
+                ),
+                rx.button(
+                    rx.icon(tag="chevron-right"),
+                    on_click=State.month_increment,
+                    width="48px",
+                    height="40px",
+                    color=AppColor.BLACK,
+                    background_color=AppColor.WHITE,
                 ),
                 width="100%",
             ),
@@ -213,18 +205,11 @@ def calendar_header(purpose: str = "join", height: str = "35%"):
                     ),
                 ),
                 columns="7",
-                align="center",
-                width="350px",
+                width="348px",
             ),
         ),
-        color=AppColor.BLACK,
-        font_size="20px",
-        font_family=AppFontFamily.DEFAULT_FONT,
         width="100%",
-        font_weight="600",
-        background_color=AppColor.WHITE,
         height=height,
-        margin_bottom="10px",
     )
 
 

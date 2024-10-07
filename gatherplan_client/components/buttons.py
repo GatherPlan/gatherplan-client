@@ -28,27 +28,3 @@ def index_button(main_text: str, sub_text: str = "", redirect_url: str = ""):
         background_color=AppColor.BACKGROUND_GRAY_COLOR,
         on_click=rx.redirect(redirect_url),
     )
-
-
-def basic_button(button_text: str = "", type: str = "submit"):
-    return rx.button(
-        button_text,
-        width="348px",
-        height="48px",
-        padding="20px",
-        color=AppColor.WHITE,
-        type=type,
-        background_color=AppColor.MAIN_COLOR,
-    )
-
-
-def small_button(button_text: str = "", redirect_url: str = "/"):
-    return rx.button(
-        button_text,
-        width="110px",
-        height="36px",
-        color="#A3A3A3",
-        type="button",
-        background_color="#FFFFFF",
-        on_click=rx.redirect(redirect_url),
-    )
