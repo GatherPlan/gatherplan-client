@@ -110,7 +110,17 @@ def main_sub_text_center_box(main_text: str, sub_text: str):
     )
 
 
-def main_button(text: str, **kwargs):
+def main_button(text: str, sub_button: bool = False, **kwargs):
+    if sub_button:
+        return rx.button(
+            text,
+            width="360px",
+            height="35px",
+            color=AppColor.BLACK,
+            background_color=AppColor.SUB_TEXT,
+            **kwargs,
+        )
+
     return rx.button(
         text,
         width="360px",

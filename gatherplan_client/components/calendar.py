@@ -4,6 +4,7 @@ import reflex as rx
 
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.schema import AppColor, AppFontFamily
+from gatherplan_client.components.text_box import sub_text_box
 
 
 def calendar_button(
@@ -139,14 +140,7 @@ def time_button(time_data_to_button_click: List):
 
 
 def display_select_date(display_select_date: str):
-    return rx.text(
-        display_select_date,
-        font_size="14px",
-        font_family=AppFontFamily.DEFAULT_FONT,
-        font_weight="700",
-        color=AppColor.BLACK,
-        padding_left="10px",
-    )
+    return sub_text_box(display_select_date)
 
 
 def calendar_header(purpose: str = "join", height: str = "35%"):
