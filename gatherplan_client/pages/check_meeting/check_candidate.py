@@ -3,7 +3,6 @@ from typing import Dict
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, AppColor
 from gatherplan_client.templates.template import template
 
@@ -160,21 +159,6 @@ def list_view_candidate(items: Dict):
 )
 def check_candidate() -> rx.Component:
     return rx.vstack(
-        header("/check_meeting_detail"),
-        rx.center(
-            rx.text(
-                "약속 확정하기",
-                font_size="20px",
-                padding_top="28px",
-                padding_bottom="40px",
-                padding_left="10px",
-                font_family=AppFontFamily.DEFAULT_FONT,
-                font_weight="700",
-                width="360px",
-            ),
-            width="100%",
-            height="15%",
-        ),
         rx.center(
             rx.vstack(
                 rx.text(
