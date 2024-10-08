@@ -20,7 +20,7 @@ def make_meeting_date() -> rx.Component:
             calendar_header(purpose="make", height="55%"),
             rx.button(
                 "다음",
-                width="340px",
+                width="360px",
                 height="35px",
                 padding="20px",
                 color=AppColor.WHITE,
@@ -29,7 +29,6 @@ def make_meeting_date() -> rx.Component:
                 on_click=rx.redirect("/make_meeting_check"),
             ),
             width="360px",
-            padding_left="10px",
         ),
         width="100%",
     )

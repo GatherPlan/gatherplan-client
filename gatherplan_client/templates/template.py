@@ -49,7 +49,6 @@ def template(
                             font_size="20px",
                             padding_top="28px",
                             padding_bottom="40px",
-                            padding_left="10px",
                             font_family=AppFontFamily.DEFAULT_FONT,
                             font_weight="700",
                             width="360px",

@@ -21,7 +21,7 @@ def sign_up() -> rx.Component:
                         "이메일",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     rx.hstack(
                         rx.input(
@@ -47,7 +47,7 @@ def sign_up() -> rx.Component:
                         "인증번호",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="인증번호를 입력해주세요",
@@ -57,7 +57,7 @@ def sign_up() -> rx.Component:
                         "비밀번호",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="2~8자리",
@@ -68,7 +68,7 @@ def sign_up() -> rx.Component:
                         "닉네임",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="닉네임을 입력해주세요",
@@ -76,7 +76,7 @@ def sign_up() -> rx.Component:
                     ),
                     rx.button(
                         "가입하기",
-                        width="340px",
+                        width="360px",
                         height="48px",
                         padding="20px",
                         color=AppColor.WHITE,

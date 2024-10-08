@@ -76,7 +76,6 @@ def join_meeting() -> rx.Component:
                 on_click=rx.redirect("/join_meeting_date"),
             ),
             width="360px",
-            paddig_left="10px",
         ),
         width="100%",
     )

@@ -46,7 +46,7 @@ def login() -> rx.Component:
                         "이메일",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="email@naver.com",
@@ -56,7 +56,7 @@ def login() -> rx.Component:
                         "비밀번호",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="2~8자리",
@@ -97,7 +97,7 @@ def login() -> rx.Component:
                         "닉네임",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="닉네임을 입력해주세요",
@@ -107,7 +107,7 @@ def login() -> rx.Component:
                         "비밀번호",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="비밀번호를 입력해주세요",
@@ -131,8 +131,8 @@ def login() -> rx.Component:
                         "회원으로 시작하기",
                     ),
                 ),
-                width="340px",
-                height="48px",
+                width="360px",
+                height="35px",
                 color=AppColor.WHITE,
                 type="button",
                 background_color=AppColor.LIGHT_GRAY_TEXT,
@@ -159,7 +159,7 @@ def login_check_meeting() -> rx.Component:
                         "이메일",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="email@naver.com",
@@ -169,7 +169,7 @@ def login_check_meeting() -> rx.Component:
                         "비밀번호",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="2~8자리",
@@ -209,7 +209,7 @@ def login_check_meeting() -> rx.Component:
                         "약속 코드",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="약속 코드를 입력해주세요",
@@ -219,7 +219,7 @@ def login_check_meeting() -> rx.Component:
                         "닉네임",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="닉네임을 입력해주세요",
@@ -229,7 +229,7 @@ def login_check_meeting() -> rx.Component:
                         "비밀번호",
                         font_size=TextSize.VERY_TINY,
                         font_family=AppFontFamily.DEFAULT_FONT,
-                        width="340px",
+                        width="360px",
                     ),
                     input_box(
                         placeholder="비밀번호를 입력해주세요",
@@ -251,8 +251,8 @@ def login_check_meeting() -> rx.Component:
                         "회원으로 시작하기",
                     ),
                 ),
-                width="340px",
-                height="48px",
+                width="360px",
+                height="35px",
                 color=AppColor.WHITE,
                 type="button",
                 background_color=AppColor.LIGHT_GRAY_TEXT,

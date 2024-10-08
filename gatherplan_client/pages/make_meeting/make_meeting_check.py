@@ -50,7 +50,7 @@ def make_meeting_check() -> rx.Component:
                 ),
                 rx.button(
                     "약속 만들기",
-                    width="340px",
+                    width="360px",
                     height="35px",
                     padding="20px",
                     color=AppColor.WHITE,
@@ -58,7 +58,6 @@ def make_meeting_check() -> rx.Component:
                     background_color=AppColor.MAIN_COLOR,
                     on_click=State.make_meeting_check_handle_submit,
                 ),
-                padding_left="10px",
             ),
             width="360px",
         ),

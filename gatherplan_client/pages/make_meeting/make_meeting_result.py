@@ -63,7 +63,7 @@ def make_meeting_result() -> rx.Component:
                 main_text_box(State.meeting_code),
                 rx.button(
                     "참여하기",
-                    width="340px",
+                    width="360px",
                     height="35px",
                     padding="20px",
                     color=AppColor.WHITE,
@@ -73,7 +73,7 @@ def make_meeting_result() -> rx.Component:
                 ),
                 rx.button(
                     "공유하기",
-                    width="340px",
+                    width="360px",
                     height="35px",
                     padding="20px",
                     color=AppColor.BLACK,
@@ -82,7 +82,6 @@ def make_meeting_result() -> rx.Component:
                     ),
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                 ),
-                padding_left="10px",
             ),
             width="360px",
         ),

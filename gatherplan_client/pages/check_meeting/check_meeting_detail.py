@@ -5,7 +5,6 @@ from gatherplan_client.components.calendar import (
     display_select_date,
     calendar_header,
 )
-from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.templates.template import template
 
@@ -19,116 +18,110 @@ from gatherplan_client.templates.template import template
 )
 def check_meeting_detail() -> rx.Component:
     return rx.vstack(
-        header("/check_meeting"),
         rx.center(
-            rx.text(
-                "약속 현황보기",
-                font_size="20px",
-                padding_top="28px",
-                padding_bottom="40px",
-                padding_left="10px",
-                font_family=AppFontFamily.DEFAULT_FONT,
-                font_weight="700",
-                width="300px",
-            ),
-            rx.cond(
-                State.is_host,
-                rx.drawer.root(
-                    rx.drawer.trigger(
+            rx.tabs.root(
+                rx.hstack(
+                    rx.tabs.list(
+                        rx.tabs.trigger("약속 정보", value="tab1"),
+                        rx.tabs.trigger("참여 정보", value="tab2"),
+                        width="270px",
+                    ),
+                    rx.center(
+                        rx.cond(
+                            State.is_host,
+                            rx.drawer.root(
+                                rx.drawer.trigger(
+                                    rx.button(
+                                        rx.icon(
+                                            tag="settings",
+                                            size=24,
+                                            stroke_width=1,
+                                        ),
+                                        color=AppColor.BLACK,
+                                        background_color=AppColor.WHITE,
+                                        padding="0px",
+                                    ),
+                                ),
+                                rx.drawer.overlay(z_index="5"),
+                                rx.drawer.portal(
+                                    rx.drawer.content(
+                                        rx.center(
+                                            rx.vstack(
+                                                rx.alert_dialog.root(
+                                                    rx.alert_dialog.trigger(
+                                                        rx.button(
+                                                            "약속 삭제하기",
+                                                            width="300px",
+                                                            background_color="#DF0000",
+                                                        ),
+                                                    ),
+                                                    rx.alert_dialog.content(
+                                                        rx.alert_dialog.title(
+                                                            "정말로 약속을 삭제하시겠습니까?"
+                                                        ),
+                                                        rx.alert_dialog.description(
+                                                            "약속을 삭제하면, 약속 생성자를 포함한 모든 참여자의 약속이 삭제됩니다.",
+                                                        ),
+                                                        rx.flex(
+                                                            rx.alert_dialog.cancel(
+                                                                rx.button(
+                                                                    "아니요, 삭제하지 않을게요!"
+                                                                ),
+                                                            ),
+                                                            rx.alert_dialog.action(
+                                                                rx.button(
+                                                                    "네, 삭제할게요!",
+                                                                    on_click=State.check_meeting_detail_delete_appointment,
+                                                                ),
+                                                            ),
+                                                            spacing="3",
+                                                        ),
+                                                    ),
+                                                ),
+                                                rx.button(
+                                                    "약속 확정하기",
+                                                    width="300px",
+                                                    background_color="#00A41A",
+                                                    on_click=rx.redirect(
+                                                        "/check_candidate"
+                                                    ),
+                                                ),
+                                                rx.button(
+                                                    "약속 변경하기",
+                                                    width="300px",
+                                                    on_click=State.change_join_meeting,
+                                                ),
+                                                spacing="3",
+                                            ),
+                                            width="100%",
+                                        ),
+                                        align="center",
+                                        top="auto",
+                                        right="auto",
+                                        height="30%",
+                                        width="100%",
+                                        padding="2em",
+                                        background_color="#FFF",
+                                        border_radius="1em 1em 0 0",
+                                    )
+                                ),
+                                direction="bottom",
+                            ),
+                            rx.box(),
+                        ),
                         rx.button(
                             rx.icon(
-                                tag="settings",
+                                tag="share",
                                 size=24,
                                 stroke_width=1,
                             ),
                             color=AppColor.BLACK,
                             background_color=AppColor.WHITE,
-                            padding="0px",
+                            padding_left="5px",
                         ),
+                        width="80px",
+                        height="40px",
                     ),
-                    rx.drawer.overlay(z_index="5"),
-                    rx.drawer.portal(
-                        rx.drawer.content(
-                            rx.center(
-                                rx.vstack(
-                                    rx.alert_dialog.root(
-                                        rx.alert_dialog.trigger(
-                                            rx.button(
-                                                "약속 삭제하기",
-                                                width="300px",
-                                                background_color="#DF0000",
-                                            ),
-                                        ),
-                                        rx.alert_dialog.content(
-                                            rx.alert_dialog.title(
-                                                "정말로 약속을 삭제하시겠습니까?"
-                                            ),
-                                            rx.alert_dialog.description(
-                                                "약속을 삭제하면, 약속 생성자를 포함한 모든 참여자의 약속이 삭제됩니다.",
-                                            ),
-                                            rx.flex(
-                                                rx.alert_dialog.cancel(
-                                                    rx.button(
-                                                        "아니요, 삭제하지 않을게요!"
-                                                    ),
-                                                ),
-                                                rx.alert_dialog.action(
-                                                    rx.button(
-                                                        "네, 삭제할게요!",
-                                                        on_click=State.check_meeting_detail_delete_appointment,
-                                                    ),
-                                                ),
-                                                spacing="3",
-                                            ),
-                                        ),
-                                    ),
-                                    rx.button(
-                                        "약속 확정하기",
-                                        width="300px",
-                                        background_color="#00A41A",
-                                        on_click=rx.redirect("/check_candidate"),
-                                    ),
-                                    rx.button(
-                                        "약속 변경하기",
-                                        width="300px",
-                                        on_click=State.change_join_meeting,
-                                    ),
-                                    spacing="3",
-                                ),
-                                width="100%",
-                            ),
-                            align="center",
-                            top="auto",
-                            right="auto",
-                            height="30%",
-                            width="100%",
-                            padding="2em",
-                            background_color="#FFF",
-                            border_radius="1em 1em 0 0",
-                        )
-                    ),
-                    direction="bottom",
-                ),
-                rx.box(),
-            ),
-            rx.button(
-                rx.icon(
-                    tag="share",
-                    size=24,
-                    stroke_width=1,
-                ),
-                color=AppColor.BLACK,
-                background_color=AppColor.WHITE,
-                padding_left="5px",
-            ),
-            width="100%",
-            height="10%",
-        ),
-        rx.center(
-            rx.tabs.root(
-                rx.tabs.list(
-                    rx.tabs.trigger("약속 정보", value="tab1"),
-                    rx.tabs.trigger("참여 정보", value="tab2"),
                 ),
                 rx.tabs.content(
                     rx.center(

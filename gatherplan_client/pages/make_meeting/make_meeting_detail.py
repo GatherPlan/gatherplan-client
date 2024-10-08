@@ -12,7 +12,7 @@ def location_button(button_text: Dict):
     return rx.drawer.close(
         rx.button(
             button_text["address_name"],
-            width="340px",
+            width="360px",
             height="36px",
             color="#A3A3A3",
             type="button",
@@ -178,15 +178,13 @@ def make_meeting_detail() -> rx.Component:
                 ),
                 rx.button(
                     "다음",
-                    width="340px",
+                    width="360px",
                     height="35px",
-                    padding_left="10px",
                     color=AppColor.WHITE,
                     type="submit",
                     background_color=AppColor.MAIN_COLOR,
                 ),
                 width="360px",
-                padding_left="10px",
             ),
         ),
         on_submit=rx.redirect("/make_meeting_date"),

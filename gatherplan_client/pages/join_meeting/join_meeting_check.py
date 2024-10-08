@@ -83,7 +83,6 @@ def join_meeting_check() -> rx.Component:
                     text="참여하기",
                     on_click=State.join_meeting_check_handle_result_submit,
                 ),
-                paddig_left="10px",
             ),
             width="360px",
         ),

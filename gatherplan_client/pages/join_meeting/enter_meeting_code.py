@@ -28,7 +28,6 @@ def enter_meeting_code() -> rx.Component:
                 ),
                 main_button(text="다음", type="submit"),
                 width="360px",
-                padding_left="10px",
             ),
             width="100%",
         ),

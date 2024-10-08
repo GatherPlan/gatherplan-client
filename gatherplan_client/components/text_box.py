@@ -17,7 +17,6 @@ def center_align_text_box(
                 font_family=AppFontFamily.DEFAULT_FONT,
                 font_weight="700",
                 color=AppColor.BLACK,
-                padding_left="10px",
             ),
             rx.center(
                 sub_text,
@@ -25,7 +24,6 @@ def center_align_text_box(
                 font_family=AppFontFamily.DEFAULT_FONT,
                 color=AppColor.GRAY_TEXT,
                 font_weight="700",
-                padding_left="10px",
             ),
             width="360px",
         ),
@@ -115,7 +113,7 @@ def main_sub_text_center_box(main_text: str, sub_text: str):
 def main_button(text: str, **kwargs):
     return rx.button(
         text,
-        width="340px",
+        width="360px",
         height="35px",
         color=AppColor.WHITE,
         background_color=AppColor.MAIN_COLOR,
@@ -131,6 +129,6 @@ def input_box(**kwargs):
             height="35px",
             **kwargs,
         ),
-        width="340px",
+        width="360px",
         height="60px",
     )
