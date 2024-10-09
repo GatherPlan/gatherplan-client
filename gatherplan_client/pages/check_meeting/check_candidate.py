@@ -4,6 +4,11 @@ import reflex as rx
 
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.schema import AppFontFamily, AppColor
+from gatherplan_client.components.text_box import (
+    main_sub_text_box,
+    sub_text_box,
+    main_button,
+)
 from gatherplan_client.templates.template import template
 
 
@@ -158,110 +163,25 @@ def list_view_candidate(items: Dict):
     on_load=State.get_appointments_candidates,
 )
 def check_candidate() -> rx.Component:
-    return rx.vstack(
-        rx.center(
-            rx.vstack(
-                rx.text(
-                    "약속 시간 후보 목록",
-                    font_size="14px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    padding_left="10px",
-                    color=AppColor.BLACK,
-                    width="360px",
-                ),
-                rx.text(
-                    "참여율, 약속 구간 길이, 날씨를 기준으로 정렬된 결과가 반환됩니다.",
-                    font_size="12px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    color=AppColor.GRAY_TEXT,
-                    font_weight="700",
-                    padding_left="10px",
-                    padding_bottom="5px",
-                    width="360px",
-                ),
-                align="center",
-                width="100%",
+    return rx.center(
+        rx.vstack(
+            main_sub_text_box(
+                "약속 후보 시간 목록",
+                "참여율, 약속 구간 길이, 날씨를 기준으로 정렬된 결과가 반환됩니다.",
             ),
-            width="100%",
-        ),
-        rx.scroll_area(
-            rx.flex(
-                rx.box(
-                    rx.vstack(
-                        rx.box(
-                            rx.vstack(
-                                rx.text(
-                                    "검색결과",
-                                    font_size="12px",
-                                    font_family=AppFontFamily.DEFAULT_FONT,
-                                    font_weight="700",
-                                    color=AppColor.SUB_TEXT,
-                                    padding_left="10px",
-                                ),
-                                rx.foreach(
-                                    State.meeting_confirm_display_data,
-                                    list_view_candidate,
-                                ),
-                            ),
-                            width="360px",
-                        ),
-                        width="100%",
-                        align="center",
-                        padding_top="20px",
-                    ),
-                    width="100%",
+            sub_text_box("검색결과"),
+            rx.scroll_area(
+                rx.foreach(
+                    State.meeting_confirm_display_data,
+                    list_view_candidate,
                 ),
-                direction="column",
-                spacing="4",
+                type="scroll",
+                scrollbars="vertical",
+                style={"height": "40%"},
             ),
-            type="scroll",
-            scrollbars="vertical",
-            style={"height": "40%"},
-        ),
-        rx.center(
-            rx.vstack(
-                rx.text(
-                    "사용자 참여 목록",
-                    font_size="14px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    padding_left="10px",
-                    color=AppColor.BLACK,
-                    width="360px",
-                ),
-                rx.text(
-                    State.meeting_confirm_display_data_user,
-                    font_size="12px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    color=AppColor.GRAY_TEXT,
-                    font_weight="700",
-                    padding_left="10px",
-                    padding_bottom="5px",
-                    width="360px",
-                    height="40px",
-                ),
-                align="center",
-                width="100%",
-            ),
-            width="100%",
-        ),
-        rx.center(
-            rx.vstack(
-                rx.button(
-                    "다음",
-                    width="348px",
-                    height="35px",
-                    padding="20px",
-                    color=AppColor.BLACK,
-                    type="submit",
-                    background_color=AppColor.SUB_TEXT,
-                    on_click=rx.redirect("/check_candidate_check"),
-                ),
-            ),
-            width="100%",
-            padding_top="10px",
+            main_sub_text_box("참여자 목록", State.meeting_confirm_display_data_user),
+            main_button("다음", on_click=rx.redirect("/check_candidate_check")),
+            width="360px",
         ),
         width="100%",
-        height="100%",
     )

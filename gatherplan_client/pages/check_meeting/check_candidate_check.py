@@ -2,6 +2,13 @@ import reflex as rx
 
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.schema import AppColor, AppFontFamily
+from gatherplan_client.components.text_box import (
+    main_sub_text_center_box,
+    main_sub_text_box,
+    sub_text_box,
+    main_text_box,
+    main_button,
+)
 from gatherplan_client.templates.template import template
 
 
@@ -11,196 +18,54 @@ from gatherplan_client.templates.template import template
     page_text="",
 )
 def check_candidate_check() -> rx.Component:
-    return rx.vstack(
-        rx.center(
+    return rx.center(
+        rx.vstack(
             rx.vstack(
-                rx.text(
-                    "선택한 약속 시간을 확인해주세요",
-                    font_size="18px",
+                main_sub_text_center_box(
+                    "선택한 약속 정보를 확인해주세요",
+                    "약속 정보 변경은 약속 현황보기에서 가능합니다.",
+                ),
+            ),
+            rx.vstack(
+                main_sub_text_box(State.meeting_name, "약속이름", change_position=True),
+                sub_text_box("약속장소"),
+                rx.link(
+                    State.meeting_location,
+                    href=State.place_url,
+                    font_size="14px",
                     font_family=AppFontFamily.DEFAULT_FONT,
                     font_weight="700",
                     color=AppColor.BLACK,
-                    align="center",
-                    width="360px",
+                    padding_bottom="5px",
                 ),
-                rx.text(
-                    "확정하기 이후에는 약속 변경이 불가능합니다.",
-                    font_size="12px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
+                sub_text_box(State.meeting_location_detail),
+                main_sub_text_box(
+                    f"{State.confirm_date} {State.confirm_start_time} ~ {State.confirm_end_time}",
+                    "선택된 약속 시간",
+                    change_position=True,
+                ),
+            ),
+            main_sub_text_box(State.meeting_notice, "공지사항", change_position=True),
+            rx.hstack(
+                sub_text_box("약속코드"),
+                rx.button(
+                    rx.icon("copy"),
+                    on_click=rx.set_clipboard(State.meeting_code),
+                    width="12px",
+                    height="12px",
+                    padding="0",
                     color=AppColor.GRAY_TEXT,
-                    font_weight="700",
-                    align="center",
-                    width="360px",
+                    background_color=AppColor.WHITE,
                 ),
             ),
-            width="100%",
-            height="20%",
-        ),
-        rx.center(
-            rx.vstack(
-                rx.box(
-                    rx.text(
-                        "약속이름",
-                        font_size="12px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.GRAY_TEXT,
-                    ),
-                    rx.text(
-                        State.meeting_name,
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
-                    ),
-                    width="360px",
-                    padding_left="10px",
-                    height="50px",
-                ),
-                rx.box(
-                    rx.text(
-                        "약속장소",
-                        font_size="12px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.GRAY_TEXT,
-                    ),
-                    rx.vstack(
-                        rx.link(
-                            State.meeting_location,
-                            href=State.place_url,
-                            font_size="14px",
-                            font_family=AppFontFamily.DEFAULT_FONT,
-                            font_weight="700",
-                            color=AppColor.BLACK,
-                            padding_bottom="5px",
-                        ),
-                        rx.text(
-                            State.meeting_location_detail,
-                            font_size="12px",
-                            font_family=AppFontFamily.DEFAULT_FONT,
-                            font_weight="500",
-                            color=AppColor.GRAY_TEXT,
-                            margin="0",
-                            padding="0",
-                        ),
-                        spacing="0",
-                    ),
-                    width="360px",
-                    padding_left="10px",
-                    height="60px",
-                ),
-                rx.box(
-                    rx.text(
-                        "선택된 약속 시간",
-                        font_size="12px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.GRAY_TEXT,
-                    ),
-                    rx.text(
-                        f"{State.confirm_date} {State.confirm_start_time} ~ {State.confirm_end_time}",
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
-                    ),
-                    width="360px",
-                    padding_left="10px",
-                    height="50px",
-                ),
-                rx.box(
-                    rx.text(
-                        "공지사항",
-                        font_size="12px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.GRAY_TEXT,
-                    ),
-                    rx.text(
-                        State.meeting_notice,
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
-                    ),
-                    width="360px",
-                    padding_left="10px",
-                    height="50px",
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.hstack(
-                            rx.text(
-                                "약속코드",
-                                font_size="12px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="700",
-                                color=AppColor.GRAY_TEXT,
-                            ),
-                            rx.button(
-                                rx.icon("copy"),
-                                on_click=rx.set_clipboard(
-                                    State.check_detail_meeting_code
-                                ),
-                                width="12px",
-                                height="12px",
-                                padding="0",
-                                color=AppColor.GRAY_TEXT,
-                                background_color=AppColor.WHITE,
-                            ),
-                        ),
-                        rx.box(
-                            rx.text(
-                                State.check_detail_meeting_code,
-                                font_size="14px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                color=AppColor.BLACK,
-                                font_weight="700",
-                                width="170px",
-                            ),
-                        ),
-                    ),
-                    width="360px",
-                    padding_left="10px",
-                    height="50px",
-                ),
-                rx.box(
-                    rx.text(
-                        "사용자 참여 목록",
-                        font_size="12px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.GRAY_TEXT,
-                    ),
-                    rx.text(
-                        State.meeting_confirm_display_data_user,
-                        font_size="14px",
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
-                    ),
-                    width="360px",
-                    padding_left="10px",
-                    height="50px",
-                ),
+            main_text_box(State.meeting_code),
+            main_sub_text_box(
+                State.meeting_confirm_display_data_user,
+                "사용자 참여 목록",
+                change_position=True,
             ),
-            width="100%",
-            height="60%",
-        ),
-        rx.center(
-            rx.button(
-                "확정하기",
-                width="348px",
-                height="35px",
-                padding="20px",
-                color=AppColor.WHITE,
-                type="submit",
-                background_color=AppColor.MAIN_COLOR,
-                on_click=State.check_candidate_check_handle_submit,
-            ),
-            width="100%",
+            main_button("확정하기", on_click=State.check_candidate_check_handle_submit),
+            width="360px",
         ),
         width="100%",
-        height="100%",
     )
