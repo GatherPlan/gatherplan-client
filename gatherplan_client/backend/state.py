@@ -494,7 +494,6 @@ class State(rx.State):
             "name": form_data["nick_name"],
             "password": form_data["password"],
         }
-
         response = requests.post(
             f"{BACKEND_URL}/api/v1/users/join", headers=HEADER, json=data
         )

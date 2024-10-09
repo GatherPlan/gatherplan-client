@@ -2,8 +2,12 @@ import reflex as rx
 
 from gatherplan_client.backend.state import EmailAuth, State
 from gatherplan_client.components.header import header
-from gatherplan_client.components.schema import AppFontFamily, AppColor, TextSize
-from gatherplan_client.components.text_box import main_sub_text_center_box, input_box
+from gatherplan_client.components.schema import AppFontFamily, TextSize
+from gatherplan_client.components.text_box import (
+    main_sub_text_center_box,
+    input_box,
+    main_button,
+)
 
 
 @rx.page("/sign_up")
@@ -31,6 +35,7 @@ def sign_up() -> rx.Component:
                             font_size="12px",
                             width="290px",
                             name="email",
+                            on_blur=EmailAuth.set_text,
                         ),
                         rx.button(
                             "인증요청",
@@ -74,15 +79,7 @@ def sign_up() -> rx.Component:
                         placeholder="닉네임을 입력해주세요",
                         name="nick_name",
                     ),
-                    rx.button(
-                        "가입하기",
-                        width="360px",
-                        height="48px",
-                        padding="20px",
-                        color=AppColor.WHITE,
-                        type="submit",
-                        background_color=AppColor.MAIN_COLOR,
-                    ),
+                    main_button("가입하기", type="submit"),
                     width="360px",
                 ),
                 width="100%",
