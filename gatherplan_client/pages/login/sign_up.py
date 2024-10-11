@@ -1,12 +1,12 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import EmailAuth, State
+from gatherplan_client.components.buttons import main_button
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily, TextSize
 from gatherplan_client.components.text_box import (
     main_sub_text_center_box,
     input_box,
-    main_button,
 )
 
 

@@ -1,13 +1,12 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
+from gatherplan_client.components.buttons import main_button
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
-    text_for_each,
     main_sub_text_box,
     sub_text_box,
     main_text_box,
-    main_button,
 )
 from gatherplan_client.templates.template import template
 
@@ -47,7 +46,7 @@ def join_meeting() -> rx.Component:
             sub_text_box("약속 후보 날짜"),
             rx.scroll_area(
                 rx.grid(
-                    rx.foreach(State.meeting_date, text_for_each),
+                    rx.foreach(State.meeting_date, main_text_box),
                     columns="3",
                     width="360px",
                 ),

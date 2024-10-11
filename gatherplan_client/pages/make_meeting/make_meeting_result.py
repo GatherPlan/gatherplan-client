@@ -3,7 +3,6 @@ import reflex as rx
 from gatherplan_client.backend.state import State, FRONTEND_URL
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
-    text_for_each,
     main_sub_text_center_box,
     sub_text_box,
     main_text_box,
@@ -38,7 +37,7 @@ def make_meeting_result() -> rx.Component:
                 sub_text_box("약속 후보 날짜"),
                 rx.scroll_area(
                     rx.grid(
-                        rx.foreach(State.select_data, text_for_each),
+                        rx.foreach(State.select_data, main_text_box),
                         columns="3",
                         width="100%",
                     ),

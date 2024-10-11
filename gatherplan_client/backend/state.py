@@ -1026,18 +1026,18 @@ class EmailAuth(rx.State):
             return rx.toast.error(response.json()["message"], position="top-right")
 
 
-class IndexBanner(rx.State):
-    banner_list: List[Dict[str, str]] = []
-
-    def get_banner_list(self):
-        response = requests.get(
-            f"{BACKEND_URL}/api/v1/region/festivals", headers=HEADER
-        )
-        if response.status_code == 200:
-            self.banner_list = response.json()["data"]
-        else:
-            print(response.json())
-            return rx.toast.error(response.json()["message"], position="top-right")
+# class IndexBanner(rx.State):
+#     banner_list: List[Dict[str, str]] = []
+#
+#     def get_banner_list(self):
+#         response = requests.get(
+#             f"{BACKEND_URL}/api/v1/region/festivals", headers=HEADER
+#         )
+#         if response.status_code == 200:
+#             self.banner_list = response.json()["data"]
+#         else:
+#             print(response.json())
+#             return rx.toast.error(response.json()["message"], position="top-right")
 
 
 HEADER = {

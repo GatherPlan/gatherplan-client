@@ -1,10 +1,10 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
+from gatherplan_client.components.buttons import main_button
 from gatherplan_client.components.text_box import (
     main_sub_text_box,
     input_box,
-    main_button,
 )
 from gatherplan_client.templates.template import template
 

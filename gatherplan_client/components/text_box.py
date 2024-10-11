@@ -34,16 +34,6 @@ def center_align_text_box(
     )
 
 
-def text_for_each(text: str):
-    return rx.text(
-        text,
-        font_size="14px",
-        font_family=AppFontFamily.DEFAULT_FONT,
-        color=AppColor.BLACK,
-        font_weight="700",
-    )
-
-
 def main_text_box(text: str):
     return rx.text(
         text,
@@ -107,27 +97,6 @@ def main_sub_text_center_box(main_text: str, sub_text: str):
         main_text_box_center(main_text),
         sub_text_box_center(sub_text),
         width="360px",
-    )
-
-
-def main_button(text: str, sub_button: bool = False, **kwargs):
-    if sub_button:
-        return rx.button(
-            text,
-            width="360px",
-            height="35px",
-            color=AppColor.BLACK,
-            background_color=AppColor.SUB_TEXT,
-            **kwargs,
-        )
-
-    return rx.button(
-        text,
-        width="360px",
-        height="35px",
-        color=AppColor.WHITE,
-        background_color=AppColor.MAIN_COLOR,
-        **kwargs,
     )
 
 

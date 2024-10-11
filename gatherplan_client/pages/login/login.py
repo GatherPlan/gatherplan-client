@@ -1,11 +1,12 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
+from gatherplan_client.components.buttons import main_button
 from gatherplan_client.components.schema import AppColor, TextSize, AppFontFamily
 from gatherplan_client.components.text_box import (
     center_align_text_box,
     input_box,
-    main_button,
+    sub_text_box,
 )
 
 
@@ -120,6 +121,12 @@ def login() -> rx.Component:
                     width="100%",
                     align="center",
                 ),
+            ),
+            rx.box(height="40vh"),
+            rx.cond(
+                State.not_member_login_button,
+                sub_text_box("회원가입없이 간편하게 이용해보세요"),
+                rx.text(),
             ),
             rx.button(
                 rx.cond(

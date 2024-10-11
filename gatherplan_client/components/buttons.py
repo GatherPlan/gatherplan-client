@@ -28,3 +28,24 @@ def index_button(main_text: str, sub_text: str = "", redirect_url: str = ""):
         background_color=AppColor.BACKGROUND_GRAY_COLOR,
         on_click=rx.redirect(redirect_url),
     )
+
+
+def main_button(text: str, sub_button: bool = False, **kwargs):
+    if sub_button:
+        return rx.button(
+            text,
+            width="360px",
+            height="35px",
+            color=AppColor.BLACK,
+            background_color=AppColor.SUB_TEXT,
+            **kwargs,
+        )
+
+    return rx.button(
+        text,
+        width="360px",
+        height="35px",
+        color=AppColor.WHITE,
+        background_color=AppColor.MAIN_COLOR,
+        **kwargs,
+    )

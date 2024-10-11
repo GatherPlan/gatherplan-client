@@ -5,7 +5,7 @@ from gatherplan_client.components.schema import AppFontFamily, AppColor
 from gatherplan_client.components.text_box import (
     main_sub_text_center_box,
     sub_text_box,
-    text_for_each,
+    main_text_box,
     main_sub_text_box,
 )
 from gatherplan_client.templates.template import template
@@ -37,7 +37,7 @@ def make_meeting_check() -> rx.Component:
                 sub_text_box("약속 후보 날짜"),
                 rx.scroll_area(
                     rx.grid(
-                        rx.foreach(State.select_data, text_for_each),
+                        rx.foreach(State.select_data, main_text_box),
                         columns="3",
                         width="100%",
                     ),

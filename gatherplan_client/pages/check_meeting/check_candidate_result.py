@@ -1,13 +1,13 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
+from gatherplan_client.components.buttons import main_button
 from gatherplan_client.components.schema import AppColor, AppFontFamily
 from gatherplan_client.components.text_box import (
     main_sub_text_center_box,
     main_sub_text_box,
     sub_text_box,
     main_text_box,
-    main_button,
 )
 from gatherplan_client.templates.template import template
 
