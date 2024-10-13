@@ -37,10 +37,24 @@ def center_align_text_box(
 def main_text_box(text: str):
     return rx.text(
         text,
-        font_size=TextSize.TINY_SMALL,
+        font_size=TextSize.TINY,
         font_family=AppFontFamily.DEFAULT_FONT,
         font_weight="700",
         color=AppColor.BLACK,
+    )
+
+
+def main_text_box_need_star(text: str):
+    return rx.hstack(
+        rx.text(
+            text,
+            font_size=TextSize.TINY,
+            font_family=AppFontFamily.DEFAULT_FONT,
+            font_weight="700",
+            color=AppColor.BLACK,
+        ),
+        rx.text("*", font_size=TextSize.VERY_TINY, color=AppColor.RED),
+        spacing="1",
     )
 
 
@@ -78,11 +92,22 @@ def sub_text_box(text: str):
     )
 
 
-def main_sub_text_box(main_text: str, sub_text: str, change_position: bool = False):
+def main_sub_text_box(
+    main_text: str,
+    sub_text: str,
+    change_position: bool = False,
+    need_start: bool = False,
+):
     if change_position:
         return rx.vstack(
             sub_text_box(sub_text),
             main_text_box(main_text),
+            width="360px",
+        )
+    if need_start:
+        return rx.vstack(
+            main_text_box_need_star(main_text),
+            sub_text_box(sub_text),
             width="360px",
         )
     return rx.vstack(

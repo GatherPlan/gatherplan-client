@@ -15,7 +15,9 @@ def make_meeting() -> rx.Component:
         rx.center(
             rx.vstack(
                 main_sub_text_box(
-                    "약속 이름", "상대방이 이해하기 좋은 이름으로 만들어요!"
+                    "약속 이름",
+                    "상대방이 이해하기 좋은 이름으로 만들어요!",
+                    need_start=True,
                 ),
                 input_box(
                     placeholder="약속이름을 입력해주세요",

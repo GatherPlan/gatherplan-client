@@ -369,6 +369,22 @@ class State(rx.State):
         if self.input_location == "":
             return rx.toast.info("검색어를 입력해주세요.", position="top-right")
 
+        self.search_location = [
+            {
+                "address_name": "Loading...",
+                "location_type": "INFO",
+            }
+        ]
+        self.search_location_place = [
+            {
+                "place_name": "Loading...",  # {'place_name': '건대입구역 2호선'
+                "place_url": "",
+                "address_name": "Loading...",  # 'address_name': '서울 광진구 화양동 1',
+                "location_type": "INFO",
+            }
+        ]
+        yield
+
         response = requests.get(
             f"{BACKEND_URL}/api/v1/region/district", headers=HEADER, params=params
         )
@@ -382,12 +398,20 @@ class State(rx.State):
             self.search_location.append(data)
 
         if len(self.search_location) == 0:
+            self.search_location = [
+                {
+                    "address_name": "검색 결과가 없습니다.",
+                    "location_type": "INFO",
+                }
+            ]
             yield rx.toast.info("행정구역 검색 결과가 없습니다.", position="top-right")
 
         response = requests.get(
             f"{BACKEND_URL}/api/v1/region/place", headers=HEADER, params=params
         )
+
         self.search_location_place = []
+
         for i in response.json()["data"]:
             data = {
                 "place_name": i["placeName"],
@@ -398,11 +422,22 @@ class State(rx.State):
             self.search_location_place.append(data)
 
         if len(self.search_location_place) == 0:
+            self.search_location_place = [
+                {
+                    "place_name": "검색 결과가 없습니다.",  # {'place_name': '건대입구역 2호선'
+                    "place_url": "",
+                    "address_name": "검색 결과가 없습니다.",  # 'address_name': '서울 광진구 화양동 1',
+                    "location_type": "INFO",
+                }
+            ]
             yield rx.toast.info("상세주소 검색 결과가 없습니다.", position="top-right")
 
     def make_meeting_detail_handle_location_submit(self, form_data: dict):
-        """Handle the form submit."""
-        if form_data["location_type"] == "DISTRICT":
+
+        if form_data["location_type"] == "INFO":
+            return
+
+        elif form_data["location_type"] == "DISTRICT":
             self.meeting_location = ""
             self.meeting_location_detail = form_data["address_name"]
             self.place_url = ""
@@ -480,6 +515,8 @@ class State(rx.State):
         self.nick_name = ""
         self.password = ""
         self.not_member_login = False
+
+        self.meeting_location_detail = ""
         return [
             rx.redirect("/"),
             rx.toast.info("로그아웃 되었습니다.", position="top-right"),
