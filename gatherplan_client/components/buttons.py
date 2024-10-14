@@ -49,3 +49,9 @@ def main_button(text: str, sub_button: bool = False, **kwargs):
         background_color=AppColor.MAIN_COLOR,
         **kwargs,
     )
+
+
+def calendar_button_component(text: str, **kwargs):
+    return rx.button(
+        text, width="45px", height="36px", font_size="16px", type="button", **kwargs
+    )

@@ -1,7 +1,7 @@
 import reflex as rx
 
 from gatherplan_client.backend.state import State
-from gatherplan_client.components.schema import AppFontFamily, AppColor
+from gatherplan_client.components.schema import AppFontFamily, AppColor, TextSize
 from gatherplan_client.components.text_box import (
     main_sub_text_center_box,
     sub_text_box,
@@ -23,17 +23,19 @@ def make_meeting_check() -> rx.Component:
             ),
             rx.vstack(
                 main_sub_text_box(State.meeting_name, "약속이름", change_position=True),
-                sub_text_box("약속장소"),
-                rx.link(
-                    State.meeting_location,
-                    href=State.place_url,
-                    font_size="14px",
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    color=AppColor.BLACK,
-                    padding_bottom="5px",
+                rx.box(
+                    sub_text_box("약속장소"),
+                    rx.link(
+                        State.meeting_location,
+                        href=State.place_url,
+                        font_size=TextSize.TINY_SMALL,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.SKY_BLUE,
+                        margin_top="5px",
+                    ),
+                    sub_text_box(State.meeting_location_detail),
                 ),
-                sub_text_box(State.meeting_location_detail),
                 sub_text_box("약속 후보 날짜"),
                 rx.scroll_area(
                     rx.grid(
@@ -48,6 +50,7 @@ def make_meeting_check() -> rx.Component:
                 main_sub_text_box(
                     State.meeting_notice, "공지사항", change_position=True
                 ),
+                rx.box(height="20vh"),
                 rx.button(
                     "약속 만들기",
                     width="360px",
