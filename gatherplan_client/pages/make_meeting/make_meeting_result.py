@@ -10,7 +10,9 @@ from gatherplan_client.components.text_box import (
 from gatherplan_client.templates.template import template
 
 
-@template(route="/make_meeting_result", header_url="/", page_text="")
+@template(
+    route="/make_meeting_result/[meeting_code_result]", header_url="/", page_text=""
+)
 def make_meeting_result() -> rx.Component:
     return rx.center(
         rx.vstack(
@@ -51,7 +53,7 @@ def make_meeting_result() -> rx.Component:
                     sub_text_box("약속코드"),
                     rx.button(
                         rx.icon("copy"),
-                        on_click=rx.set_clipboard(State.meeting_code),
+                        on_click=rx.set_clipboard(rx.State.meeting_code_result),
                         width="12px",
                         height="12px",
                         padding="0",
@@ -59,7 +61,7 @@ def make_meeting_result() -> rx.Component:
                         background_color=AppColor.WHITE,
                     ),
                 ),
-                main_text_box(State.meeting_code),
+                main_text_box(rx.State.meeting_code_result),
                 rx.button(
                     "참여하기",
                     width="360px",
@@ -68,7 +70,9 @@ def make_meeting_result() -> rx.Component:
                     color=AppColor.WHITE,
                     type="submit",
                     background_color=AppColor.MAIN_COLOR,
-                    on_click=rx.redirect(f"/enter_meeting_code/{State.meeting_code}"),
+                    on_click=rx.redirect(
+                        f"/enter_meeting_code/{rx.State.meeting_code_result}"
+                    ),
                 ),
                 rx.button(
                     "공유하기",
@@ -77,7 +81,7 @@ def make_meeting_result() -> rx.Component:
                     padding="20px",
                     color=AppColor.BLACK,
                     on_click=rx.set_clipboard(
-                        f"{FRONTEND_URL}/enter_meeting_code/{State.meeting_code}"
+                        f"{FRONTEND_URL}/enter_meeting_code/{rx.State.meeting_code_result}"
                     ),
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                 ),

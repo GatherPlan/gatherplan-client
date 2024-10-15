@@ -114,6 +114,12 @@ class State(rx.State):
     confirm_start_time: str = ""
     confirm_end_time: str = ""
 
+    def reset_location_info(self):
+        self.meeting_location = ""
+        self.meeting_location_detail = ""
+        self.location_type = ""
+        self.place_url = ""
+
     def change_login_not_member(self):
         self.not_member_login_button = not self.not_member_login_button
 
@@ -334,8 +340,9 @@ class State(rx.State):
                 )
 
         if response.status_code == 200:
-            self.meeting_code = response.json()["appointmentCode"]
-            return rx.redirect(f"/make_meeting_result")
+            return rx.redirect(
+                f"/make_meeting_result/{response.json()['appointmentCode']}"
+            )
         else:
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
@@ -347,6 +354,11 @@ class State(rx.State):
         else:
             self.select_data.append(click_data)
             self.display_data[click_data] = True
+
+    def make_meeting_date_handle_submit(self):
+        if len(self.select_data) == 0:
+            return rx.toast.error("날짜를 선택해주세요.", position="top-right")
+        return rx.redirect("/make_meeting_check")
 
     def month_change_common(self, is_increment: bool):
         if is_increment:

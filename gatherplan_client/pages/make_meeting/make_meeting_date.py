@@ -29,7 +29,7 @@ def make_meeting_date() -> rx.Component:
                 color=AppColor.WHITE,
                 type="submit",
                 background_color=AppColor.MAIN_COLOR,
-                on_click=rx.redirect("/make_meeting_check"),
+                on_click=State.make_meeting_date_handle_submit,
             ),
             width="360px",
         ),

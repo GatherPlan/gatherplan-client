@@ -103,17 +103,23 @@ def main_sub_text_box(
             sub_text_box(sub_text),
             main_text_box(main_text),
             width="360px",
+            spacing="0",
+            margin_boottom="20px",
         )
     if need_start:
         return rx.vstack(
             main_text_box_need_star(main_text),
             sub_text_box(sub_text),
+            spacing="0",
             width="360px",
+            margin_boottom="20px",
         )
     return rx.vstack(
         main_text_box(main_text),
         sub_text_box(sub_text),
+        spacing="0",
         width="360px",
+        margin_boottom="20px",
     )
 
 

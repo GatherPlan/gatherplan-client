@@ -43,7 +43,10 @@ def location_button(button_text: Dict):
 
 
 @template(
-    route="/make_meeting_detail", page_text="약속 만들기", header_url="/make_meeting"
+    route="/make_meeting_detail",
+    page_text="약속 만들기",
+    header_url="/make_meeting",
+    on_load=State.reset_location_info,
 )
 def make_meeting_detail() -> rx.Component:
     return rx.form(
