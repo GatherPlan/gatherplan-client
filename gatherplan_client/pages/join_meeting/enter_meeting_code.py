@@ -26,6 +26,7 @@ def enter_meeting_code() -> rx.Component:
                     type="text",
                     on_change=State.set_meeting_code,
                 ),
+                rx.box(height="47vh"),
                 main_button(text="다음", type="submit"),
                 width="360px",
             ),

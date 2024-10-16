@@ -266,8 +266,8 @@ class State(rx.State):
                 else True
             )
         for clicked_data in self.select_data:
-            if clicked_data in self.display_data.keys():
-                self.display_data[clicked_data] = True
+            if clicked_data["selectedDate"] in self.display_data.keys():
+                self.display_data[clicked_data["selectedDate"]] = True
 
     def make_meeting_handle_submit(self, form_data: dict):
 
@@ -1055,6 +1055,9 @@ class State(rx.State):
         else:
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
+
+    def index_page_load(self):
+        self.meeting_code = ""
 
 
 class EmailAuth(rx.State):

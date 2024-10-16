@@ -58,45 +58,51 @@ def make_meeting_result() -> rx.Component:
                         ),
                         type="auto",
                         scrollbars="vertical",
-                        style={"height": 160, "width": 360},
+                        style={"height": 120, "width": 360},
                     ),
                 ),
-                rx.hstack(
-                    sub_text_box("약속코드"),
+                rx.box(
+                    rx.hstack(
+                        sub_text_box("약속코드"),
+                        rx.button(
+                            rx.icon("copy"),
+                            on_click=rx.set_clipboard(rx.State.meeting_code_result),
+                            width="12px",
+                            height="12px",
+                            padding="0",
+                            color=AppColor.GRAY_TEXT,
+                            background_color=AppColor.WHITE,
+                        ),
+                    ),
+                    main_text_box(rx.State.meeting_code_result),
+                ),
+                rx.box(
                     rx.button(
-                        rx.icon("copy"),
-                        on_click=rx.set_clipboard(rx.State.meeting_code_result),
-                        width="12px",
-                        height="12px",
-                        padding="0",
-                        color=AppColor.GRAY_TEXT,
-                        background_color=AppColor.WHITE,
+                        "참여하기",
+                        width="360px",
+                        height="35px",
+                        padding="20px",
+                        color=AppColor.WHITE,
+                        type="submit",
+                        background_color=AppColor.MAIN_COLOR,
+                        on_click=rx.redirect(
+                            f"/enter_meeting_code/{rx.State.meeting_code_result}"
+                        ),
+                        margin_bottom="10px",
+                    ),
+                    rx.button(
+                        "공유하기",
+                        width="360px",
+                        height="35px",
+                        padding="20px",
+                        color=AppColor.BLACK,
+                        on_click=rx.set_clipboard(
+                            f"{FRONTEND_URL}/enter_meeting_code/{rx.State.meeting_code_result}"
+                        ),
+                        background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     ),
                 ),
-                main_text_box(rx.State.meeting_code_result),
-                rx.button(
-                    "참여하기",
-                    width="360px",
-                    height="35px",
-                    padding="20px",
-                    color=AppColor.WHITE,
-                    type="submit",
-                    background_color=AppColor.MAIN_COLOR,
-                    on_click=rx.redirect(
-                        f"/enter_meeting_code/{rx.State.meeting_code_result}"
-                    ),
-                ),
-                rx.button(
-                    "공유하기",
-                    width="360px",
-                    height="35px",
-                    padding="20px",
-                    color=AppColor.BLACK,
-                    on_click=rx.set_clipboard(
-                        f"{FRONTEND_URL}/enter_meeting_code/{rx.State.meeting_code_result}"
-                    ),
-                    background_color=AppColor.BACKGROUND_GRAY_COLOR,
-                ),
+                spacing="5",
             ),
             width="360px",
         ),
