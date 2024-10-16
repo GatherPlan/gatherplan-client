@@ -212,10 +212,11 @@ class State(rx.State):
         if init_setting_time:
             self.setting_time = datetime.datetime.now()
             self.setting_time_display = self.setting_time.strftime("%Y-%m")
+            self.select_data = []
 
-        self.display_data = {}
-        self.checked_data = {}
-        self.select_data = []
+        else:
+            self.display_data = {}
+            self.checked_data = {}
 
         weekday = (
             datetime.date(self.setting_time.year, self.setting_time.month, 1).weekday()
