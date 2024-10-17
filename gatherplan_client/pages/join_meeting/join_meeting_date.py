@@ -14,6 +14,7 @@ from gatherplan_client.templates.template import template
     route="/join_meeting_date",
     header_url="/join_meeting",
     page_text="약속 참여하기",
+    on_load=State.setting_month_calendar,
 )
 def join_meeting_date() -> rx.Component:
     return rx.center(

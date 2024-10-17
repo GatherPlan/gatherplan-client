@@ -6,7 +6,7 @@ from gatherplan_client.components.calendar import (
     display_select_date,
     calendar_header,
 )
-from gatherplan_client.components.schema import AppColor, AppFontFamily
+from gatherplan_client.components.schema import AppColor, AppFontFamily, TextSize
 from gatherplan_client.components.text_box import (
     main_sub_text_box,
     sub_text_box,
@@ -132,61 +132,57 @@ def check_meeting_detail() -> rx.Component:
                 rx.tabs.content(
                     rx.center(
                         rx.vstack(
+                            rx.box(),
                             main_sub_text_box(
                                 State.meeting_name, "약속이름", change_position=True
                             ),
-                            sub_text_box("약속장소"),
-                            rx.link(
-                                State.meeting_location_detail,
-                                href=State.place_url,
-                                font_size="14px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="700",
-                                color=AppColor.BLACK,
-                                padding_bottom="5px",
-                            ),
-                            rx.text(
-                                State.meeting_location,
-                                font_size="12px",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_weight="500",
-                                color=AppColor.GRAY_TEXT,
-                                margin="0",
-                                padding="0",
-                            ),
-                            sub_text_box("선택한 일정"),
-                            rx.scroll_area(
-                                rx.grid(
-                                    rx.foreach(
-                                        State.display_select_date,
-                                        display_select_date,
+                            rx.cond(
+                                State.meeting_location_detail != "",
+                                rx.box(
+                                    sub_text_box("약속장소"),
+                                    rx.link(
+                                        State.meeting_location,
+                                        href=State.place_url,
+                                        font_size=TextSize.TINY_SMALL,
+                                        font_family=AppFontFamily.DEFAULT_FONT,
+                                        font_weight="700",
+                                        color=AppColor.SKY_BLUE,
                                     ),
-                                    columns="1",
-                                    width="360px",
+                                    sub_text_box(State.meeting_location_detail),
                                 ),
-                                type="always",
-                                scrollbars="vertical",
-                                style={"height": 70, "width": 360},
+                                rx.box(),
                             ),
-                            main_sub_text_box(
-                                State.meeting_notice, "공지사항", change_position=True
-                            ),
-                            rx.hstack(
-                                sub_text_box("약속코드"),
-                                rx.button(
-                                    rx.icon("copy"),
-                                    on_click=rx.set_clipboard(State.meeting_code),
-                                    width="12px",
-                                    height="12px",
-                                    padding="0",
-                                    color=AppColor.GRAY_TEXT,
-                                    background_color=AppColor.WHITE,
+                            rx.cond(
+                                State.meeting_notice != "",
+                                main_sub_text_box(
+                                    State.meeting_notice,
+                                    "공지사항",
+                                    change_position=True,
                                 ),
+                                rx.box(),
                             ),
-                            main_text_box(State.meeting_code),
+                            rx.box(
+                                rx.hstack(
+                                    sub_text_box("약속코드"),
+                                    rx.button(
+                                        rx.icon("copy"),
+                                        on_click=rx.set_clipboard(
+                                            State.check_detail_meeting_code
+                                        ),
+                                        width="12px",
+                                        height="12px",
+                                        padding="0",
+                                        color=AppColor.GRAY_TEXT,
+                                        background_color=AppColor.WHITE,
+                                    ),
+                                ),
+                                main_text_box(State.check_detail_meeting_code),
+                            ),
                             main_sub_text_box(
                                 State.host_name, "모임장", change_position=True
                             ),
+                            rx.box(height="90px"),
+                            spacing="4",
                         ),
                         width="100%",
                         height="60%",
@@ -196,6 +192,7 @@ def check_meeting_detail() -> rx.Component:
                 rx.tabs.content(
                     # tab2
                     calendar_header(purpose="check"),
+                    rx.box(height="10px"),
                     rx.center(
                         rx.vstack(
                             main_sub_text_box(
@@ -214,7 +211,7 @@ def check_meeting_detail() -> rx.Component:
                                 ),
                                 type="always",
                                 scrollbars="vertical",
-                                style={"height": 120, "width": 360},
+                                style={"height": 100, "width": 360},
                             ),
                         ),
                         width="100%",

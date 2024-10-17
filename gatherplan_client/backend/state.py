@@ -43,6 +43,15 @@ def additional_holiday(year: int) -> List[datetime.date]:
     return ADDITIONAL_HOLIDAYS.get(year, [])
 
 
+def meeting_state_change(state: str):
+    if state == "CONFIRMED":
+        return "확정"
+    elif state == "UNCONFIRMED":
+        return "미확정"
+    else:
+        return "기타"
+
+
 class State(rx.State):
     login_token: str = ""
     not_member_login: bool = False
@@ -109,6 +118,7 @@ class State(rx.State):
 
     meeting_confirm_display_data: List[Dict[str, Any]] = []
     meeting_confirm_display_data_user: str = ""
+    meeting_confirm_display_data_not_attend_user: str = ""
 
     confirm_date: str = ""
     confirm_start_time: str = ""
@@ -214,9 +224,8 @@ class State(rx.State):
             self.setting_time_display = self.setting_time.strftime("%Y-%m")
             self.select_data = []
 
-        else:
-            self.display_data = {}
-            self.checked_data = {}
+        self.display_data = {}
+        self.checked_data = {}
 
         weekday = (
             datetime.date(self.setting_time.year, self.setting_time.month, 1).weekday()
@@ -265,9 +274,15 @@ class State(rx.State):
                 in self.meeting_date
                 else True
             )
+
         for clicked_data in self.select_data:
-            if clicked_data["selectedDate"] in self.display_data.keys():
-                self.display_data[clicked_data["selectedDate"]] = True
+
+            if type(clicked_data) == str:
+                if clicked_data in self.display_data.keys():
+                    self.display_data[clicked_data] = True
+            else:
+                if clicked_data["selectedDate"] in self.display_data.keys():
+                    self.display_data[clicked_data["selectedDate"]] = True
 
     def make_meeting_handle_submit(self, form_data: dict):
 
@@ -639,7 +654,7 @@ class State(rx.State):
             header = HEADER
             header["Authorization"] = self.login_token
 
-            data = {"page": 1, "size": 10, "keyword": keyword}
+            data = {"page": 1, "size": 15, "keyword": keyword}
 
             response = requests.get(
                 f"{BACKEND_URL}/api/v1/appointments/list:search",
@@ -654,7 +669,9 @@ class State(rx.State):
                             "meeting_name": data["appointmentName"],
                             "host_name": data["hostName"],
                             "meeting_code": data["appointmentCode"],
-                            "meeting_state": data["appointmentState"],
+                            "meeting_state": meeting_state_change(
+                                data["appointmentState"]
+                            ),
                             "is_host": data["isHost"],
                             "meeting_notice": data["notice"],
                         }
@@ -785,7 +802,6 @@ class State(rx.State):
 
     def join_meeting_check_handle_result_submit(self):
         header = HEADER
-
         data = {
             "appointmentCode": self.meeting_code,
             "selectedDateTimeList": self.get_value(self.select_data),
@@ -796,6 +812,7 @@ class State(rx.State):
                 "nickname": self.nick_name,
                 "password": self.password,
             }
+
             response = requests.post(
                 f"{BACKEND_URL}/api/v1/temporary/appointments/join",
                 headers=header,
@@ -819,13 +836,12 @@ class State(rx.State):
             )
             if "code" in response.json().keys() and response.json()["code"] == 4001:
                 response = requests.put(
-                    f"{BACKEND_URL}/api/v1/temporary/appointments/join",
+                    f"{BACKEND_URL}/api/v1/appointments/join",
                     headers=header,
                     json=data,
                 )
 
         if response.status_code == 200:
-            self.not_member_login = False
             return rx.redirect(f"/join_meeting_result")
         else:
             print(response.json())
@@ -851,6 +867,7 @@ class State(rx.State):
     def get_appointments_candidates(self):
         self.meeting_confirm_display_data = []
         self.meeting_confirm_display_data_user = ""
+        self.meeting_confirm_display_data_not_attend_user = ""
         header = HEADER
         data = {
             "appointmentCode": self.check_detail_meeting_code,
@@ -877,10 +894,15 @@ class State(rx.State):
         if response.status_code == 200:
             data = response.json()["data"]
             for index, item in enumerate(data):
-                user_list = [
-                    user_data["nickname"]
-                    for user_data in item["userParticipationInfoList"]
-                ]
+
+                user_list = []
+                not_attend_list = []
+                for user_data in item["userParticipationInfoList"]:
+                    if user_data["isAvailable"]:
+                        user_list.append(user_data["nickname"])
+                    else:
+                        not_attend_list.append(user_data["nickname"])
+
                 temp = {
                     "index": index,
                     "date": item["candidateDate"],
@@ -888,6 +910,7 @@ class State(rx.State):
                     "end_time": item["endTime"][:5],
                     "user_count": len(user_list),
                     "user_list": user_list,
+                    "not_attend_list": not_attend_list,
                     "weather": "not_yet",
                     "click": False,
                 }
@@ -901,6 +924,9 @@ class State(rx.State):
             if item["index"] == index:
                 item["click"] = True
                 self.meeting_confirm_display_data_user = ", ".join(item["user_list"])
+                self.meeting_confirm_display_data_not_attend_user = ", ".join(
+                    [""] + item["not_attend_list"]
+                )
                 self.confirm_date = item["date"]
                 self.confirm_start_time = item["start_time"]
                 self.confirm_end_time = item["end_time"]

@@ -452,37 +452,25 @@ def location_button_check(display_data: List):
         State.holiday_data[display_data[0]] == "sun",
         rx.cond(
             State.holiday_data[display_data[0]] == "prev",
-            rx.button(
+            calendar_button_component(
                 display_data[0].split("-")[2],
-                width="50px",
-                height="36px",
                 color=AppColor.RED,
-                font_size="16px",
-                type="button",
                 background_color=AppColor.BACKGROUND_GRAY_COLOR,
                 disabled=True,
                 on_click=State.check_meeting_date_click_button(display_data[0]),
             ),
             rx.cond(
                 display_data[1],
-                rx.button(
+                calendar_button_component(
                     display_data[0].split("-")[2],
-                    width="50px",
-                    height="36px",
                     color=AppColor.RED,
-                    font_size="16px",
-                    type="button",
                     border="3px solid #4E5CDC",
                     background_color=AppColor.WHITE,
                     on_click=State.check_meeting_date_click_button(display_data[0]),
                 ),
-                rx.button(
+                calendar_button_component(
                     display_data[0].split("-")[2],
-                    width="50px",
-                    height="36px",
                     color=AppColor.RED,
-                    font_size="16px",
-                    type="button",
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     disabled=True,
                     on_click=State.check_meeting_date_click_button(display_data[0]),
@@ -493,37 +481,25 @@ def location_button_check(display_data: List):
             State.holiday_data[display_data[0]] == "sat",
             rx.cond(
                 State.holiday_data[display_data[0]] == "prev",
-                rx.button(
+                calendar_button_component(
                     display_data[0].split("-")[2],
-                    width="50px",
-                    height="36px",
                     color=AppColor.BLUE,
-                    font_size="16px",
-                    type="button",
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     disabled=True,
                     on_click=State.check_meeting_date_click_button(display_data[0]),
                 ),
                 rx.cond(
                     display_data[1],
-                    rx.button(
+                    calendar_button_component(
                         display_data[0].split("-")[2],
-                        width="50px",
-                        height="36px",
                         color=AppColor.BLUE,
-                        font_size="16px",
-                        type="button",
                         border="3px solid #4E5CDC",
                         background_color=AppColor.WHITE,
                         on_click=State.check_meeting_date_click_button(display_data[0]),
                     ),
-                    rx.button(
+                    calendar_button_component(
                         display_data[0].split("-")[2],
-                        width="50px",
-                        height="36px",
                         color=AppColor.BLUE,
-                        font_size="16px",
-                        type="button",
                         disabled=True,
                         background_color=AppColor.BACKGROUND_GRAY_COLOR,
                         on_click=State.check_meeting_date_click_button(display_data[0]),
@@ -532,36 +508,25 @@ def location_button_check(display_data: List):
             ),
             rx.cond(
                 State.holiday_data[display_data[0]] == "prev",
-                rx.button(
-                    width="50px",
-                    height="36px",
+                calendar_button_component(
+                    display_data[0].split("-")[2],
                     color="#000000",
-                    font_size="16px",
-                    type="button",
                     background_color=AppColor.BACKGROUND_GRAY_COLOR,
                     disabled=True,
                     on_click=State.check_meeting_date_click_button(display_data[0]),
                 ),
                 rx.cond(
                     display_data[1],
-                    rx.button(
+                    calendar_button_component(
                         display_data[0].split("-")[2],
-                        width="50px",
-                        height="36px",
                         color="#000000",
-                        font_size="16px",
-                        type="button",
                         background_color=AppColor.WHITE,
                         border="3px solid #4E5CDC",
                         on_click=State.check_meeting_date_click_button(display_data[0]),
                     ),
-                    rx.button(
+                    calendar_button_component(
                         display_data[0].split("-")[2],
-                        width="50px",
-                        height="36px",
                         color="#000000",
-                        font_size="16px",
-                        type="button",
                         disabled=True,
                         background_color=AppColor.BACKGROUND_GRAY_COLOR,
                         on_click=State.check_meeting_date_click_button(display_data[0]),

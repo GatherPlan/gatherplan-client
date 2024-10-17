@@ -4,7 +4,7 @@ import reflex as rx
 
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.buttons import main_button
-from gatherplan_client.components.schema import AppFontFamily, AppColor
+from gatherplan_client.components.schema import AppFontFamily, AppColor, TextSize
 from gatherplan_client.components.text_box import (
     main_sub_text_box,
     sub_text_box,
@@ -82,6 +82,7 @@ def list_view_candidate(items: Dict):
             height="50px",
             width="360px",
             padding="0px",
+            margin_bottom="10px",
             on_click=State.get_appointments_candidates_click_get_user(items["index"]),
         ),
         rx.button(
@@ -150,6 +151,7 @@ def list_view_candidate(items: Dict):
             border_radius="10px",
             height="50px",
             width="360px",
+            margin_bottom="10px",
             padding="0px",
             on_click=State.get_appointments_candidates_click_get_user(items["index"]),
         ),
@@ -175,11 +177,33 @@ def check_candidate() -> rx.Component:
                     State.meeting_confirm_display_data,
                     list_view_candidate,
                 ),
-                type="scroll",
+                type="auto",
                 scrollbars="vertical",
-                style={"height": "40%"},
+                style={"height": 300, "width": 360},
             ),
-            main_sub_text_box("참여자 목록", State.meeting_confirm_display_data_user),
+            rx.vstack(
+                sub_text_box("참여자 목록"),
+                rx.hstack(
+                    rx.text(
+                        State.meeting_confirm_display_data_user,
+                        font_size=TextSize.TINY,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        color=AppColor.BLACK,
+                        font_weight="700",
+                    ),
+                    rx.text(
+                        State.meeting_confirm_display_data_not_attend_user,
+                        font_size=TextSize.TINY,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        color=AppColor.GRAY_TEXT,
+                        font_weight="700",
+                    ),
+                    spacing="0",
+                ),
+                spacing="0",
+                width="360px",
+                height="50px",
+            ),
             main_button("다음", on_click=rx.redirect("/check_candidate_check")),
             width="360px",
         ),
