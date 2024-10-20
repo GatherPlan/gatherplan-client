@@ -1119,6 +1119,30 @@ class EmailAuth(rx.State):
 #             return rx.toast.error(response.json()["message"], position="top-right")
 
 
+# import asyncio
+#
+#
+# class CallHandlerState(rx.State):
+#     count: int = 0
+#     progress: int = 0
+#
+#     async def run(self):
+#         # Reset the count.
+#         self.set_progress(0)
+#         yield
+#
+#         # Count to 10 while showing progress.
+#         for i in range(10):
+#             # Wait and increment.
+#             await asyncio.sleep(0.5)
+#             self.count += 1
+#
+#             # Update the progress.
+#             self.set_progress(i + 1)
+#
+#             # Yield to send the update.
+#             yield
+
 HEADER = {
     "accept": "*/*",
     "Content-Type": "application/json",

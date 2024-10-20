@@ -35,83 +35,87 @@ def check_meeting_detail() -> rx.Component:
                     rx.center(
                         rx.cond(
                             State.is_host,
-                            rx.drawer.root(
-                                rx.drawer.trigger(
-                                    rx.button(
-                                        rx.icon(
-                                            tag="settings",
-                                            size=24,
-                                            stroke_width=1,
-                                        ),
-                                        color=AppColor.BLACK,
-                                        background_color=AppColor.WHITE,
-                                        padding="0px",
-                                    ),
-                                ),
-                                rx.drawer.overlay(z_index="5"),
-                                rx.drawer.portal(
-                                    rx.drawer.content(
-                                        rx.center(
-                                            rx.vstack(
-                                                rx.alert_dialog.root(
-                                                    rx.alert_dialog.trigger(
-                                                        rx.button(
-                                                            "약속 삭제하기",
-                                                            width="300px",
-                                                            background_color="#DF0000",
-                                                        ),
-                                                    ),
-                                                    rx.alert_dialog.content(
-                                                        rx.alert_dialog.title(
-                                                            "정말로 약속을 삭제하시겠습니까?"
-                                                        ),
-                                                        rx.alert_dialog.description(
-                                                            "약속을 삭제하면, 약속 생성자를 포함한 모든 참여자의 약속이 삭제됩니다.",
-                                                        ),
-                                                        rx.flex(
-                                                            rx.alert_dialog.cancel(
-                                                                rx.button(
-                                                                    "아니요, 삭제하지 않을게요!"
-                                                                ),
-                                                            ),
-                                                            rx.alert_dialog.action(
-                                                                rx.button(
-                                                                    "네, 삭제할게요!",
-                                                                    on_click=State.check_meeting_detail_delete_appointment,
-                                                                ),
-                                                            ),
-                                                            spacing="3",
-                                                        ),
-                                                    ),
-                                                ),
-                                                rx.button(
-                                                    "약속 확정하기",
-                                                    width="300px",
-                                                    background_color="#00A41A",
-                                                    on_click=rx.redirect(
-                                                        "/check_candidate"
-                                                    ),
-                                                ),
-                                                rx.button(
-                                                    "약속 변경하기",
-                                                    width="300px",
-                                                    on_click=State.change_join_meeting,
-                                                ),
-                                                spacing="3",
+                            rx.cond(
+                                State.meeting_state == "CONFIRMED",
+                                rx.box(),
+                                rx.drawer.root(
+                                    rx.drawer.trigger(
+                                        rx.button(
+                                            rx.icon(
+                                                tag="settings",
+                                                size=24,
+                                                stroke_width=1,
                                             ),
-                                            width="100%",
+                                            color=AppColor.BLACK,
+                                            background_color=AppColor.WHITE,
+                                            padding="0px",
                                         ),
-                                        align="center",
-                                        top="auto",
-                                        right="auto",
-                                        height="30%",
-                                        width="100%",
-                                        padding="2em",
-                                        background_color="#FFF",
-                                        border_radius="1em 1em 0 0",
-                                    )
+                                    ),
+                                    rx.drawer.overlay(z_index="5"),
+                                    rx.drawer.portal(
+                                        rx.drawer.content(
+                                            rx.center(
+                                                rx.vstack(
+                                                    rx.alert_dialog.root(
+                                                        rx.alert_dialog.trigger(
+                                                            rx.button(
+                                                                "약속 삭제하기",
+                                                                width="300px",
+                                                                background_color="#DF0000",
+                                                            ),
+                                                        ),
+                                                        rx.alert_dialog.content(
+                                                            rx.alert_dialog.title(
+                                                                "정말로 약속을 삭제하시겠습니까?"
+                                                            ),
+                                                            rx.alert_dialog.description(
+                                                                "약속을 삭제하면, 약속 생성자를 포함한 모든 참여자의 약속이 삭제됩니다.",
+                                                            ),
+                                                            rx.flex(
+                                                                rx.alert_dialog.cancel(
+                                                                    rx.button(
+                                                                        "아니요, 삭제하지 않을게요!"
+                                                                    ),
+                                                                ),
+                                                                rx.alert_dialog.action(
+                                                                    rx.button(
+                                                                        "네, 삭제할게요!",
+                                                                        on_click=State.check_meeting_detail_delete_appointment,
+                                                                    ),
+                                                                ),
+                                                                spacing="3",
+                                                            ),
+                                                        ),
+                                                    ),
+                                                    rx.button(
+                                                        "약속 확정하기",
+                                                        width="300px",
+                                                        background_color="#00A41A",
+                                                        on_click=rx.redirect(
+                                                            "/check_candidate"
+                                                        ),
+                                                    ),
+                                                    rx.button(
+                                                        "약속 변경하기",
+                                                        width="300px",
+                                                        on_click=State.change_join_meeting,
+                                                    ),
+                                                    spacing="3",
+                                                ),
+                                                width="100%",
+                                            ),
+                                            align="center",
+                                            top="auto",
+                                            right="auto",
+                                            height="30%",
+                                            width="100%",
+                                            padding="2em",
+                                            background_color="#FFF",
+                                            border_radius="1em 1em 0 0",
+                                        )
+                                    ),
+                                    direction="bottom",
                                 ),
-                                direction="bottom",
                             ),
                             rx.box(),
                         ),
@@ -220,24 +224,35 @@ def check_meeting_detail() -> rx.Component:
                     value="tab2",
                 ),
                 rx.cond(
-                    State.is_participated,
-                    rx.vstack(
-                        main_button(
-                            text="참여 변경하기",
-                            on_click=rx.redirect(
-                                f"/enter_meeting_code/{State.check_detail_meeting_code}"
+                    State.meeting_state == "CONFIRMED",
+                    rx.button(
+                        "확정된 약속입니다.",
+                        width="360px",
+                        height="35px",
+                        disabled=True,
+                        color=AppColor.WHITE,
+                        background_color="#00A41A",
+                    ),
+                    rx.cond(
+                        State.is_participated,
+                        rx.vstack(
+                            main_button(
+                                text="참여 변경하기",
+                                on_click=rx.redirect(
+                                    f"/enter_meeting_code/{State.check_detail_meeting_code}"
+                                ),
+                            ),
+                            main_button(
+                                text="참여 취소하기",
+                                sub_button=True,
+                                on_click=State.change_meeting_delete_join,
                             ),
                         ),
                         main_button(
-                            text="참여 취소하기",
-                            sub_button=True,
-                            on_click=State.change_meeting_delete_join,
-                        ),
-                    ),
-                    main_button(
-                        text="참여하기",
-                        on_click=rx.redirect(
-                            f"/enter_meeting_code/{State.check_detail_meeting_code}"
+                            text="참여하기",
+                            on_click=rx.redirect(
+                                f"/enter_meeting_code/{State.check_detail_meeting_code}"
+                            ),
                         ),
                     ),
                 ),
