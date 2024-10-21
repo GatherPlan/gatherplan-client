@@ -105,7 +105,6 @@ class State(rx.State):
     check_detail_meeting_code: str = ""
 
     meeting_date: List[str] = []
-    post_data: Dict = {}
     display_select_date: List = []
 
     first_click_time: str = ""
@@ -478,11 +477,6 @@ class State(rx.State):
 
         return
 
-    def init_calendar_click_button(self):
-        self.first_click_time = ""
-        self.time_data_to_button_click = copy.copy(DEFAULT_TIME_SETTING)
-        yield
-
     def join_meeting_handle_submit(self, form_data: dict):
         enter_code = form_data["enter_code"]
         response = requests.get(
@@ -759,11 +753,45 @@ class State(rx.State):
                 if time_key in self.time_data_to_button_click:
                     self.time_data_to_button_click[time_key] = 2
                 start += datetime.timedelta(hours=1)
+            self.first_click_time = ""
 
     def click_button(self, click_data: List):
         self.click_date = click_data
 
+        self.first_click_time = ""
+        self.time_data_to_button_click = copy.copy(DEFAULT_TIME_SETTING)
+
+        for dispplay_select_date_time in self.display_select_date:
+            split_data = dispplay_select_date_time.split(" ")
+            if click_data == split_data[0]:
+                result = [item.strip(",") for item in split_data[1:] if item]
+
+                for time_range in result:
+                    start_time, end_time = time_range.split("-")
+
+                    temp_time = start_time
+
+                    while temp_time <= end_time:
+                        self.time_data_to_button_click[temp_time] = 2
+                        temp_time = (
+                            datetime.datetime.strptime(temp_time, "%H:%M")
+                            + datetime.timedelta(hours=1)
+                        ).strftime("%H:%M")
+
+                        if temp_time == "00:00":
+                            self.time_data_to_button_click["23:59"] = 2
+                            break
+
+        yield
+
     def add_meeting_schedule(self, date):
+        for temp_display_select_date in self.display_select_date:
+            if date in temp_display_select_date.split(" ")[0]:
+                self.display_select_date.pop(
+                    self.display_select_date.index(temp_display_select_date)
+                )
+                self.display_data[date] = False
+
         intervals = []
         start_time = None
         prev_key = None
@@ -778,30 +806,38 @@ class State(rx.State):
                     intervals.append({"start": start_time, "end": prev_key})
                     start_time = None
 
-        # Handle the case where the last interval ends at the last key
         if start_time is not None:
             intervals.append({"start": start_time, "end": prev_key})
 
-        self.post_data[date] = intervals
         self.display_data[date] = True
 
-        split_date_string = date.split("-")
         display_select_date_temp = f"{date} "
 
+        if len(intervals) == 0:
+            self.display_data[date] = False
+            return
+
         for interval in intervals:
-
-            select_date_temp = {
-                "selectedDate": f"{split_date_string[0]}-{int(split_date_string[1]):02}-{int(split_date_string[2]):02}",
-                "selectedStartTime": interval["start"],
-                "selectedEndTime": interval["end"],
-            }
             display_select_date_temp += f" {interval['start']}-{interval['end']},"
-            self.select_data.append(select_date_temp)
 
-            self.display_select_date.append(display_select_date_temp[:-1])
+        self.display_select_date.append(display_select_date_temp[:-1])
 
     def join_meeting_check_handle_result_submit(self):
         header = HEADER
+        for display_select_date_time in self.display_select_date:
+            split_data = display_select_date_time.split(" ")
+            date = split_data[0]
+            result = [item.strip(",") for item in split_data[1:] if item]
+
+            for time_range in result:
+                start_time, end_time = time_range.split("-")
+                select_date_temp = {
+                    "selectedDate": date,
+                    "selectedStartTime": start_time,
+                    "selectedEndTime": end_time,
+                }
+                self.select_data.append(select_date_temp)
+
         data = {
             "appointmentCode": self.meeting_code,
             "selectedDateTimeList": self.get_value(self.select_data),

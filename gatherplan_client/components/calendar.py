@@ -94,7 +94,7 @@ def calendar_button(
             ),
         ),
         direction="bottom",
-        on_open_change=State.init_calendar_click_button(),
+        # on_open_change=State.init_calendar_click_button(),
     )
 
 
