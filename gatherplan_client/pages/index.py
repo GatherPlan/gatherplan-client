@@ -12,7 +12,7 @@ from gatherplan_client.templates.template import template
     header_url="",
     page_text="",
     need_login_type="no_login",
-    on_load=State.index_page_load,
+    on_load=State.get_banner_list,
 )
 def index() -> rx.Component:
     return rx.vstack(
@@ -52,44 +52,48 @@ def index() -> rx.Component:
             height="50%",
             align="center",
         ),
-        rx.vstack(
-            rx.box(
-                rx.text(
-                    "이런 모임은 어떠세요?",
-                    font_size=TextSize.TINY_SMALL,
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    font_weight="700",
-                    color=AppColor.BLACK,
-                    padding_left="10px",
-                    padding_bottom="5px",
+        rx.cond(
+            State.is_hydrated,
+            rx.vstack(
+                rx.box(
+                    rx.text(
+                        "이런 모임은 어떠세요?",
+                        font_size=TextSize.TINY_SMALL,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                        padding_left="10px",
+                        padding_bottom="5px",
+                    ),
+                    width="360px",
                 ),
-                width="360px",
+                rx.image(
+                    src=State.banner_img,
+                    width="320px",
+                    height="180px",
+                    border_radius="15px 50px",
+                    border="5px solid #555",
+                ),
+                rx.text(
+                    State.banner_name,
+                    font_size=TextSize.TINY,
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    color=AppColor.GRAY_TEXT,
+                    font_weight="700",
+                ),
+                rx.text(
+                    State.banner_location,
+                    font_size=TextSize.VERY_TINY,
+                    font_family=AppFontFamily.DEFAULT_FONT,
+                    color=AppColor.GRAY_TEXT,
+                    font_weight="700",
+                ),
+                width="100%",
+                height="40vh",
+                align="center",
+                spacing="0",
             ),
-            rx.image(
-                src="http://tong.visitkorea.or.kr/cms/resource/95/3373595_image2_1.jpg",
-                width="320px",
-                height="180px",
-                border_radius="15px 50px",
-                border="5px solid #555",
-            ),
-            rx.text(
-                "도시라이프스타일 플리마켓 축제",
-                font_size=TextSize.TINY,
-                font_family=AppFontFamily.DEFAULT_FONT,
-                color=AppColor.GRAY_TEXT,
-                font_weight="700",
-            ),
-            rx.text(
-                "서울특별시 동대문구 전농로4길 1 (답십리동)",
-                font_size=TextSize.VERY_TINY,
-                font_family=AppFontFamily.DEFAULT_FONT,
-                color=AppColor.GRAY_TEXT,
-                font_weight="700",
-            ),
-            width="100%",
-            height="35%",
-            align="center",
-            spacing="0",
+            rx.spacer(height="40vh"),
         ),
         width="100%",
         height="100%",

@@ -1,3 +1,5 @@
+import asyncio
+
 import base64
 import calendar
 import copy
@@ -5,6 +7,7 @@ import datetime
 import json
 import os
 from typing import List, Dict, Any
+import time
 
 import reflex as rx
 import requests
@@ -39,17 +42,23 @@ ADDITIONAL_HOLIDAYS = {
 }
 
 
+HEADER = {
+    "accept": "*/*",
+    "Content-Type": "application/json",
+}
+BACKEND_URL = os.getenv(
+    "BACKEND_URL",
+    "https://test-backed.gatherplan.site",
+)
+
+
 def additional_holiday(year: int) -> List[datetime.date]:
     return ADDITIONAL_HOLIDAYS.get(year, [])
 
 
-def meeting_state_change(state: str):
-    if state == "CONFIRMED":
-        return "확정"
-    elif state == "UNCONFIRMED":
-        return "미확정"
-    else:
-        return "기타"
+def meeting_state_change(state: str) -> str:
+    상태_매핑 = {"CONFIRMED": "확정", "UNCONFIRMED": "미확정"}
+    return 상태_매핑.get(state, "기타")
 
 
 class State(rx.State):
@@ -122,6 +131,12 @@ class State(rx.State):
     confirm_date: str = ""
     confirm_start_time: str = ""
     confirm_end_time: str = ""
+
+    banner_list: List[Dict[str, str]] = []
+    banner_index: int = 0
+    banner_img: str = ""
+    banner_name: str = ""
+    banner_location: str = ""
 
     def reset_location_info(self):
         self.meeting_location = ""
@@ -1118,8 +1133,31 @@ class State(rx.State):
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
 
-    def index_page_load(self):
+    async def get_banner_list(self):
         self.meeting_code = ""
+
+        response = requests.get(
+            f"{BACKEND_URL}/api/v1/region/festivals", headers=HEADER
+        )
+        if response.status_code == 200:
+            self.banner_list = response.json()["data"]
+
+            # TODO: 현재 구조로는 너무 비효율적일 것 같아서 다른 코드로 대체
+            # while True:
+            #     self.banner_img = self.banner_list[self.banner_index]["imagePath"]
+            #     self.banner_name = self.banner_list[self.banner_index]["title"]
+            #     self.banner_location = self.banner_list[self.banner_index][
+            #         "addressName"
+            #     ]
+            #     yield
+            #     self.banner_index = (self.banner_index + 1) % len(self.banner_list)
+            #     await asyncio.sleep(8)
+
+            random_index = int(time.time()) % len(self.banner_list)
+            self.banner_img = self.banner_list[random_index]["imagePath"]
+            self.banner_name = self.banner_list[random_index]["title"]
+            self.banner_location = self.banner_list[random_index]["addressName"]
+            yield
 
 
 class EmailAuth(rx.State):
@@ -1139,51 +1177,3 @@ class EmailAuth(rx.State):
         else:
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
-
-
-# class IndexBanner(rx.State):
-#     banner_list: List[Dict[str, str]] = []
-#
-#     def get_banner_list(self):
-#         response = requests.get(
-#             f"{BACKEND_URL}/api/v1/region/festivals", headers=HEADER
-#         )
-#         if response.status_code == 200:
-#             self.banner_list = response.json()["data"]
-#         else:
-#             print(response.json())
-#             return rx.toast.error(response.json()["message"], position="top-right")
-
-
-# import asyncio
-#
-#
-# class CallHandlerState(rx.State):
-#     count: int = 0
-#     progress: int = 0
-#
-#     async def run(self):
-#         # Reset the count.
-#         self.set_progress(0)
-#         yield
-#
-#         # Count to 10 while showing progress.
-#         for i in range(10):
-#             # Wait and increment.
-#             await asyncio.sleep(0.5)
-#             self.count += 1
-#
-#             # Update the progress.
-#             self.set_progress(i + 1)
-#
-#             # Yield to send the update.
-#             yield
-
-HEADER = {
-    "accept": "*/*",
-    "Content-Type": "application/json",
-}
-BACKEND_URL = os.getenv(
-    "BACKEND_URL",
-    "https://test-backed.gatherplan.site",
-)
