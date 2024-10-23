@@ -6,8 +6,6 @@ from gatherplan_client.components.schema import AppColor, TextSize, AppFontFamil
 from gatherplan_client.components.text_box import main_sub_text_box
 from gatherplan_client.templates.template import template
 
-# TEMP
-
 
 @template(
     route="/",
