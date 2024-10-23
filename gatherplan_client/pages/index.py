@@ -7,9 +7,6 @@ from gatherplan_client.components.text_box import main_sub_text_box
 from gatherplan_client.templates.template import template
 
 
-# Test Commit
-
-
 @template(
     route="/",
     header_url="",
