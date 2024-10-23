@@ -7,6 +7,9 @@ from gatherplan_client.components.text_box import main_sub_text_box
 from gatherplan_client.templates.template import template
 
 
+# Test Commit
+
+
 @template(
     route="/",
     header_url="",
@@ -98,6 +101,3 @@ def index() -> rx.Component:
         width="100%",
         height="100%",
     )
-
-
-# Test Commit
