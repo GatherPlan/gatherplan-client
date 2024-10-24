@@ -1,5 +1,3 @@
-import asyncio
-
 import base64
 import calendar
 import copy
@@ -61,6 +59,7 @@ def meeting_state_change(state: str) -> str:
     return 상태_매핑.get(state, "기타")
 
 
+# pylint: disable=inherit-non-class
 class State(rx.State):
     login_token: str = ""
     not_member_login: bool = False
@@ -139,96 +138,101 @@ class State(rx.State):
     banner_location: str = ""
 
     def reset_location_info(self):
-        self.meeting_location = ""
-        self.meeting_location_detail = ""
-        self.location_type = ""
-        self.place_url = ""
+        """위치 정보를 초기화합니다."""
+        location_attributes = [
+            "meeting_location",
+            "meeting_location_detail",
+            "location_type",
+            "place_url",
+        ]
+        for attr in location_attributes:
+            setattr(self, attr, "")
 
     def change_login_not_member(self):
         self.not_member_login_button = not self.not_member_login_button
 
-    def check_meeting_date_click_button(self, click_data: List):
+    def check_meeting_date_click_button(self, click_data: str):
         self.check_meeting_detail_display_clicked_date_data = []
-        click_data_split = click_data.split("-")
-        click_data_adjust = f"{click_data_split[0]}-{int(click_data_split[1]):02}-{int(click_data_split[2]):02}"
+        year, month, day = click_data.split("-")
+        click_data_adjust = f"{year}-{int(month):02}-{int(day):02}"
 
         self.check_meeting_detail_display_clicked_date = click_data_adjust
-        if click_data_adjust in self.check_meeting_participants_data_per_date.keys():
-            temp_data = self.check_meeting_participants_data_per_date[click_data_adjust]
-            for data in temp_data:
-                for key, value in data.items():
-                    start_time, end_time = value.split("~")
-                    start_time = start_time[:5]
-                    end_time = end_time[:5]
-                    result = f"{key}: {start_time}~{end_time}"
-                    self.check_meeting_detail_display_clicked_date_data.append(result)
+        participants_data = self.check_meeting_participants_data_per_date.get(
+            click_data_adjust, []
+        )
+
+        if participants_data:
+            for data in participants_data:
+                for name, time_range in data.items():
+                    start_time, end_time = map(lambda x: x[:5], time_range.split("~"))
+                    self.check_meeting_detail_display_clicked_date_data.append(
+                        f"{name}: {start_time}~{end_time}"
+                    )
         else:
             self.check_meeting_detail_display_clicked_date_data = ["참여자가 없습니다."]
 
     def setting_month_calendar_and_get_check_meeting(self):
+        self.reset_check_meeting_data()
+        self.setting_month_calendar()
+        self.update_display_data()
+        self.fetch_participants_data()
+
+    def reset_check_meeting_data(self):
         self.check_meeting_participants_data = []
         self.check_meeting_participants_data_per_date = {}
         self.check_meeting_detail_display_clicked_date = ""
         self.check_meeting_detail_display_clicked_date_data = []
-        self.setting_month_calendar()
 
+    def update_display_data(self):
         for date in self.candidate_list:
-            temp_y, temp_m, temp_d = date.split("-")
-
-            full_date = f"{temp_y}-{int(temp_m)}-{int(temp_d)}"
+            year, month, day = date.split("-")
+            full_date = f"{year}-{int(month)}-{int(day)}"
             self.display_data[full_date] = True
 
+    def fetch_participants_data(self):
+        url = self.get_api_url()
+        headers, params = self.get_request_params()
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+        if response.status_code == 200:
+            self.process_participants_data(response.json()["data"])
+
+    def get_api_url(self):
+        return (
+            f"{BACKEND_URL}/api/v1/temporary/appointments/participants"
+            if self.not_member_login
+            else f"{BACKEND_URL}/api/v1/appointments/participants"
+        )
+
+    def get_request_params(self):
+        headers = HEADER.copy()
+        params = {"appointmentCode": self.check_detail_meeting_code}
+
         if self.not_member_login:
-            data = {
-                "appointmentCode": self.check_detail_meeting_code,
-                "tempUserInfo.nickname": self.nick_name,
-                "tempUserInfo.password": self.password,
-            }
-            response = requests.get(
-                f"{BACKEND_URL}/api/v1/temporary/appointments/participants",
-                headers=HEADER,
-                params=data,
+            params.update(
+                {
+                    "tempUserInfo.nickname": self.nick_name,
+                    "tempUserInfo.password": self.password,
+                }
             )
         else:
-            data = {"appointmentCode": self.check_detail_meeting_code}
-            header = HEADER
-            header["Authorization"] = self.login_token
-            response = requests.get(
-                f"{BACKEND_URL}/api/v1/appointments/participants",
-                headers=header,
-                params=data,
-            )
+            headers["Authorization"] = self.login_token
 
-        if response.status_code == 200:
-            self.check_meeting_participants_data = response.json()["data"]
+        return headers, params
 
-            for participants in self.check_meeting_participants_data:
+    def process_participants_data(self, data):
+        self.check_meeting_participants_data = data
 
-                for selected_date in participants["participationInfo"][
-                    "selectedDateTimeList"
-                ]:
-                    if (
-                        selected_date["selectedDate"]
-                        in self.check_meeting_participants_data_per_date.keys()
-                    ):
-                        temp = {
-                            participants["participationInfo"][
-                                "nickname"
-                            ]: f"{selected_date['selectedStartTime']}~{selected_date['selectedEndTime']}"
-                        }
-                        self.check_meeting_participants_data_per_date[
-                            selected_date["selectedDate"]
-                        ].append(temp)
-                    else:
-                        self.check_meeting_participants_data_per_date[
-                            selected_date["selectedDate"]
-                        ] = [
-                            {
-                                participants["participationInfo"][
-                                    "nickname"
-                                ]: f"{selected_date['selectedStartTime']}~{selected_date['selectedEndTime']}"
-                            }
-                        ]
+        for participant in data:
+            nickname = participant["participationInfo"]["nickname"]
+            for selected_date in participant["participationInfo"][
+                "selectedDateTimeList"
+            ]:
+                date = selected_date["selectedDate"]
+                time_range = f"{selected_date['selectedStartTime']}~{selected_date['selectedEndTime']}"
+
+                self.check_meeting_participants_data_per_date.setdefault(
+                    date, []
+                ).append({nickname: time_range})
 
     def setting_month_calendar(self, init_setting_time: bool = True):
         from pytimekr import pytimekr
@@ -344,14 +348,16 @@ class State(rx.State):
                     f"{BACKEND_URL}/api/v1/temporary/appointments",
                     headers=header,
                     json=data,
+                    timeout=10,
                 )
-                return rx.redirect(f"/check_meeting_detail")
+                return rx.redirect("/check_meeting_detail")
 
             else:
                 response = requests.post(
                     f"{BACKEND_URL}/api/v1/temporary/appointments",
                     headers=header,
                     json=data,
+                    timeout=10,
                 )
         else:
             header["Authorization"] = self.login_token
@@ -362,11 +368,15 @@ class State(rx.State):
                     f"{BACKEND_URL}/api/v1/appointments",
                     headers=header,
                     json=data,
+                    timeout=10,
                 )
-                return rx.redirect(f"/check_meeting_detail")
+                return rx.redirect("/check_meeting_detail")
             else:
                 response = requests.post(
-                    f"{BACKEND_URL}/api/v1/appointments", headers=header, json=data
+                    f"{BACKEND_URL}/api/v1/appointments",
+                    headers=header,
+                    json=data,
+                    timeout=10,
                 )
 
         if response.status_code == 200:
@@ -428,7 +438,10 @@ class State(rx.State):
         yield
 
         response = requests.get(
-            f"{BACKEND_URL}/api/v1/region/district", headers=HEADER, params=params
+            f"{BACKEND_URL}/api/v1/region/district",
+            headers=HEADER,
+            params=params,
+            timeout=10,
         )
         self.search_location = []
 
@@ -446,10 +459,13 @@ class State(rx.State):
                     "location_type": "INFO",
                 }
             ]
-            yield rx.toast.info("행정구역 검색 결과가 없습니다.", position="top-right")
+            yield rx.toast.info("행정구역 검색 결���가 없습니다.", position="top-right")
 
         response = requests.get(
-            f"{BACKEND_URL}/api/v1/region/place", headers=HEADER, params=params
+            f"{BACKEND_URL}/api/v1/region/place",
+            headers=HEADER,
+            params=params,
+            timeout=10,
         )
 
         self.search_location_place = []
@@ -492,15 +508,20 @@ class State(rx.State):
 
         return
 
-    def join_meeting_handle_submit(self, form_data: dict):
+    def enter_meeting_code_handle_submit(self, form_data: dict):
         enter_code = form_data["enter_code"]
         response = requests.get(
             f"{BACKEND_URL}/api/v1/appointments/preview",
             headers={"accept": "*/*"},
             params={"appointmentCode": enter_code},
+            timeout=10,
         )
         if response.status_code == 200:
+
             data = response.json()
+            if data["appointmentState"] == "CONFIRMED":
+                return rx.redirect("/join_meeting_confirmed")
+
             self.meeting_name = data["appointmentName"]
             self.meeting_location = (
                 data["address"]["fullAddress"] if data["address"] else ""
@@ -517,6 +538,9 @@ class State(rx.State):
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
 
+    def join_meeting_handle_submit(self):
+        return rx.redirect("/join_meeting_date")
+
     def login_handle_submit(self, form_data: dict):
         """Handle the form submit."""
 
@@ -530,7 +554,7 @@ class State(rx.State):
             )
 
         response = requests.post(
-            f"{BACKEND_URL}/api/v1/users/login", headers=HEADER, json=data
+            f"{BACKEND_URL}/api/v1/users/login", headers=HEADER, json=data, timeout=10
         )
         if response.status_code == 200:
             token = response.headers["Authorization"]
@@ -569,7 +593,7 @@ class State(rx.State):
             "password": form_data["password"],
         }
         response = requests.post(
-            f"{BACKEND_URL}/api/v1/users/join", headers=HEADER, json=data
+            f"{BACKEND_URL}/api/v1/users/join", headers=HEADER, json=data, timeout=10
         )
 
         if response.status_code == 200:
@@ -627,6 +651,7 @@ class State(rx.State):
             f"{BACKEND_URL}/api/v1/temporary/appointments",
             headers=HEADER,
             params=params,
+            timeout=10,
         )
 
         if response.status_code == 200:
@@ -669,6 +694,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/appointments/list:search",
                 headers=header,
                 params=data,
+                timeout=10,
             )
             if response.status_code == 200:
                 self.check_meeting_list = []
@@ -690,7 +716,7 @@ class State(rx.State):
                     self.login_token = ""
                 else:
                     print(response.json())
-                    return rx.window_alert(f"error")
+                    return rx.window_alert("error")
 
     def check_get_appointments_search(self, data):
         self.check_get_appointments_list(keyword=data["keyword"])
@@ -704,6 +730,7 @@ class State(rx.State):
             f"{BACKEND_URL}/api/v1/appointments",
             headers=header,
             params={"appointmentCode": self.check_detail_meeting_code},
+            timeout=10,
         )
 
         if response.status_code == 200:
@@ -733,42 +760,51 @@ class State(rx.State):
 
     def click_time_button(self, click_time: str):
         """
-        0: no click
-        1: first click
-        2: range
+        시간 버튼 클릭 처리
+        0: 클릭 없음
+        1: 첫 번째 클릭
+        2: 범위 선택
         """
-
         if self.time_data_to_button_click[click_time] != 0:
-            self.time_data_to_button_click = copy.copy(DEFAULT_TIME_SETTING)
-            self.time_data_to_button_click[click_time] = 1
-            self.first_click_time = click_time
+            self._reset_time_selection(click_time)
             return
 
-        # 첫 클릭이 없을 땐
-        if self.first_click_time == "":
-            self.time_data_to_button_click[click_time] = 1
-            self.first_click_time = click_time
+        if not self.first_click_time:
+            self._set_first_click(click_time)
+        else:
+            self._process_second_click(click_time)
 
-        # 첫 클릭은 있고 두 번째 클릭이 없을 땐
-        elif self.first_click_time != "":
+    def _reset_time_selection(self, click_time: str):
+        self.time_data_to_button_click = copy.copy(DEFAULT_TIME_SETTING)
+        self.time_data_to_button_click[click_time] = 1
+        self.first_click_time = click_time
 
-            self.time_data_to_button_click[click_time] = 2
+    def _set_first_click(self, click_time: str):
+        self.time_data_to_button_click[click_time] = 1
+        self.first_click_time = click_time
 
-            start = datetime.datetime.strptime(self.first_click_time, "%H:%M")
-            end = datetime.datetime.strptime(click_time, "%H:%M")
+    def _process_second_click(self, click_time: str):
+        start = datetime.datetime.strptime(self.first_click_time, "%H:%M")
+        end = datetime.datetime.strptime(click_time, "%H:%M")
 
-            if end <= start:
-                self.time_data_to_button_click[click_time] = 0
-                self.time_data_to_button_click[self.first_click_time] = 0
-                self.first_click_time = ""
-                return
+        if end <= start:
+            self._clear_selection()
+            return
 
-            while start <= end:
-                time_key = start.strftime("%H:%M")
-                if time_key in self.time_data_to_button_click:
-                    self.time_data_to_button_click[time_key] = 2
-                start += datetime.timedelta(hours=1)
-            self.first_click_time = ""
+        self._set_time_range(start, end)
+        self.first_click_time = ""
+
+    def _clear_selection(self):
+        self.time_data_to_button_click[self.first_click_time] = 0
+        self.first_click_time = ""
+
+    def _set_time_range(self, start: datetime, end: datetime):
+        current = start
+        while current <= end:
+            time_key = current.strftime("%H:%M")
+            if time_key in self.time_data_to_button_click:
+                self.time_data_to_button_click[time_key] = 2
+            current += datetime.timedelta(hours=1)
 
     def click_button(self, click_data: List):
         self.click_date = click_data
@@ -868,6 +904,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/temporary/appointments/join",
                 headers=header,
                 json=data,
+                timeout=10,
             )
 
             if "code" in response.json().keys() and response.json()["code"] == 4001:
@@ -875,6 +912,7 @@ class State(rx.State):
                     f"{BACKEND_URL}/api/v1/temporary/appointments/join",
                     headers=header,
                     json=data,
+                    timeout=10,
                 )
         else:
             header["Authorization"] = self.login_token
@@ -884,16 +922,18 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/appointments/join",
                 headers=header,
                 json=data,
+                timeout=10,
             )
             if "code" in response.json().keys() and response.json()["code"] == 4001:
                 response = requests.put(
                     f"{BACKEND_URL}/api/v1/appointments/join",
                     headers=header,
                     json=data,
+                    timeout=10,
                 )
 
         if response.status_code == 200:
-            return rx.redirect(f"/join_meeting_result")
+            return rx.redirect("/join_meeting_result")
         else:
             print(response.json())
             return rx.toast.error(response.json()["message"], position="top-right")
@@ -907,13 +947,14 @@ class State(rx.State):
             f"{BACKEND_URL}/api/v1/appointments",
             headers=header,
             params={"appointmentCode": self.check_detail_meeting_code},
+            timeout=10,
         )
 
         if response.status_code == 200:
             return rx.redirect("/check_meeting")
         else:
             print(response.json())
-            return rx.window_alert(f"error")
+            return rx.window_alert("error")
 
     def get_appointments_candidates(self):
         self.meeting_confirm_display_data = []
@@ -933,6 +974,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/temporary/appointments/candidates",
                 headers=header,
                 params=data,
+                timeout=10,
             )
         else:
             header["Authorization"] = self.login_token
@@ -940,6 +982,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/appointments/candidates",
                 headers=header,
                 params=data,
+                timeout=10,
             )
 
         if response.status_code == 200:
@@ -1004,6 +1047,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/temporary/appointments/candidates:confirm",
                 headers=header,
                 data=json.dumps(data),
+                timeout=10,
             )
         else:
             header["Authorization"] = self.login_token
@@ -1011,6 +1055,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/appointments/candidates:confirm",
                 headers=header,
                 data=json.dumps(data),
+                timeout=10,
             )
 
         if response.status_code == 200:
@@ -1024,10 +1069,10 @@ class State(rx.State):
         decoded_payload = base64.urlsafe_b64decode(payload + "==").decode("utf-8")
         data = json.loads(decoded_payload)
 
-        id = data["id"]
+        user_id = data["id"]
         nickname = data["nickname"]
         email = data["email"]
-        return id, nickname, email
+        return user_id, nickname, email
 
     def change_join_meeting(self):
         header = HEADER
@@ -1040,6 +1085,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/temporary/appointments/participants",
                 headers=header,
                 params=data,
+                timeout=10,
             )
         else:
             header["Authorization"] = self.login_token
@@ -1047,10 +1093,11 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/appointments/participants",
                 headers=header,
                 params=data,
+                timeout=10,
             )
 
         if response.status_code == 200:
-            # TODO: default value add
+            # TODO(ppippi-dev): default value add
             self.setting_month_calendar()
             self.meeting_code = self.check_detail_meeting_code
             return rx.redirect("/make_meeting")
@@ -1070,6 +1117,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/temporary/appointments/join",
                 headers=header,
                 params=data,
+                timeout=10,
             )
         else:
             header["Authorization"] = self.login_token
@@ -1077,6 +1125,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/appointments/join",
                 headers=header,
                 params=data,
+                timeout=10,
             )
 
         if response.status_code == 200:
@@ -1100,6 +1149,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/temporary/appointments",
                 headers=header,
                 params=data,
+                timeout=10,
             )
         else:
             header["Authorization"] = self.login_token
@@ -1107,6 +1157,7 @@ class State(rx.State):
                 f"{BACKEND_URL}/api/v1/appointments",
                 headers=header,
                 params=data,
+                timeout=10,
             )
 
         if response.status_code == 200:
@@ -1137,21 +1188,13 @@ class State(rx.State):
         self.meeting_code = ""
 
         response = requests.get(
-            f"{BACKEND_URL}/api/v1/region/festivals", headers=HEADER
+            f"{BACKEND_URL}/api/v1/region/festivals", headers=HEADER, timeout=10
         )
         if response.status_code == 200:
             self.banner_list = response.json()["data"]
 
-            # TODO: 현재 구조로는 너무 비효율적일 것 같아서 다른 코드로 대체
-            # while True:
-            #     self.banner_img = self.banner_list[self.banner_index]["imagePath"]
-            #     self.banner_name = self.banner_list[self.banner_index]["title"]
-            #     self.banner_location = self.banner_list[self.banner_index][
-            #         "addressName"
-            #     ]
-            #     yield
-            #     self.banner_index = (self.banner_index + 1) % len(self.banner_list)
-            #     await asyncio.sleep(8)
+            # TODO(ppippi-dev): 현재 구조의 비효율성 개선 필요
+            # 배너 순환 로직을 최적화하고 비동기 처리 방식 재검토 요망
 
             random_index = int(time.time()) % len(self.banner_list)
             self.banner_img = self.banner_list[random_index]["imagePath"]
@@ -1160,6 +1203,7 @@ class State(rx.State):
             yield
 
 
+# pylint: disable=inherit-non-class
 class EmailAuth(rx.State):
     text: str = ""
 
@@ -1168,6 +1212,7 @@ class EmailAuth(rx.State):
             f"{BACKEND_URL}/api/v1/users/auth",
             headers=HEADER,
             json={"email": self.text},
+            timeout=10,
         )
         if response.status_code == 200:
             return rx.toast.info(

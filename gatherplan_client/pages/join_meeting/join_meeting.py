@@ -75,8 +75,8 @@ def join_meeting() -> rx.Component:
             main_sub_text_box(State.host_name, "모임장", change_position=True),
             main_button(
                 text="참여하기",
-                type="submit",
-                on_click=rx.redirect("/join_meeting_date"),
+                type="button",
+                on_click=State.join_meeting_handle_submit,
             ),
             width="360px",
             spacing="5",

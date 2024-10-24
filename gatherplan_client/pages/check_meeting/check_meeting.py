@@ -65,6 +65,7 @@ def list_view(items: Dict):
         border_radius="10px",
         height="50px",
         width="360px",
+        # pylint: disable=no-value-for-parameter
         on_click=State.check_appointments_detail(items["meeting_code"]),
         margin_bottom="10px",
     )

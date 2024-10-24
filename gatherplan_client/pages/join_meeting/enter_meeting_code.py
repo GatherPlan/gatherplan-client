@@ -32,7 +32,7 @@ def enter_meeting_code() -> rx.Component:
             ),
             width="100%",
         ),
-        on_submit=State.join_meeting_handle_submit,
+        on_submit=State.enter_meeting_code_handle_submit,
         align="center",
         height="100%",
         width="100%",

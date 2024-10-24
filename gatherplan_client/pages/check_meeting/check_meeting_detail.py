@@ -20,7 +20,7 @@ from gatherplan_client.templates.template import template
     header_url="/",
     page_text="약속 현황보기",
     need_login_type="check_meeting_login",
-    on_load=State.setting_month_calendar_and_get_check_meeting(),
+    on_load=State.setting_month_calendar_and_get_check_meeting,
 )
 def check_meeting_detail() -> rx.Component:
     return rx.vstack(
