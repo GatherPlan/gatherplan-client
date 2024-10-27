@@ -234,6 +234,139 @@ class State(rx.State):
                     date, []
                 ).append({nickname: time_range})
 
+    def join_meeting_date_on_state(self):
+        if self.not_member_login:
+            params = {
+                "appointmentCode": self.meeting_code,
+                "tempUserInfo.nickname": self.nick_name,
+                "tempUserInfo.password": self.password,
+            }
+            #  GET /api/v1/temporary/appointments/join:check
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/temporary/users/join:check",
+                headers=HEADER,
+                params=params,
+                timeout=10,
+            )
+
+            print("참여여부 체크", response.json())
+            if response.json()["isSuccess"]:
+                return rx.redirect("/join_meeting_already")
+
+            # 호스트 여부 체크
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/temporary/users/host:check",
+                headers=HEADER,
+                params=params,
+                timeout=10,
+            )
+            print("호스트 여부 체크", response.json())
+            if response.json()["isSuccess"]:
+                # host 인 경우
+                pass
+            else:
+                # 참여자 인 경우 닉네임 체크
+                response = requests.get(
+                    f"{BACKEND_URL}/api/v1/temporary/users/join:valid",
+                    headers=HEADER,
+                    params=params,
+                    timeout=10,
+                )
+                print("닉네임 체크", response.json())
+
+                if response.json()["isSuccess"]:
+                    pass
+                else:
+                    return rx.redirect("/join_meeting_change_nickname")
+
+        if self.login_token != "":
+            params = {"appointmentCode": self.meeting_code}
+            headers = HEADER
+            headers["Authorization"] = self.login_token
+
+            # 참여여부 체크
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/users/join:check",
+                headers=HEADER,
+                params=params,
+                timeout=10,
+            )
+            print("참여여부 체크", response.json())
+
+            if response.json()["isSuccess"]:
+                return rx.redirect("/join_meeting_already")
+
+            # 호스트 여부 체크
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/users/host:check",
+                headers=headers,
+                params=params,
+                timeout=10,
+            )
+            print("호스트 여부 체크", response.json())
+            if response.json()["isSuccess"]:
+                # host 인 경우
+                pass
+            else:
+                print("참여자 인 경우 닉네임 체크")
+
+                # 참여자 인 경우 닉네임 체크
+                response = requests.get(
+                    f"{BACKEND_URL}/api/v1/users/name:check",
+                    headers=headers,
+                    params=params,
+                    timeout=10,
+                )
+
+                if response.json()["isSuccess"]:
+                    pass
+                else:
+                    return rx.redirect("/join_meeting_change_nickname")
+
+        # GET /api/v1/region/weather
+
+        self.setting_month_calendar()
+
+    def join_meeting_change_nickname_handle_submit(self, form_data: dict):
+        if self.login_token != "":
+            params = {
+                "appointmentCode": self.meeting_code,
+                "nickname": form_data["nick_name"],
+            }
+            headers = HEADER
+            headers["Authorization"] = self.login_token
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/users/nickname:check",
+                headers=headers,
+                params=params,
+                timeout=10,
+            )
+            if response.status_code == 200 and response.json()["isSuccess"]:
+                self.nick_name = form_data["nick_name"]
+                return rx.redirect("/join_meeting_date")
+            else:
+                print(response.json())
+                return rx.toast.error(response.json()["message"], position="top-right")
+        else:
+            self.nick_name = form_data["nick_name"]
+            params = {
+                "appointmentCode": self.meeting_code,
+                "tempUserInfo.nickname": self.nick_name,
+                "tempUserInfo.password": self.password,
+            }
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/temporary/users/join:valid",
+                headers=HEADER,
+                params=params,
+                timeout=10,
+            )
+            if response.status_code == 200 and response.json()["isSuccess"]:
+                self.nick_name = form_data["nick_name"]
+                return rx.redirect("/join_meeting_date")
+            else:
+                print(response.json())
+                return rx.toast.error(response.json()["message"], position="top-right")
+
     def setting_month_calendar(self, init_setting_time: bool = True):
         from pytimekr import pytimekr
 
