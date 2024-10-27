@@ -8,6 +8,8 @@ from gatherplan_client.templates.template import template
 
 
 @template(
+    title="GatherPlan",
+    description="새로운 모임을 계획해보세요",
     route="/",
     header_url="",
     page_text="",
