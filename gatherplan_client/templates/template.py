@@ -35,6 +35,20 @@ def template(
 
         def templated_page():
             return rx.vstack(
+                rx.script(
+                    src="https://www.googletagmanager.com/gtag/js?id=G-Q9R0ZEJ8S6",
+                    strategy="afterInteractive",
+                ),
+                rx.script(
+                    """
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){window.dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-Q9R0ZEJ8S6');
+                    """,
+                    id="google-analytics",
+                    strategy="afterInteractive",
+                ),
                 rx.cond(
                     header_url == "",
                     rx.box(),
