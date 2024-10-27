@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from typing import Callable
 
 import reflex as rx
@@ -16,6 +17,9 @@ default_meta = [
         "content": "width=device-width, shrink-to-fit=no, initial-scale=1",
     },
 ]
+
+
+GA_ID = "G-Q9R0ZEJ8S6" if os.environ.get("ENV") == "prod" else ""
 
 
 def template(
@@ -35,6 +39,20 @@ def template(
 
         def templated_page():
             return rx.vstack(
+                rx.script(
+                    src=f"https://www.googletagmanager.com/gtag/js?id={GA_ID}",
+                    strategy="afterInteractive",
+                ),
+                rx.script(
+                    f"""
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){{window.dataLayer.push(arguments);}}
+                    gtag('js', new Date());
+                    gtag('config', '{GA_ID}');
+                    """,
+                    id="google-analytics",
+                    strategy="afterInteractive",
+                ),
                 rx.cond(
                     header_url == "",
                     rx.box(),
