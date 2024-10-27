@@ -249,7 +249,6 @@ class State(rx.State):
                 timeout=10,
             )
 
-            print("참여여부 체크", response.json())
             if response.json()["isSuccess"]:
                 return rx.redirect("/join_meeting_already")
 
@@ -260,7 +259,6 @@ class State(rx.State):
                 params=params,
                 timeout=10,
             )
-            print("호스트 여부 체크", response.json())
             if response.json()["isSuccess"]:
                 # host 인 경우
                 pass
@@ -272,8 +270,6 @@ class State(rx.State):
                     params=params,
                     timeout=10,
                 )
-                print("닉네임 체크", response.json())
-
                 if response.json()["isSuccess"]:
                     pass
                 else:
@@ -291,8 +287,6 @@ class State(rx.State):
                 params=params,
                 timeout=10,
             )
-            print("참여여부 체크", response.json())
-
             if response.json()["isSuccess"]:
                 return rx.redirect("/join_meeting_already")
 
@@ -303,13 +297,10 @@ class State(rx.State):
                 params=params,
                 timeout=10,
             )
-            print("호스트 여부 체크", response.json())
             if response.json()["isSuccess"]:
                 # host 인 경우
                 pass
             else:
-                print("참여자 인 경우 닉네임 체크")
-
                 # 참여자 인 경우 닉네임 체크
                 response = requests.get(
                     f"{BACKEND_URL}/api/v1/users/name:check",
