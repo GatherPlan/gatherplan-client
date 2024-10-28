@@ -63,7 +63,9 @@ def check_candidate_result() -> rx.Component:
                         sub_text_box("약속코드"),
                         rx.button(
                             rx.icon("copy"),
-                            on_click=rx.set_clipboard(State.check_detail_meeting_code),
+                            on_click=State.paste_meeting_code(
+                                State.check_detail_meeting_code
+                            ),
                             width="12px",
                             height="12px",
                             padding="0",
