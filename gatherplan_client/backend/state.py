@@ -812,7 +812,9 @@ class State(rx.State):
             header = HEADER
             header["Authorization"] = self.login_token
 
-            data = {"page": 1, "size": 15, "keyword": keyword}
+            data = {"page": 1, "size": 15}
+            if keyword:
+                data["keyword"] = keyword
 
             response = requests.get(
                 f"{BACKEND_URL}/api/v1/appointments/list:search",
@@ -835,15 +837,17 @@ class State(rx.State):
                             "meeting_notice": data["notice"],
                         }
                     )
+
+            elif response.status_code == 401:
+                self.login_token = ""
             else:
-                if response.status_code == 401:
-                    self.login_token = ""
-                else:
-                    print(response.json())
-                    return rx.window_alert("error")
+                print(response.json())
+                return response.json()["message"]
 
     def check_get_appointments_search(self, data):
-        self.check_get_appointments_list(keyword=data["keyword"])
+        error = self.check_get_appointments_list(keyword=data["keyword"])
+        if error:
+            return rx.toast.error(error, position="top-right")
 
     def check_appointments_detail(self, meeting_code: str):
         self.check_detail_meeting_code = meeting_code
