@@ -75,7 +75,7 @@ def list_view(items: Dict):
     route="/check_meeting",
     header_url="/",
     page_text="약속 정보",
-    need_login_type="check_meeting_login",
+    need_login_type="need_login_check_meeting_login_purpose",
     on_load=State.check_get_appointments_list,
 )
 def check_meeting() -> rx.Component:

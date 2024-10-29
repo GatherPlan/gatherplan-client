@@ -32,6 +32,17 @@ def need_login_check_meeting(func):
     return inner
 
 
+def need_login_check_meeting_login_purpose(func):
+    def inner():
+        return rx.cond(
+            State.login_token == "",
+            login_check_meeting(),
+            func(),
+        )
+
+    return inner
+
+
 @rx.page("/login")
 def login() -> rx.Component:
     return rx.center(

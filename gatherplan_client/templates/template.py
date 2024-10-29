@@ -10,6 +10,7 @@ import reflex as rx
 from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily
 from gatherplan_client.pages.login import need_login_check_meeting, need_login
+from gatherplan_client.pages.login.login import need_login_check_meeting_login_purpose
 
 default_meta = [
     {
@@ -105,6 +106,20 @@ def template(
                 on_load=on_load,
             )
             @need_login_check_meeting
+            def theme_wrap():
+                return templated_page()
+
+        elif need_login_type == "need_login_check_meeting_login_purpose":
+
+            @rx.page(
+                route=route,
+                title=title,
+                description=description,
+                meta=all_meta,
+                script_tags=script_tags,
+                on_load=on_load,
+            )
+            @need_login_check_meeting_login_purpose
             def theme_wrap():
                 return templated_page()
 
