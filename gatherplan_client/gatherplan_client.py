@@ -10,7 +10,7 @@ if os.environ.get("ENV") == "prod":
                 name="google-site-verification",
                 content="beqAu5H-vKsKPxSVN6z3hpR6ydUfSKqWjcmzqY-6000",
             ),
-            rx.meta(
+            rx.el.meta(
                 name="viewport",
                 content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
             ),
@@ -20,6 +20,12 @@ else:
     app = rx.App(
         stylesheets=["fonts/myfont.css"],
         title="GatherPlan",
+        head_components=[
+            rx.el.meta(
+                name="viewport",
+                content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+            ),
+        ],
     )
 
 
