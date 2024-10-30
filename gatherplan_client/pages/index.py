@@ -19,12 +19,21 @@ from gatherplan_client.templates.template import template
 def index() -> rx.Component:
     return rx.vstack(
         rx.vstack(
-            rx.image(
-                src="/images/index_logo.png",
-                width="300px",
-                height="60px",
-                margin_top="15px",
-                margin_bottom="15px",
+            rx.color_mode_cond(
+                light=rx.image(
+                    src="/images/index_logo.png",
+                    width="300px",
+                    height="60px",
+                    margin_top="15px",
+                    margin_bottom="15px",
+                ),
+                dark=rx.image(
+                    src="/images/index_logo.png",
+                    width="300px",
+                    height="60px",
+                    margin_top="15px",
+                    margin_bottom="15px",
+                ),
             ),
             width="100%",
             height="15%",
