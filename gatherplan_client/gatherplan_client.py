@@ -10,6 +10,10 @@ if os.environ.get("ENV") == "prod":
                 name="google-site-verification",
                 content="beqAu5H-vKsKPxSVN6z3hpR6ydUfSKqWjcmzqY-6000",
             ),
+            rx.meta(
+                name="viewport",
+                content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+            ),
         ],
     )
 else:

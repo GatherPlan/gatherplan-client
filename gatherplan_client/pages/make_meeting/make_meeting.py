@@ -30,7 +30,7 @@ def make_meeting() -> rx.Component:
                     placeholder="선택사항",
                     name="meeting_memo",
                 ),
-                rx.text(height="28vh"),
+                rx.text(height="22vh"),
                 main_button(text="다음", type="submit"),
                 width="360px",
             ),
