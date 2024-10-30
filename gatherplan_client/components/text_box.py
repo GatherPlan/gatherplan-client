@@ -136,6 +136,7 @@ def input_box(**kwargs):
         rx.input(
             font_family=AppFontFamily.DEFAULT_FONT,
             font_size="12px",
+            style={"font-size": "16px"},
             height="35px",
             **kwargs,
         ),
