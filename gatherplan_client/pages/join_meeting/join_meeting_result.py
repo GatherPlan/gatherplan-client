@@ -73,7 +73,7 @@ def join_meeting_result() -> rx.Component:
                         sub_text_box("약속코드"),
                         rx.button(
                             rx.icon("copy"),
-                            on_click=State.paste_meeting_code(State.meeting_code),
+                            on_click=rx.set_clipboard(State.meeting_code),
                             width="12px",
                             height="12px",
                             padding="0",

@@ -1330,22 +1330,6 @@ class State(rx.State):
             self.banner_location = self.banner_list[random_index]["addressName"]
             yield
 
-    def paste_meeting_link(self):
-        yield rx.set_clipboard(
-            f"{FRONTEND_URL}/enter_meeting_code/{self.meeting_code_result}"
-        )
-        return rx.toast.info("링크가 복사되었습니다.", position="top-right")
-        #     rx.set_clipboard(
-        #         f"{FRONTEND_URL}/enter_meeting_code/{self.meeting_code_result}"
-        #     ),
-        #     rx.toast.info("링크가 복사되었습니다.", position="top-right"),
-        # ]
-
-    def paste_meeting_code(self, meeting_code: str):
-
-        yield rx.toast.info("약속 코드가 복사되었습니다.", position="top-right")
-        return rx.set_clipboard(meeting_code)
-
 
 # pylint: disable=inherit-non-class
 class EmailAuth(rx.State):
