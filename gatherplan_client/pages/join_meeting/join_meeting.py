@@ -54,7 +54,7 @@ def join_meeting() -> rx.Component:
                     ),
                     type="auto",
                     scrollbars="vertical",
-                    style={"height": 80, "width": 360},
+                    style={"height": 60, "width": 360},
                 ),
             ),
             rx.box(
@@ -79,7 +79,7 @@ def join_meeting() -> rx.Component:
                 on_click=State.join_meeting_handle_submit,
             ),
             width="360px",
-            spacing="5",
+            spacing="4",
         ),
         width="100%",
     )

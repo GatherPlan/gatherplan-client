@@ -211,7 +211,7 @@ def check_meeting_detail() -> rx.Component:
                                         display_select_date,
                                     ),
                                     direction="column",
-                                    spacing="4",
+                                    spacing="1",
                                 ),
                                 type="always",
                                 scrollbars="vertical",

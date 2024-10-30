@@ -58,7 +58,7 @@ def make_meeting_result() -> rx.Component:
                         ),
                         type="auto",
                         scrollbars="vertical",
-                        style={"height": 120, "width": 360},
+                        style={"height": 110, "width": 360},
                     ),
                 ),
                 rx.box(

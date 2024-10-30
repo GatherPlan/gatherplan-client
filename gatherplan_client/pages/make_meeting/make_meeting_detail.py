@@ -197,7 +197,7 @@ def make_meeting_detail() -> rx.Component:
                 ),
                 rx.box(width="100%", height="98px"),
             ),
-            rx.box(width="100%", height="31vh"),
+            rx.box(width="100%", height="20vh"),
             rx.button(
                 "다음",
                 width="360px",

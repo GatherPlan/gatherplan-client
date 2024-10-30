@@ -12,18 +12,40 @@ def center_align_text_box(
     return rx.vstack(
         rx.box(
             rx.center(
-                main_text,
-                font_size=main_font_size,
-                font_family=AppFontFamily.DEFAULT_FONT,
-                font_weight="700",
-                color=AppColor.BLACK,
+                rx.color_mode_cond(
+                    light=rx.text(
+                        main_text,
+                        font_size=main_font_size,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.BLACK,
+                    ),
+                    dark=rx.text(
+                        main_text,
+                        font_size=main_font_size,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        font_weight="700",
+                        color=AppColor.WHITE,
+                    ),
+                ),
             ),
             rx.center(
-                sub_text,
-                font_size=sub_font_size,
-                font_family=AppFontFamily.DEFAULT_FONT,
-                color=AppColor.GRAY_TEXT,
-                font_weight="700",
+                rx.color_mode_cond(
+                    light=rx.text(
+                        sub_text,
+                        font_size=sub_font_size,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        color=AppColor.GRAY_TEXT,
+                        font_weight="700",
+                    ),
+                    dark=rx.text(
+                        sub_text,
+                        font_size=sub_font_size,
+                        font_family=AppFontFamily.DEFAULT_FONT,
+                        color=AppColor.WHITE,
+                        font_weight="700",
+                    ),
+                ),
             ),
             width="360px",
         ),
@@ -35,23 +57,41 @@ def center_align_text_box(
 
 
 def main_text_box(text: str):
-    return rx.text(
-        text,
-        font_size=TextSize.TINY,
-        font_family=AppFontFamily.DEFAULT_FONT,
-        font_weight="700",
-        color=AppColor.BLACK,
-    )
-
-
-def main_text_box_need_star(text: str):
-    return rx.hstack(
-        rx.text(
+    return rx.color_mode_cond(
+        light=rx.text(
             text,
             font_size=TextSize.TINY,
             font_family=AppFontFamily.DEFAULT_FONT,
             font_weight="700",
             color=AppColor.BLACK,
+        ),
+        dark=rx.text(
+            text,
+            font_size=TextSize.TINY,
+            font_family=AppFontFamily.DEFAULT_FONT,
+            font_weight="700",
+            color=AppColor.WHITE,
+        ),
+    )
+
+
+def main_text_box_need_star(text: str):
+    return rx.hstack(
+        rx.color_mode_cond(
+            light=rx.text(
+                text,
+                font_size=TextSize.TINY,
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.BLACK,
+            ),
+            dark=rx.text(
+                text,
+                font_size=TextSize.TINY,
+                font_family=AppFontFamily.DEFAULT_FONT,
+                font_weight="700",
+                color=AppColor.WHITE,
+            ),
         ),
         rx.text("*", font_size=TextSize.VERY_TINY, color=AppColor.RED),
         spacing="1",
@@ -59,36 +99,67 @@ def main_text_box_need_star(text: str):
 
 
 def main_text_box_center(text: str):
-    return rx.text(
-        text,
-        font_size="18px",
-        font_family=AppFontFamily.DEFAULT_FONT,
-        font_weight="700",
-        color=AppColor.BLACK,
-        align="center",
-        width="360px",
+    return rx.color_mode_cond(
+        light=rx.text(
+            text,
+            font_size="18px",
+            font_family=AppFontFamily.DEFAULT_FONT,
+            font_weight="700",
+            color=AppColor.BLACK,
+            align="center",
+            width="360px",
+        ),
+        dark=rx.text(
+            text,
+            font_size="18px",
+            font_family=AppFontFamily.DEFAULT_FONT,
+            font_weight="700",
+            color=AppColor.WHITE,
+            align="center",
+            width="360px",
+        ),
     )
 
 
 def sub_text_box_center(text: str):
-    return rx.text(
-        text,
-        font_size="12px",
-        font_family=AppFontFamily.DEFAULT_FONT,
-        color=AppColor.GRAY_TEXT,
-        font_weight="700",
-        align="center",
-        width="360px",
+    return rx.color_mode_cond(
+        light=rx.text(
+            text,
+            font_size="12px",
+            font_family=AppFontFamily.DEFAULT_FONT,
+            color=AppColor.GRAY_TEXT,
+            font_weight="700",
+            align="center",
+            width="360px",
+        ),
+        dark=rx.text(
+            text,
+            font_size="12px",
+            font_family=AppFontFamily.DEFAULT_FONT,
+            color=AppColor.WHITE,
+            font_weight="700",
+            align="center",
+            width="360px",
+        ),
     )
 
 
 def sub_text_box(text: str):
-    return rx.text(
-        text,
-        font_size=TextSize.TINY,
-        font_family=AppFontFamily.DEFAULT_FONT,
-        color=AppColor.GRAY_TEXT,
-        font_weight="700",
+    return rx.color_mode_cond(
+        light=rx.text(
+            text,
+            font_size=TextSize.TINY,
+            font_family=AppFontFamily.DEFAULT_FONT,
+            color=AppColor.GRAY_TEXT,
+            font_weight="700",
+        ),
+        dark=rx.text(
+            text,
+            font_size=TextSize.TINY,
+            font_family=AppFontFamily.DEFAULT_FONT,
+            color=AppColor.WHITE,
+            font_weight="700",
+        ),
     )
 
 

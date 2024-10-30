@@ -20,7 +20,7 @@ def make_meeting_date() -> rx.Component:
                 "약속 후보 날짜", "최대 10일까지 선택가능합니다.", need_start=True
             ),
             calendar_header(purpose="make"),
-            rx.box(height="15vh"),
+            rx.box(height="10vh"),
             rx.button(
                 "다음",
                 width="360px",

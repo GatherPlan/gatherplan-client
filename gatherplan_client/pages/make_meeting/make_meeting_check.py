@@ -56,7 +56,7 @@ def make_meeting_check() -> rx.Component:
                         ),
                         type="auto",
                         scrollbars="vertical",
-                        style={"height": 240, "width": 360},
+                        style={"height": 170, "width": 360},
                     ),
                 ),
                 rx.button(

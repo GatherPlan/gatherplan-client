@@ -87,7 +87,7 @@ def join_meeting_result() -> rx.Component:
                 main_button(
                     text="약속 현황보기", on_click=rx.redirect("/check_meeting")
                 ),
-                spacing="5",
+                spacing="4",
             ),
             width="360px",
         ),

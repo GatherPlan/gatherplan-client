@@ -3,7 +3,7 @@ import reflex as rx
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.buttons import index_button
 from gatherplan_client.components.schema import AppColor, TextSize, AppFontFamily
-from gatherplan_client.components.text_box import main_sub_text_box
+from gatherplan_client.components.text_box import main_sub_text_box, main_text_box
 from gatherplan_client.templates.template import template
 
 
@@ -67,15 +67,7 @@ def index() -> rx.Component:
             State.is_hydrated,
             rx.vstack(
                 rx.box(
-                    rx.text(
-                        "이런 모임은 어떠세요?",
-                        font_size=TextSize.TINY_SMALL,
-                        font_family=AppFontFamily.DEFAULT_FONT,
-                        font_weight="700",
-                        color=AppColor.BLACK,
-                        padding_left="10px",
-                        padding_bottom="5px",
-                    ),
+                    main_text_box("이런 모임은 어떠세요?"),
                     width="360px",
                 ),
                 rx.image(
