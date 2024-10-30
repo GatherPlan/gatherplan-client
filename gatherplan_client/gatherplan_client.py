@@ -2,33 +2,60 @@ import os
 from .pages import *  # noqa: F401, F403
 
 
-def create_app() -> rx.App:
-    """애플리케이션 인스턴스를 생성합니다."""
-    common_head_components = [
-        rx.el.meta(
-            name="viewport",
-            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
-        ),
-    ]
-
-    if os.environ.get("ENV") == "prod":
-        # 프로덕션 환경일 때는 Google 사이트 인증 메타 태그 추가
-        prod_meta = rx.el.meta(
-            name="google-site-verification",
-            content="beqAu5H-vKsKPxSVN6z3hpR6ydUfSKqWjcmzqY-6000",
-        )
-        head_components = [prod_meta] + common_head_components
-    else:
-        head_components = common_head_components
-
-    return rx.App(
+if os.environ.get("ENV") == "prod":
+    app = rx.App(
         stylesheets=["fonts/myfont.css"],
         title="GatherPlan",
-        head_components=head_components,
+        head_components=[
+            rx.el.meta(
+                name="google-site-verification",
+                content="beqAu5H-vKsKPxSVN6z3hpR6ydUfSKqWjcmzqY-6000",
+            ),
+            rx.el.meta(
+                name="viewport",
+                content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+            ),
+        ],
+    )
+else:
+    app = rx.App(
+        stylesheets=["fonts/myfont.css"],
+        title="GatherPlan",
+        head_components=[
+            rx.el.meta(
+                name="viewport",
+                content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+            ),
+        ],
     )
 
+# def create_app() -> rx.App:
+#     """애플리케이션 인스턴스를 생성합니다."""
+#     common_head_components = [
+#         rx.el.meta(
+#             name="viewport",
+#             content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+#         ),
+#     ]
 
-app = create_app()
+#     if os.environ.get("ENV") == "prod":
+#         # 프로덕션 환경일 때는 Google 사이트 인증 메타 태그 추가
+#         prod_meta = rx.el.meta(
+#             name="google-site-verification",
+#             content="beqAu5H-vKsKPxSVN6z3hpR6ydUfSKqWjcmzqY-6000",
+#         )
+#         head_components = [prod_meta] + common_head_components
+#     else:
+#         head_components = common_head_components
+
+#     return rx.App(
+#         stylesheets=["fonts/myfont.css"],
+#         title="GatherPlan",
+#         head_components=head_components,
+#     )
+
+
+# app = create_app()
 
 
 def health_check() -> rx.Component:

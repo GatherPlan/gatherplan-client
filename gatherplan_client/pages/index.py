@@ -21,14 +21,14 @@ def index() -> rx.Component:
         rx.vstack(
             rx.color_mode_cond(
                 light=rx.image(
-                    src="/images/index_logo.png",
+                    src="/images/index_logo_light.svg",
                     width="300px",
                     height="60px",
                     margin_top="15px",
                     margin_bottom="15px",
                 ),
                 dark=rx.image(
-                    src="/images/index_logo.png",
+                    src="/images/index_logo_dark.svg",
                     width="300px",
                     height="60px",
                     margin_top="15px",
