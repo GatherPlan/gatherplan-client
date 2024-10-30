@@ -11,6 +11,7 @@ from gatherplan_client.components.header import header
 from gatherplan_client.components.schema import AppFontFamily
 from gatherplan_client.pages.login import need_login_check_meeting, need_login
 from gatherplan_client.pages.login.login import need_login_check_meeting_login_purpose
+from gatherplan_client.components.footer import footer
 
 default_meta = [
     {
@@ -59,6 +60,7 @@ def template(
                     rx.box(),
                     header(header_url),
                 ),
+                rx.box(height="48px"),
                 rx.cond(
                     page_text == "",
                     rx.box(),
@@ -77,6 +79,7 @@ def template(
                     ),
                 ),
                 page_content(),
+                footer(),
                 spacing="0",
                 height="100vh",
             )
