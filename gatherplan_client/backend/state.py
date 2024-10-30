@@ -1343,8 +1343,8 @@ class State(rx.State):
 
     def paste_meeting_code(self, meeting_code: str):
 
-        yield rx.set_clipboard(meeting_code)
-        return rx.toast.info("약속 코드가 복사되었습니다.", position="top-right")
+        yield rx.toast.info("약속 코드가 복사되었습니다.", position="top-right")
+        return rx.set_clipboard(meeting_code)
 
 
 # pylint: disable=inherit-non-class
