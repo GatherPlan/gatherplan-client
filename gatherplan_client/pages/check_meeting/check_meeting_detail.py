@@ -238,9 +238,7 @@ def check_meeting_detail() -> rx.Component:
                         rx.vstack(
                             main_button(
                                 text="참여 변경하기",
-                                on_click=rx.redirect(
-                                    f"/enter_meeting_code/{State.check_detail_meeting_code}"
-                                ),
+                                on_click=State.join_meeting_change_metting_for_update,
                             ),
                             main_button(
                                 text="참여 취소하기",

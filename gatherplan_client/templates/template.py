@@ -60,7 +60,7 @@ def template(
                     rx.box(),
                     header(header_url),
                 ),
-                rx.box(height="48px"),
+                rx.box(height="68px"),
                 rx.cond(
                     page_text == "",
                     rx.box(),

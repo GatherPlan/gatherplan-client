@@ -234,6 +234,84 @@ class State(rx.State):
                     date, []
                 ).append({nickname: time_range})
 
+    def join_meeting_change_meeting_for_update(self):
+        if self.not_member_login:
+            params = {
+                "appointmentCode": self.meeting_code,
+                "tempUserInfo.nickname": self.nick_name,
+                "tempUserInfo.password": self.password,
+            }
+            #  GET /api/v1/temporary/appointments/join:check
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/temporary/users/join:check",
+                headers=HEADER,
+                params=params,
+                timeout=10,
+            )
+
+            # 호스트 여부 체크
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/temporary/users/host:check",
+                headers=HEADER,
+                params=params,
+                timeout=10,
+            )
+            if response.json()["isSuccess"]:
+                pass
+            else:
+                # 참여자 인 경우 닉네임 체크
+                response = requests.get(
+                    f"{BACKEND_URL}/api/v1/temporary/users/join:valid",
+                    headers=HEADER,
+                    params=params,
+                    timeout=10,
+                )
+                if response.json()["isSuccess"]:
+                    pass
+                else:
+                    return rx.redirect("/join_meeting_change_nickname")
+
+        if self.login_token != "":
+            params = {"appointmentCode": self.meeting_code}
+            headers = HEADER
+            headers["Authorization"] = self.login_token
+
+            # 참여여부 체크
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/users/join:check",
+                headers=HEADER,
+                params=params,
+                timeout=10,
+            )
+
+            # 호스트 여부 체크
+            response = requests.get(
+                f"{BACKEND_URL}/api/v1/users/host:check",
+                headers=headers,
+                params=params,
+                timeout=10,
+            )
+            if response.json()["isSuccess"]:
+                # host 인 경우
+                pass
+            else:
+                # 참여자 인 경우 닉네임 체크
+                response = requests.get(
+                    f"{BACKEND_URL}/api/v1/users/name:check",
+                    headers=headers,
+                    params=params,
+                    timeout=10,
+                )
+
+                if response.json()["isSuccess"]:
+                    pass
+                else:
+                    return rx.redirect("/join_meeting_change_nickname")
+
+        # GET /api/v1/region/weather
+
+        self.setting_month_calendar()
+
     def join_meeting_date_on_state(self):
         if self.not_member_login:
             params = {
@@ -287,6 +365,10 @@ class State(rx.State):
                 params=params,
                 timeout=10,
             )
+
+            print("meeting_code: ", self.meeting_code)
+            print(response.json())
+
             if response.json()["isSuccess"]:
                 return rx.redirect("/join_meeting_already")
 
@@ -1329,6 +1411,10 @@ class State(rx.State):
             self.banner_name = self.banner_list[random_index]["title"]
             self.banner_location = self.banner_list[random_index]["addressName"]
             yield
+
+    def join_meeting_change_metting_for_update(self):
+        self.meeting_code = self.check_detail_meeting_code
+        return rx.redirect("/join_meeting_change_meeting")
 
 
 # pylint: disable=inherit-non-class
