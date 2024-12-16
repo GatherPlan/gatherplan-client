@@ -1,6 +1,8 @@
-FROM python:3.11.6
+FROM python:3.11.6-alpine
 WORKDIR /app
 COPY . /app
+
+RUN apk add --no-cache gcc musl-dev linux-headers
 
 RUN pip install pip --upgrade && \
     pip install poetry && \

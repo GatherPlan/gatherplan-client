@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: plan4u
-  IMAGE: client
+  IMAGE: client-server
   IMG_TAG: v${GITHUB_SHA::7}
 
 jobs:
