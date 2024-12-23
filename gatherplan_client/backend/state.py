@@ -601,10 +601,6 @@ class State(rx.State):
             self.select_data.append(click_data)
             self.display_data[click_data] = True
 
-    def make_meeting_date_handle_submit(self):
-        if len(self.select_data) == 0:
-            return rx.toast.error("날짜를 선택해주세요.", position="top-right")
-        return rx.redirect("/make_meeting_check")
 
     def month_change_common(self, is_increment: bool):
         if is_increment:

@@ -2,16 +2,12 @@
 
 from __future__ import annotations
 
-import os
 from typing import Callable
 
 import reflex as rx
 
-from gatherplan_client.components.header import header
-from gatherplan_client.components.schema import AppFontFamily
 from gatherplan_client.pages.login import need_login_check_meeting, need_login
 from gatherplan_client.pages.login.login import need_login_check_meeting_login_purpose
-from gatherplan_client.components.footer import footer
 
 default_meta = [
     {
@@ -20,8 +16,9 @@ default_meta = [
     },
 ]
 
-
-GA_ID = "G-Q9R0ZEJ8S6" if os.environ.get("ENV") == "prod" else ""
+COMMON_LAYOUT = rx.vstack(
+    # 공통으로 사용되는 레이아웃 컴포넌트
+)
 
 
 def template(
@@ -31,8 +28,6 @@ def template(
     meta: str | None = None,
     script_tags: list[rx.Component] | None = None,
     on_load: rx.event.EventHandler | list[rx.event.EventHandler] | None = None,
-    header_url: str | None = "/",
-    page_text: str | None = None,
     need_login_type: str | None = "default",
 ) -> Callable[[Callable[[], rx.Component]], rx.Component]:
 
@@ -40,45 +35,58 @@ def template(
         all_meta = [*default_meta, *(meta or [])]
 
         def templated_page():
-            return rx.vstack(
-                rx.script(
-                    src=f"https://www.googletagmanager.com/gtag/js?id={GA_ID}",
-                    strategy="afterInteractive",
-                ),
-                rx.script(
-                    f"""
-                    window.dataLayer = window.dataLayer || [];
-                    function gtag(){{window.dataLayer.push(arguments);}}
-                    gtag('js', new Date());
-                    gtag('config', '{GA_ID}');
-                    """,
-                    id="google-analytics",
-                    strategy="afterInteractive",
-                ),
-                rx.cond(
-                    header_url == "",
-                    rx.box(),
-                    header(header_url),
-                ),
-                rx.box(height="68px"),
-                rx.cond(
-                    page_text == "",
-                    rx.box(),
-                    rx.center(
-                        rx.text(
-                            page_text,
-                            font_size="20px",
-                            font_family=AppFontFamily.DEFAULT_FONT,
-                            font_weight="700",
-                            width="360px",
+            from gatherplan_client.components.header import header
+            from gatherplan_client.components.footer import footer
+
+            return rx.box(
+                rx.vstack(
+                    header(),
+                    rx.hstack(
+                        # PC에서는 footer를 왼쪽에 세로로 표시
+                        rx.box(
+                            footer(is_vertical=True),
+                            width="240px",
+                            height="100vh",
+                            position="sticky",
+                            top="0",
+                            display=["none", "none", "block"],
+                        ),
+                        rx.box(
+                            rx.box(
+                                page_content(),
+                                width="100%",
+                                max_width="600px",
+                                margin="0 auto",
+                                bg="white",
+                                border_x="1px solid #eaeaea",
+                                min_height="100vh",
+                                padding_top="50px",
+                            ),
+                            flex="1",
+                            min_height="100vh",
+                            bg="rgb(250, 250, 250)",
                         ),
                         width="100%",
+                        spacing="0",
+                        align_items="stretch",
+                        bg="rgb(250, 250, 250)",
                     ),
+                    # 모바일에서는 footer를 아래에 가로로 표시
+                    rx.box(
+                        footer(is_vertical=False),
+                        width="100%",
+                        position="fixed",
+                        bottom="0",
+                        left="0",
+                        display=["block", "block", "none"],
+                    ),
+                    height="100%",
+                    spacing="0",
+                    bg="rgb(250, 250, 250)",
                 ),
-                page_content(),
-                footer(),
-                spacing="0",
-                height="100vh",
+                width="100%",
+                min_height="100vh",
+                bg="rgb(250, 250, 250)",
             )
 
         if need_login_type == "default":

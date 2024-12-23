@@ -1,8 +1,6 @@
 import reflex as rx
-
 from gatherplan_client.backend.state import State
 from gatherplan_client.components.buttons import index_button
-from gatherplan_client.components.schema import AppColor, TextSize, AppFontFamily
 from gatherplan_client.components.text_box import main_sub_text_box, main_text_box
 from gatherplan_client.templates.template import template
 
@@ -11,10 +9,8 @@ from gatherplan_client.templates.template import template
     title="GatherPlan",
     description="새로운 모임을 계획해보세요",
     route="/",
-    header_url="",
-    page_text="",
     need_login_type="no_login",
-    on_load=State.get_banner_list,
+    # on_load=State.get_banner_list,
 )
 def index() -> rx.Component:
     return rx.vstack(
@@ -63,41 +59,41 @@ def index() -> rx.Component:
             height="50%",
             align="center",
         ),
-        rx.cond(
-            State.is_hydrated,
-            rx.vstack(
-                rx.box(
-                    main_text_box("이런 모임은 어떠세요?"),
-                    width="360px",
-                ),
-                rx.image(
-                    src=State.banner_img,
-                    width="320px",
-                    height="180px",
-                    border_radius="15px 50px",
-                    border="5px solid #555",
-                ),
-                rx.text(
-                    State.banner_name,
-                    font_size=TextSize.TINY,
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    color=AppColor.GRAY_TEXT,
-                    font_weight="700",
-                ),
-                rx.text(
-                    State.banner_location,
-                    font_size=TextSize.VERY_TINY,
-                    font_family=AppFontFamily.DEFAULT_FONT,
-                    color=AppColor.GRAY_TEXT,
-                    font_weight="700",
-                ),
-                width="100%",
-                height="40vh",
-                align="center",
-                spacing="0",
-            ),
-            rx.spacer(height="40vh"),
-        ),
+        # rx.cond(
+        #     State.is_hydrated,
+        #     rx.vstack(
+        #         rx.box(
+        #             main_text_box("이런 모임은 어떠세요?"),
+        #             width="360px",
+        #         ),
+        #         rx.image(
+        #             src=State.banner_img,
+        #             width="320px",
+        #             height="180px",
+        #             border_radius="15px 50px",
+        #             border="5px solid #555",
+        #         ),
+        #         rx.text(
+        #             State.banner_name,
+        #             font_size=TextSize.TINY,
+        #             font_family=AppFontFamily.DEFAULT_FONT,
+        #             color=AppColor.GRAY_TEXT,
+        #             font_weight="700",
+        #         ),
+        #         rx.text(
+        #             State.banner_location,
+        #             font_size=TextSize.VERY_TINY,
+        #             font_family=AppFontFamily.DEFAULT_FONT,
+        #             color=AppColor.GRAY_TEXT,
+        #             font_weight="700",
+        #         ),
+        #         width="100%",
+        #         height="40vh",
+        #         align="center",
+        #         spacing="0",
+        #     ),
+        #     rx.spacer(height="40vh"),
+        # ),
         width="100%",
         height="100%",
     )

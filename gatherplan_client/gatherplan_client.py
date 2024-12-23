@@ -4,7 +4,6 @@ from .pages import *  # noqa: F401, F403
 
 if os.environ.get("ENV") == "prod":
     app = rx.App(
-        stylesheets=["fonts/myfont.css"],
         title="GatherPlan",
         head_components=[
             rx.el.meta(
@@ -19,7 +18,6 @@ if os.environ.get("ENV") == "prod":
     )
 else:
     app = rx.App(
-        stylesheets=["fonts/myfont.css"],
         title="GatherPlan",
         head_components=[
             rx.el.meta(

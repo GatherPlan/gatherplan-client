@@ -1,157 +1,67 @@
 import reflex as rx
-from gatherplan_client.components.schema import AppFontFamily
 
 
-def footer():
-    return rx.color_mode_cond(
-        light=rx.center(
-            rx.center(
-                rx.hstack(
-                    rx.link(
-                        rx.vstack(
-                            rx.icon(
-                                tag="plus",
-                                size=24,
-                                color="#666666",
-                            ),
-                            rx.text(
-                                "만들기",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_size="12px",
-                                color="#666666",
-                            ),
-                            width="60px",
-                            align="center",
-                        ),
-                        href="/make_meeting",
-                        _hover={"text_decoration": "none"},
+def footer(is_vertical: bool = False) -> rx.Component:
+    """웹앱의 푸터 컴포넌트."""
+
+    def menu_items():
+        items = [
+            ("home", "/"),
+            ("search", "/search"),
+            ("plus", "/new"),
+            ("calendar-days", "/my"),
+        ]
+
+        if is_vertical:
+            # PC 버전 - 왼쪽 사이드바 스타일
+            return [
+                rx.link(
+                    rx.center(
+                        rx.icon(tag=icon, size=28, color="black"),
+                        border_radius="md",
+                        padding="2",
+                        width="40px",
+                        height="40px",
+                        _hover={"bg": "gray.200"},
                     ),
-                    rx.link(
-                        rx.vstack(
-                            rx.icon(
-                                tag="users",
-                                size=24,
-                                color="#666666",
-                            ),
-                            rx.text(
-                                "참여하기",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_size="12px",
-                                color="#666666",
-                            ),
-                            width="60px",
-                            align="center",
-                        ),
-                        href="/enter_meeting_code",
-                        _hover={"text_decoration": "none"},
+                    href=href,
+                    _hover={"text_decoration": "none"},
+                )
+                for icon, href in items
+            ]
+        else:
+            # 모바일 버전 - 하단 네비게이션 바 스타일
+            return [
+                rx.link(
+                    rx.center(
+                        rx.icon(tag=icon, size=28, color="black"),
+                        height="100%",
+                        _hover={"color": "gray.800"},
                     ),
-                    rx.link(
-                        rx.vstack(
-                            rx.icon(
-                                tag="calendar",
-                                size=24,
-                                color="#666666",
-                            ),
-                            rx.text(
-                                "현황보기",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_size="12px",
-                                color="#666666",
-                            ),
-                            width="60px",
-                            align="center",
-                        ),
-                        href="/check_meeting",
-                        _hover={"text_decoration": "none"},
-                    ),
-                    spacing="48px",
-                    justify="center",
-                    padding_y="12px",
-                ),
-                width="360px",
-            ),
-            position="fixed",
-            bottom="0",
+                    href=href,
+                    height="100%",
+                    _hover={"text_decoration": "none"},
+                )
+                for icon, href in items
+            ]
+
+    container = rx.vstack if is_vertical else rx.hstack
+    return rx.center(
+        container(
+            *menu_items(),
+            spacing="4" if is_vertical else "8",
+            justify="center",
+            align_items="center",
             width="100%",
-            z_index="999",
-            background_color="rgba(255, 255, 255, 0.95)",
-            backdrop_filter="blur(10px)",
-            box_shadow="0 -2px 4px rgba(0, 0, 0, 0.1)",
-            border_top="1px solid rgba(0, 0, 0, 0.1)",
+            height="100%" if is_vertical else "auto",
+            padding_y="2",
         ),
-        dark=rx.center(
-            rx.center(
-                rx.hstack(
-                    rx.link(
-                        rx.vstack(
-                            rx.icon(
-                                tag="plus",
-                                size=24,
-                                color="#FFFFFF",
-                            ),
-                            rx.text(
-                                "만들기",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_size="12px",
-                                color="#FFFFFF",
-                            ),
-                            width="60px",
-                            align="center",
-                        ),
-                        href="/make_meeting",
-                        _hover={"text_decoration": "none"},
-                    ),
-                    rx.link(
-                        rx.vstack(
-                            rx.icon(
-                                tag="users",
-                                size=24,
-                                color="#FFFFFF",
-                            ),
-                            rx.text(
-                                "참여하기",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_size="12px",
-                                color="#FFFFFF",
-                            ),
-                            width="60px",
-                            align="center",
-                        ),
-                        href="/enter_meeting_code",
-                        _hover={"text_decoration": "none"},
-                    ),
-                    rx.link(
-                        rx.vstack(
-                            rx.icon(
-                                tag="calendar",
-                                size=24,
-                                color="#FFFFFF",
-                            ),
-                            rx.text(
-                                "현황보기",
-                                font_family=AppFontFamily.DEFAULT_FONT,
-                                font_size="12px",
-                                color="#FFFFFF",
-                            ),
-                            width="60px",
-                            align="center",
-                        ),
-                        href="/check_meeting",
-                        _hover={"text_decoration": "none"},
-                    ),
-                    spacing="48px",
-                    justify="center",
-                    padding_y="12px",
-                ),
-                width="360px",
-            ),
-            position="fixed",
-            bottom="0",
-            width="100%",
-            z_index="999",
-            background_color="rgba(0, 0, 0, 0.95)",
-            backdrop_filter="blur(10px)",
-            box_shadow="0 -2px 4px rgba(0, 0, 0, 0.2)",
-            border_top="1px solid rgba(255, 255, 255, 0.1)",
-        ),
+        position="fixed" if not is_vertical else "static",
+        bottom="0" if not is_vertical else "auto",
+        left="0" if not is_vertical else "auto",
+        width="100%" if not is_vertical else "72px",
+        height="100%" if is_vertical else "52px",
+        background_color="white" if not is_vertical else "rgb(243, 244, 246)",
+        border_top="1px solid #eaeaea" if not is_vertical else None,
+        border_right="1px solid #eaeaea" if is_vertical else None,
     )

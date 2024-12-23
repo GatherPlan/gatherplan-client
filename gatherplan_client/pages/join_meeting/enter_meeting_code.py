@@ -11,29 +11,26 @@ from gatherplan_client.templates.template import template
 
 @template(
     route="/enter_meeting_code",
-    header_url="/",
-    page_text="약속 참여하기",
     need_login_type="no_login",
 )
 def enter_meeting_code() -> rx.Component:
     return rx.form(
-        rx.center(
-            rx.vstack(
-                main_sub_text_box("약속 코드", "12자리 영소문자입니다."),
-                input_box(
-                    value=State.params_meeting_code,
-                    name="enter_code",
-                    type="text",
-                    on_change=State.set_meeting_code,
-                ),
-                rx.box(height="38vh"),
-                main_button(text="다음", type="submit"),
-                width="360px",
+        rx.vstack(
+            main_sub_text_box("약속 코드", "12자리 영소문자입니다."),
+            input_box(
+                value=State.params_meeting_code,
+                name="enter_code",
+                type="text",
+                on_change=State.set_meeting_code,
             ),
-            width="100%",
+            rx.spacer(),
+            main_button(text="다음", type="submit"),
+            rx.text("test"),
+            min_height="100vh",
+            padding_bottom="210px",
+            align="center",
         ),
         on_submit=State.enter_meeting_code_handle_submit,
-        align="center",
-        height="100%",
+        min_height="100vh",
         width="100%",
     )

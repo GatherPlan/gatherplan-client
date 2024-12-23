@@ -1,111 +1,47 @@
 import reflex as rx
 
-from gatherplan_client.backend.state import State
-from gatherplan_client.components.schema import AppColor
 
-
-def header(back_button_url: str):
-    return rx.color_mode_cond(
-        light=rx.box(
-            rx.vstack(
-                rx.box(
-                    rx.hstack(
-                        rx.button(
-                            rx.icon(
-                                tag="chevron-left",
-                                size=24,
-                                stroke_width=3,
-                            ),
-                            color=AppColor.BLACK,
-                            background_color=AppColor.WHITE,
-                            on_click=rx.redirect(back_button_url),
-                            padding="0px",
+def header(url: str = "") -> rx.Component:
+    """웹앱의 헤더 컴포넌트."""
+    return rx.box(
+        rx.hstack(
+            rx.box(
+                rx.hstack(
+                    rx.center(
+                        rx.icon(
+                            "calendar-days",
+                            size=32,
+                            color="blue.500",
                         ),
-                        rx.image(
-                            src="/images/index_logo_light.svg",
-                            width="140px",
-                            height="30px",
-                            padding_top="2px",
-                        ),
-                        rx.box(width="190px"),
-                        rx.button(
-                            rx.icon(
-                                tag="log-out",
-                                size=24,
-                                stroke_width=3,
-                            ),
-                            color=AppColor.BLACK,
-                            background_color=AppColor.WHITE,
-                            on_click=State.logout,
-                            padding="0px",
-                        ),
-                        spacing="0",
+                        width="72px",
+                        height="60px",
                     ),
-                    width="360px",
+                    rx.spacer(),
+                    rx.center(
+                        rx.button(
+                            "로그인",
+                            bg="black",
+                            color="white",
+                            size="2",
+                            border_radius="full",
+                            _hover={
+                                "bg": "rgba(0, 0, 0, 0.8)",
+                            },
+                        ),
+                        width="72px",
+                        height="60px",
+                    ),
+                    width="100%",
                 ),
                 width="100%",
-                height="48px",
-                align="center",
-                padding_top="10px",
             ),
-            position="fixed",
-            top="0",
             width="100%",
-            z_index="999",
-            background_color="rgba(255, 255, 255, 0.95)",
-            backdrop_filter="blur(10px)",
-            box_shadow="0 2px 4px rgba(0, 0, 0, 0.1)",
-            border_bottom="1px solid rgba(0, 0, 0, 0.1)",
+            height="60px",
         ),
-        dark=rx.box(
-            rx.vstack(
-                rx.box(
-                    rx.hstack(
-                        rx.button(
-                            rx.icon(
-                                tag="chevron-left",
-                                size=24,
-                                stroke_width=3,
-                            ),
-                            color=AppColor.WHITE,
-                            background_color=AppColor.BLACK,
-                            on_click=rx.redirect(back_button_url),
-                            padding="0px",
-                        ),
-                        rx.image(
-                            src="/images/index_logo_dark.svg",
-                            width="140px",
-                            height="30px",
-                            padding_top="2px",
-                        ),
-                        rx.box(width="190px"),
-                        rx.button(
-                            rx.icon(
-                                tag="log-out",
-                                size=24,
-                                stroke_width=3,
-                            ),
-                            color=AppColor.WHITE,
-                            background_color=AppColor.BLACK,
-                            on_click=State.logout,
-                            padding="0px",
-                        ),
-                        spacing="0",
-                    ),
-                    width="360px",
-                ),
-                width="100%",
-                height="48px",
-                align="center",
-                padding_top="10px",
-            ),
-            position="fixed",
-            top="0",
-            width="100%",
-            z_index="999",
-            background_color="rgba(0, 0, 0, 0.95)",
-            backdrop_filter="blur(10px)",
-            box_shadow="0 2px 4px rgba(0, 0, 0, 0.2)",
-            border_bottom="1px solid rgba(255, 255, 255, 0.1)",
-        ),
+        position="sticky",
+        top="0",
+        z_index="999",
+        bg=["white", "white", "rgb(243, 244, 246)"],
+        border_bottom="1px solid #eaeaea",
+        width="100%",
     )

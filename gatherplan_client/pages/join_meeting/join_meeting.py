@@ -54,7 +54,7 @@ def join_meeting() -> rx.Component:
                     ),
                     type="auto",
                     scrollbars="vertical",
-                    style={"height": 60, "width": 360},
+                    style={"height": "60px", "width": "360px"},
                 ),
             ),
             rx.box(
