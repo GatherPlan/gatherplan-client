@@ -178,18 +178,13 @@ def make_meeting() -> rx.Component:
                         align="center",
                         padding_top="20px",
                     ),
-                    rx.box(width="100%", height="98px"),
                 ),
-                rx.vstack(
-                    main_sub_text_box(
-                        "약속 후보 날짜",
-                        "최대 10일까지 선택가능합니다.",
-                        need_start=True,
-                    ),
-                    calendar_header(purpose="make"),
-                    rx.box(height="10vh"),
-                    width="360px",
+                main_sub_text_box(
+                    "약속 후보 날짜",
+                    "최대 10일까지 선택가능합니다.",
+                    need_start=True,
                 ),
+                calendar_header(purpose="make"),
                 rx.box(
                     sub_text_box("약속 후보 날짜"),
                     rx.scroll_area(
